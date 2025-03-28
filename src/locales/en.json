@@ -1,0 +1,23 @@
+{
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "reservations": "Reservations",
+    "rooms": "Rooms",
+    "guests": "Guests",
+    "announcements": "Announcements",
+    "users": "Users"
+  },
+  "modal": {
+    "settings": "Settings",
+    "languages": "Languages",
+    "theme": "Theme",
+    "notifications": "Notifications",
+    "english": "English",
+    "spanish": "Spanish",
+    "lightTheme": "Light Theme",
+    "darkTheme": "Dark Theme",
+    "enableNotifications": "Enable Notifications",
+    "disableNotifications": "Disable Notifications",
+    "close": "Close"
+  }
+}

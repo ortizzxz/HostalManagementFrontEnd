@@ -1,0 +1,23 @@
+{
+  "sidebar": {
+    "dashboard": "Panel",
+    "reservations": "Reservas",
+    "rooms": "Habitaciones",
+    "guests": "Huéspedes",
+    "announcements": "Anuncios",
+    "users": "Usuarios"
+  },
+  "modal": {
+    "settings": "Ajustes",
+    "languages": "Idioma",
+    "theme": "Tema",
+    "notifications": "Notificationes",
+    "english": "Inglés",
+    "spanish": "Español",
+    "lightTheme": "Modo Claro",
+    "darkTheme": "Modo Oscuro",
+    "enableNotifications": "Activar Notificaciones",
+    "disableNotifications": "Desactivar Notificaciones",
+    "close": "Cerrar"
+  }
+}
