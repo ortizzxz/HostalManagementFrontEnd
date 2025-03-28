@@ -17,6 +17,17 @@ const ConfigModal = () => {
     i18n.changeLanguage(lang);
   };
 
+  // Function to change theme
+  const handleThemeChange = (theme) => {
+    if (theme === "light") {
+      document.documentElement.classList.remove("dark"); // Remove dark class for light mode
+      localStorage.setItem("theme", "light");
+    } else {
+      document.documentElement.classList.add("dark"); // Add dark class for dark mode
+      localStorage.setItem("theme", "dark");
+    }
+  };
+
   // Render different settings based on active tab
   const renderTabContent = () => {
     switch (activeTab) {
@@ -25,14 +36,14 @@ const ConfigModal = () => {
           <div className="space-y-3">
             <button
               onClick={() => handleLanguageChange("en")}
-              className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 flex items-center justify-center"
+              className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 flex items-center justify-center"
             >
               <Languages className="mr-2"/>
               {t("modal.english")}
             </button>
             <button
               onClick={() => handleLanguageChange("es")}
-              className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 flex items-center justify-center"
+              className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 flex items-center justify-center"
             >
               <Languages className="mr-2"/>
               {t("modal.spanish")}
@@ -42,11 +53,18 @@ const ConfigModal = () => {
       case "theme":
         return (
           <div className="space-y-3">
-            <button className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 flex items-center justify-center" onClick={() => handleThemeChange("light")}>
+            <button
+              className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 flex items-center justify-center"
+              onClick={() => handleThemeChange("light")}
+            >
               <Sun className="mr-2" />
               {t("modal.lightTheme")}
             </button>
-            <button className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 flex items-center justify-center" onClick={() => handleThemeChange("dark")}>
+
+            <button
+              className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 flex items-center justify-center"
+              onClick={() => handleThemeChange("dark")}
+            >
               <Moon className="mr-2" />
               {t("modal.darkTheme")}
             </button>
@@ -55,15 +73,14 @@ const ConfigModal = () => {
       case "notifications":
         return (
           <div className="space-y-3">
-            <button className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 flex items-center justify-center">
+            <button className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 flex items-center justify-center">
               <Bell className="mr-2" />
               {t("modal.enableNotifications")}
             </button>
-            <button className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 flex items-center justify-center">
+            <button className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 flex items-center justify-center">
               <BellOff className="mr-2" />
               {t("modal.disableNotifications")}
             </button>
-
           </div>
         );
       default:
@@ -76,7 +93,7 @@ const ConfigModal = () => {
       {/* Modal - only show when isOpen is true */}
       {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-gray-800 text-white rounded-lg w-1/3 p-6">
+          <div className="bg-gray-800 dark:bg-gray-900 text-white rounded-lg w-1/3 p-6">
             <h3 className="text-xl font-semibold mb-4">
               {t("modal.settings")}
             </h3>
@@ -85,25 +102,19 @@ const ConfigModal = () => {
             <div className="flex border-b-2 border-gray-600 mb-4">
               <button
                 onClick={() => setActiveTab("languages")}
-                className={`px-4 py-2 w-1/3 text-center ${
-                  activeTab === "languages" ? "bg-gray-600" : "bg-gray-700"
-                } rounded-tl-lg`}
+                className={`px-4 py-2 w-1/3 text-center ${activeTab === "languages" ? "bg-gray-600" : "bg-gray-700"} rounded-tl-lg`}
               >
                 {t("modal.languages")}
               </button>
               <button
                 onClick={() => setActiveTab("theme")}
-                className={`px-4 py-2 w-1/3 text-center ${
-                  activeTab === "theme" ? "bg-gray-600" : "bg-gray-700"
-                }`}
+                className={`px-4 py-2 w-1/3 text-center ${activeTab === "theme" ? "bg-gray-600" : "bg-gray-700"}`}
               >
                 {t("modal.theme")}
               </button>
               <button
                 onClick={() => setActiveTab("notifications")}
-                className={`px-4 py-2 w-1/3 text-center ${
-                  activeTab === "notifications" ? "bg-gray-600" : "bg-gray-700"
-                } rounded-tr-lg`}
+                className={`px-4 py-2 w-1/3 text-center ${activeTab === "notifications" ? "bg-gray-600" : "bg-gray-700"} rounded-tr-lg`}
               >
                 {t("modal.notifications")}
               </button>
@@ -128,7 +139,7 @@ const ConfigModal = () => {
       {/* Button to open the modal */}
       <button
         onClick={toggleModal}
-        className=" w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 ml-2"
+        className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 ml-2"
       >
         ⚙️
       </button>

@@ -1,49 +1,77 @@
 import { Link } from "react-router-dom";
-import { Home, CalendarCheck, BedDouble, Users, MessageCircle, PersonStanding } from "lucide-react";
+import {
+  Home,
+  CalendarCheck,
+  BedDouble,
+  Users,
+  MessageCircle,
+  PersonStanding,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
-import ConfigModal from "./ConfigModal"; // Import the modal
+import ConfigModal from "./ConfigModal";
+import "../assets/css/Sidebar.css";
 
 const Sidebar = () => {
-  const { t } = useTranslation(); // translation function from i18
+  const { t } = useTranslation();
 
   return (
-    <div className="w-48 h-screen bg-gray-900 text-white p-3 flex flex-col">
-      <h1 className="text-2xl mb-5 bg-gray-600 p-2 rounded-lg text-center cursor-default">
+    <div className="w-48 h-screen bg-gray-900 dark:bg-gray-800 text-white dark:white p-3 flex flex-col">
+      <h1 className="text-2xl mb-5 bg-gray-600 dark:bg-gray-900 p-2 rounded-lg text-center cursor-default">
         EasyHostal
       </h1>
 
       {/* Navigation Section */}
       <nav className="flex flex-col space-y-4 flex-1">
-        <Link to="/" className="flex items-center hover:bg-gray-700 p-2 rounded">
-          <Home className="w-5 h-5 mr-2" /> {t("sidebar.dashboard")}
+        <Link to="/" className="sidebar-link">
+          <Home className="icon" /> {t("sidebar.dashboard")}
         </Link>
-        <div className="h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent my-3"></div>
-        <Link to="/reservations" className="flex items-center hover:bg-gray-700 p-2 rounded">
-          <CalendarCheck className="w-5 h-5 mr-2" /> {t("sidebar.reservations")}
+
+        {/* Divider */}
+        <div className="divider"></div>
+
+        <Link to="/reservations" className="sidebar-link">
+          <CalendarCheck className="icon" /> {t("sidebar.reservations")}
         </Link>
-        <div className="h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent my-3"></div>
-        <Link to="/rooms" className="flex items-center hover:bg-gray-700 p-2 rounded">
-          <BedDouble className="w-5 h-5 mr-2" /> {t("sidebar.rooms")}
+
+        {/* Divider */}
+        <div className="divider"></div>
+
+        <Link to="/rooms" className="sidebar-link">
+          <BedDouble className="icon" /> {t("sidebar.rooms")}
         </Link>
-        <div className="h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent my-3"></div>
-        <Link to="/guests" className="flex items-center hover:bg-gray-700 p-2 rounded">
-          <PersonStanding className="w-5 h-5 mr-2" /> {t("sidebar.guests")}
+
+        {/* Divider */}
+        <div className="divider"></div>
+
+        <Link to="/guests" className="sidebar-link">
+          <PersonStanding className="icon" /> {t("sidebar.guests")}
         </Link>
-        <div className="h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent my-3"></div>
-        <Link to="/announcements" className="flex items-center hover:bg-gray-700 p-2 rounded">
-          <MessageCircle className="w-5 h-5 mr-2" /> {t("sidebar.announcements")}
+
+        {/* Divider */}
+        <div className="divider"></div>
+
+        <Link to="/announcements" className="sidebar-link">
+          <MessageCircle className="icon" /> {t("sidebar.announcements")}
         </Link>
-        <div className="h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent my-3"></div>
-        <Link to="/users" className="flex items-center hover:bg-gray-700 p-2 rounded">
-          <Users className="w-5 h-5 mr-2" /> {t("sidebar.users")}
+
+        {/* Divider */}
+        <div className="divider"></div>
+
+        <Link to="/users" className="sidebar-link">
+          <Users className="icon" /> {t("sidebar.users")}
         </Link>
       </nav>
 
       {/* Version and Config Button */}
       <div className="flex flex-col justify-between items-center pb-2 gap-2">
-        <p className="text-center text-gray-400 text-sm">v0.1</p>
-        {/* Config Modal Button */}
-          <ConfigModal /> {/* Button to open the configuration modal */}
+        <a
+          href="https://www.github.com/ortizzxz"
+          target="_blank"
+          className="text-center text-gray-400 text-sm"
+        >
+          v0.1 - Jesús Ortiz
+        </a>
+        <ConfigModal /> {/* Button to open the configuration modal */}
       </div>
     </div>
   );

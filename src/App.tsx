@@ -5,6 +5,7 @@ import Reservations from "./pages/Reservations";
 import Users from "./pages/Users";
 import Anouncements from "./pages/Anouncements";
 import Guests from "./pages/Guests";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -14,13 +15,13 @@ function App() {
         <Sidebar />
 
         {/* Main Content */}
-        <div className="flex-1 p-5">
+        <div className="flex-1 p-5 dark:bg-gray-900">
           <Routes>
-            <Route path="/" element={<h1 className="text-2xl">Dashboard</h1>} />
+            <Route path="/" element={<Dashboard />} />
             <Route path="/reservations" element={<Reservations />} />
             <Route path="/rooms" element={<Rooms />} />
-            <Route path="/anouncements" element={<Anouncements />} />
             <Route path="/guests" element={<Guests />} />
+            <Route path="/announcements" element={<Anouncements />} />
             <Route path="/users" element={<Users />} />
           </Routes>
         </div>
