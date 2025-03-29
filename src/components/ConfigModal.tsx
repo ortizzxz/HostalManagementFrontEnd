@@ -92,7 +92,7 @@ const ConfigModal = () => {
     <>
       {/* Modal - only show when isOpen is true */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
           <div className="bg-gray-800 dark:bg-gray-900 text-white rounded-lg w-1/3 p-6">
             <h3 className="text-xl font-semibold mb-4">
               {t("modal.settings")}

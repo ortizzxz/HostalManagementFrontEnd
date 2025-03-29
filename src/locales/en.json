@@ -1,4 +1,8 @@
 {
+  "user":{
+    "list": "Users",
+    "role": "Role"
+  },
   "sidebar": {
     "dashboard": "Dashboard",
     "reservations": "Reservations",

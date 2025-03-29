@@ -1,4 +1,8 @@
 {
+  "user":{
+    "list": "Usuarios",
+    "role": "Cargo"
+  },
   "sidebar": {
     "dashboard": "Panel",
     "reservations": "Reservas",
