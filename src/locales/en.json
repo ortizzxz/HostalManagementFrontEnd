@@ -3,6 +3,12 @@
     "list": "Users",
     "role": "Role"
   },
+  "announcement":{
+    "list": "Announcements",
+    "postDate": "Post Date",
+    "expirationDate": "Expiration Date",
+    "empty": "No Anouncements To Display"
+  },
   "sidebar": {
     "dashboard": "Dashboard",
     "reservations": "Reservations",

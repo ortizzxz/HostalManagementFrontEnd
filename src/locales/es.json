@@ -3,6 +3,12 @@
     "list": "Usuarios",
     "role": "Cargo"
   },
+  "announcement":{
+    "list": "Anuncios",
+    "postDate": "Publicación",
+    "expirationDate": "Vencimiento",
+    "empty": "No hay Anuncios para mostrar"
+  },
   "sidebar": {
     "dashboard": "Panel",
     "reservations": "Reservas",
