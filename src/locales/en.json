@@ -1,7 +1,10 @@
 {
   "user":{
     "list": "Users",
-    "role": "Role"
+    "role": "Role",
+    "create": "Create User",
+    "update": "Update User",
+    "delete": "Delete User"
   },
   "announcement":{
     "list": "Announcements",

@@ -1,7 +1,10 @@
 {
   "user":{
     "list": "Usuarios",
-    "role": "Cargo"
+    "role": "Cargo",
+    "create": "Crear Usuario",
+    "update": "Editar Usuario",
+    "delete": "Eliminar Usuario"
   },
   "announcement":{
     "list": "Anuncios",

@@ -11,3 +11,15 @@ export const getUsers = async () => {
     throw error;
   }
 };
+
+
+// Create a new user
+export const createUser = async (userData) => {
+  try {
+    const response = await axios.post(API_URL, userData); // Send POST request
+    return response.data; // Return the created user data
+  } catch (error) {
+    console.error("Error creating user:", error);
+    throw error;
+  }
+};
