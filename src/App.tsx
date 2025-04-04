@@ -7,6 +7,7 @@ import Anouncements from "./pages/Anouncements";
 import Guests from "./pages/Guests";
 import Dashboard from "./pages/Dashboard";
 import CreateUserForm from "./components/forms/CreateUserForm";
+import CreateAnouncementForm from "./components/forms/CreateAnouncementForm";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
 
             {/* Creation Routes. i.e. Create User route. */}
             <Route path="/create-user" element={<CreateUserForm />} />
+            <Route path="/create-announcement" element={<CreateAnouncementForm />} />
           </Routes>
         </div>
       </div>

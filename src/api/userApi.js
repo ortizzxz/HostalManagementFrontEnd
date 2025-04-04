@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8080/api/user";
 
+// Get all users
 export const getUsers = async () => {
   try {
     const response = await axios.get(API_URL);
@@ -11,7 +12,6 @@ export const getUsers = async () => {
     throw error;
   }
 };
-
 
 // Create a new user
 export const createUser = async (userData) => {

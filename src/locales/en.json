@@ -8,6 +8,9 @@
   },
   "announcement":{
     "list": "Announcements",
+    "create": "Create Announcement",
+    "update": "Update Announcement",
+    "delete": "Delete Announcement",
     "postDate": "Post Date",
     "expirationDate": "Expiration Date",
     "empty": "No Anouncements To Display"

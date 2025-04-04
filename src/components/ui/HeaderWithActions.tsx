@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { Switch } from "../ui/switch.tsx";
+import { Label } from "../ui/label.tsx";
 
 const HeaderWithActions = ({
   title,
@@ -9,42 +11,57 @@ const HeaderWithActions = ({
   updateLabel = "Update",
   deleteLabel = "Delete",
 }) => {
+  const [showActions, setShowActions] = useState(true);
+
   return (
-    <div className="flex justify-between items-center shadow-md dark:shadow-gray-800 mb-2 p-3 bg-gray-100 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center shadow-md dark:shadow-gray-800 mb-4 p-4 rounded-2xl border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-black dark:text-white space-y-4 md:space-y-0">
       {/* Title */}
       <h1 className="text-3xl font-bold">{title}</h1>
 
-      {/* Action Buttons */}
-      <div className="flex space-x-4">
-        {/* Create Button */}
-        {onCreate && (
-          <button
-            onClick={onCreate}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-300"
-          >
-            {createLabel}
-          </button>
+      {/* Buttons + Toggle Row */}
+      <div className="flex items-center space-x-4">
+        {showActions && (
+          <>
+            {onCreate && (
+              <button
+                onClick={onCreate}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-2xl shadow transition duration-300"
+              >
+                {createLabel}
+              </button>
+            )}
+            {onUpdate && (
+              <button
+                onClick={onUpdate}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-2xl shadow transition duration-300"
+              >
+                {updateLabel}
+              </button>
+            )}
+            {onDelete && (
+              <button
+                onClick={onDelete}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-2xl shadow transition duration-300"
+              >
+                {deleteLabel}
+              </button>
+            )}
+          </>
         )}
 
-        {/* Update Button */}
-        {onUpdate && (
-          <button
-            onClick={onUpdate}
-            className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-300"
+        {/* Single Toggle */}
+        <div className="flex items-center space-x-1">
+          <Switch
+            id="action-toggle"
+            checked={showActions}
+            onCheckedChange={setShowActions}
+          />
+          <Label
+            htmlFor="action-toggle"
+            className="text-sm font-medium text-gray-800 dark:text-gray-200"
           >
-            {updateLabel}
-          </button>
-        )}
-
-        {/* Delete Button */}
-        {onDelete && (
-          <button
-            onClick={onDelete}
-            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-300"
-          >
-            {deleteLabel}
-          </button>
-        )}
+          </Label>
+        </div>
       </div>
     </div>
   );

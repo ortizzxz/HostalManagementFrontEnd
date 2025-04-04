@@ -3,11 +3,22 @@ import { getAnouncements } from "../api/anouncementApi"; // Import the API funct
 import { useContext } from "react";
 import { WebSocketContext } from "../components/WebSocketProviderAnnouncements"; // Import the WebSocket context
 import { useTranslation } from "react-i18next";
+import HeaderWithActions from "../components/ui/HeaderWithActions";
+import { useNavigate } from "react-router-dom";
 
 const Announcements = () => {
-  const [announcements, setAnnouncements] = useState([]); // State for all announcements (old + real-time)
-  const { announcements: realTimeAnnouncements } = useContext(WebSocketContext); // Get real-time announcements from WebSocket context
-  const { t } = useTranslation(); // For translations
+  // Old + Incoming ones
+  const [announcements, setAnnouncements] = useState([]); 
+  
+  // Real time announcements
+  const { announcements: realTimeAnnouncements } = useContext(WebSocketContext); 
+  
+  // For translations
+  const { t } = useTranslation(); 
+
+  // For Routering
+  const navigate = useNavigate(); // Initialize useNavigate
+
 
   // Fetch old announcements on mount
   useEffect(() => {
@@ -35,9 +46,33 @@ const Announcements = () => {
     }
   }, [realTimeAnnouncements]);
 
+  const handleCreateAnnouncement = () => {
+    navigate("/create-announcement");
+  };
+
+  const handleUpdateAnnouncement = () => {
+    console.log("Redirect to user update form or open modal");
+  };
+
+  const handleDeleteAnnouncement = () => {
+    console.log("Handle user deletion logic");
+  };
+
   return (
+    
     <div className="px-4 text-black dark:text-white">
-      <h1 className="text-3xl font-bold text-center mb-8">{t("announcement.list")}</h1>
+      
+      {/* Header with actions */}
+      <HeaderWithActions
+        title={t("announcement.list")}
+        onCreate={handleCreateAnnouncement}
+        onUpdate={handleUpdateAnnouncement}
+        onDelete={handleDeleteAnnouncement}
+        createLabel={t("announcement.create")}
+        updateLabel={t("announcement.update")}
+        deleteLabel={t("announcement.delete")}
+      />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {announcements.length > 0 ? (
           announcements.map((announcement) => (

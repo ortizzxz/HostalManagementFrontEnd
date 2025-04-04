@@ -8,6 +8,9 @@
   },
   "announcement":{
     "list": "Anuncios",
+    "create": "Crear Anuncio",
+    "update": "Actualizar Anuncio",
+    "delete": "Eliminar Usuario",
     "postDate": "Publicación",
     "expirationDate": "Vencimiento",
     "empty": "No hay Anuncios para mostrar"
