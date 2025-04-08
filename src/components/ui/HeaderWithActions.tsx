@@ -34,7 +34,7 @@ const HeaderWithActions = ({
             {onCreate && (
               <button
                 onClick={onCreate}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-2xl shadow transition duration-300"
+                className="bg-blue-500 dark:bg-blue-800 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-2xl shadow transition duration-300"
               >
                 {createLabel}
               </button>
@@ -42,7 +42,7 @@ const HeaderWithActions = ({
             {onUpdate && (
               <button
                 onClick={onUpdate}
-                className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-2xl shadow transition duration-300"
+                className="bg-yellow-500 dark:bg-yellow-600 hover:bg-yellow-700 dark:hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-2xl shadow transition duration-300"
               >
                 {updateLabel}
               </button>
@@ -50,7 +50,7 @@ const HeaderWithActions = ({
             {onDelete && (
               <button
                 onClick={onDelete}
-                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-2xl shadow transition duration-300"
+                className="bg-red-500 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-2xl shadow transition duration-300"
               >
                 {deleteLabel}
               </button>

@@ -8,17 +8,16 @@ import { useNavigate } from "react-router-dom";
 
 const Announcements = () => {
   // Old + Incoming ones
-  const [announcements, setAnnouncements] = useState([]); 
-  
+  const [announcements, setAnnouncements] = useState([]);
+
   // Real time announcements
-  const { announcements: realTimeAnnouncements } = useContext(WebSocketContext); 
-  
+  const { announcements: realTimeAnnouncements } = useContext(WebSocketContext);
+
   // For translations
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
   // For Routering
   const navigate = useNavigate(); // Initialize useNavigate
-
 
   // Fetch old announcements on mount
   useEffect(() => {
@@ -59,9 +58,7 @@ const Announcements = () => {
   };
 
   return (
-    
     <div className="text-black dark:text-white">
-      
       {/* Header with actions */}
       <HeaderWithActions
         title={t("announcement.list")}
@@ -81,14 +78,20 @@ const Announcements = () => {
               className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-300 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-default"
             >
               <div className="p-6">
-                <h2 className="text-xl font-semibold mb-2">{announcement.title}</h2>
-                <p className="text-sm text-gray-500 mb-4">{announcement.content}</p>
+                <h2 className="text-xl font-semibold mb-2">
+                  {announcement.title}
+                </h2>
+                <p className="text-sm text-gray-500 mb-4">
+                  {announcement.content}
+                </p>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-400">
-                    {t("announcement.postDate")} - {new Date(announcement.postDate).toLocaleDateString()}
+                    {t("announcement.postDate")} -{" "}
+                    {new Date(announcement.postDate).toLocaleDateString()}
                   </span>
                   <span className="text-sm text-gray-400">
-                    {t("announcement.expirationDate")} - {new Date(announcement.expirationDate).toLocaleDateString()}
+                    {t("announcement.expirationDate")} -{" "}
+                    {new Date(announcement.expirationDate).toLocaleDateString()}
                   </span>
                 </div>
               </div>

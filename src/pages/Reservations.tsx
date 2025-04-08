@@ -1,6 +1,36 @@
+import { useTranslation } from "react-i18next";
+import HeaderWithActions from "../components/ui/HeaderWithActions";
+
+
 const Reservations = () => {
-    return <h1 className="text-2xl">Reservations Page</h1>;
-  };
+  const { t } = useTranslation();
+
+  const handleCreateReservation = () => {
+    console.log('Creando');
+  }
+
+  const handleUpdateReservation = () => {
+    console.log('Actualizando');
+  }
   
-  export default Reservations;
-  
+  const handleDeleteReservation = () => {
+    console.log('Borrando');
+  }
+
+  return (
+    <div className="text-black dark:text-white">
+      {/* Header with actions */}
+      <HeaderWithActions
+        title={t("reservation.list")}
+        onCreate={handleCreateReservation}
+        onUpdate={handleUpdateReservation}
+        onDelete={handleDeleteReservation}
+        createLabel={t("reservation.create")}
+        updateLabel={t("reservation.update")}
+        deleteLabel={t("reservation.delete")}
+      />
+    </div>
+  );
+};
+
+export default Reservations;

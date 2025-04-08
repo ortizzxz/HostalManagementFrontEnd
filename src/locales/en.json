@@ -1,12 +1,12 @@
 {
-  "user":{
+  "user": {
     "list": "Users",
     "role": "Role",
     "create": "Create User",
     "update": "Update User",
     "delete": "Delete User"
   },
-  "announcement":{
+  "announcement": {
     "list": "Announcements",
     "create": "Create Announcement",
     "update": "Update Announcement",
@@ -14,6 +14,13 @@
     "postDate": "Post Date",
     "expirationDate": "Expiration Date",
     "empty": "No Anouncements To Display"
+  },
+  "reservation": {
+    "list": "Reservations",
+    "create": "Create Reservation",
+    "update": "Update Reservation",
+    "delete": "Delete Reservation",
+    "empty": "No Reservation To Display"
   },
   "sidebar": {
     "dashboard": "Dashboard",
