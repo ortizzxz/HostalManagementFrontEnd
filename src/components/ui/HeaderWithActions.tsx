@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Switch } from "../ui/switch.tsx";
 import { Label } from "../ui/label.tsx";
 
@@ -11,7 +11,16 @@ const HeaderWithActions = ({
   updateLabel = "Update",
   deleteLabel = "Delete",
 }) => {
-  const [showActions, setShowActions] = useState(true);
+  // Initialize state with value from localStorage or default to true
+  const [showActions, setShowActions] = useState(() => {
+    const saved = localStorage.getItem("showActions");
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+
+  // Save to localStorage whenever state changes
+  useEffect(() => {
+    localStorage.setItem("showActions", JSON.stringify(showActions));
+  }, [showActions]);
 
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center shadow-md dark:shadow-gray-800 mb-4 p-4 rounded-2xl border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-black dark:text-white space-y-4 md:space-y-0">
@@ -59,8 +68,7 @@ const HeaderWithActions = ({
           <Label
             htmlFor="action-toggle"
             className="text-sm font-medium text-gray-800 dark:text-gray-200"
-          >
-          </Label>
+          ></Label>
         </div>
       </div>
     </div>

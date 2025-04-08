@@ -60,7 +60,7 @@ const Announcements = () => {
 
   return (
     
-    <div className="px-4 text-black dark:text-white">
+    <div className="text-black dark:text-white">
       
       {/* Header with actions */}
       <HeaderWithActions
