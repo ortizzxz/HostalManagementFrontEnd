@@ -15,6 +15,27 @@
     "expirationDate": "Vencimiento",
     "empty": "No hay Anuncios para mostrar"
   },
+  "reservation": {
+    "list": "Reservas",
+    "create": "Crear Reserva",
+    "update": "Actualizar Reserva",
+    "delete": "Eliminar Reservas",
+    "empty": "No hay Reservas para mostar"
+  },
+  "guest": {
+    "list": "Huéspedes",
+    "create": "Registrar Huésped",
+    "update": "Actualizar Huésped",
+    "delete": "Eliminar Huésped",
+    "empty": "No hay Huéspedes para mostar"
+  },
+  "room": {
+    "list": "Habitaciones",
+    "create": "Registrar Habitación",
+    "update": "Actualizar Habitación",
+    "delete": "Eliminar Habitación",
+    "empty": "No hay Habitacones para mostar"
+  },
   "sidebar": {
     "dashboard": "Panel",
     "reservations": "Reservas",

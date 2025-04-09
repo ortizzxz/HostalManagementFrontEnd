@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAnouncements } from "../api/anouncementApi"; // Import the API function
+import { getAnnouncements } from "../api/anouncementApi"; // Import the API function
 import { useContext } from "react";
 import { WebSocketContext } from "../components/WebSocketProviderAnnouncements"; // Import the WebSocket context
 import { useTranslation } from "react-i18next";
@@ -23,7 +23,7 @@ const Announcements = () => {
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const data = await getAnouncements();
+        const data = await getAnnouncements();
         setAnnouncements(data); // Set initial announcements fetched from API
       } catch (error) {
         console.error("Failed to fetch announcements:", error);

@@ -6,7 +6,7 @@ import { Card, CardContent } from "../ui/card.js";
 import { Loader2 } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { createAnouncement } from "../../api/anouncementApi.js"; // Make sure your backend API method is correct
+import { createAnnouncement } from "../../api/anouncementApi"; // Make sure your backend API method is correct
 
 const CreateAnouncementForm = () => {
   const [formData, setFormData] = useState({
@@ -43,7 +43,7 @@ const CreateAnouncementForm = () => {
     setLoading(true);
     setApiError(null);
     try {
-      await createAnouncement(formData); // Make sure the API method is correct
+      await createAnnouncement(formData); // Make sure the API method is correct
       alert("Announcement created successfully!");
       setFormData({
         title: "",

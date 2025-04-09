@@ -22,6 +22,20 @@
     "delete": "Delete Reservation",
     "empty": "No Reservation To Display"
   },
+  "guest": {
+    "list": "Guests",
+    "create": "Register Guest",
+    "update": "Update Guest",
+    "delete": "Delete Guest",
+    "empty": "No Guests To Display"
+  },
+  "room": {
+    "list": "Rooms",
+    "create": "Register Room",
+    "update": "Update Room",
+    "delete": "Delete Room",
+    "empty": "No Rooms To Display"
+  },
   "sidebar": {
     "dashboard": "Dashboard",
     "reservations": "Reservations",
