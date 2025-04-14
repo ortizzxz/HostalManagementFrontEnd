@@ -8,6 +8,7 @@ import Guests from "./pages/Guests";
 import Dashboard from "./pages/Dashboard";
 import CreateUserForm from "./components/forms/CreateUserForm";
 import CreateAnouncementForm from "./components/forms/CreateAnouncementForm";
+import CreateRoomForm from "./components/forms/CreateRoomForm";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             {/* Creation Routes. i.e. Create User route. */}
             <Route path="/create-user" element={<CreateUserForm />} />
             <Route path="/create-announcement" element={<CreateAnouncementForm />} />
+            <Route path="/create-room" element={<CreateRoomForm />} />
           </Routes>
         </div>
       </div>

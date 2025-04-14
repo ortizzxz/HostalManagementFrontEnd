@@ -1,11 +1,13 @@
 import { useTranslation } from "react-i18next";
 import HeaderWithActions from "../components/ui/HeaderWithActions";
+import { useNavigate } from "react-router-dom";
 
 const Rooms = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleCreateReservation = () => {
-    console.log("Creando");
+    navigate("/create-room");
   };
 
   const handleUpdateReservation = () => {

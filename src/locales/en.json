@@ -34,7 +34,15 @@
     "create": "Register Room",
     "update": "Update Room",
     "delete": "Delete Room",
-    "empty": "No Rooms To Display"
+    "empty": "No Rooms To Display",
+
+    "creation": {
+      "number": "Room Number",
+      "type": "Room Type",
+      "capacity": "Room Capacity",
+      "price": "Room Rate",
+      "create": "Register Room"
+    }
   },
   "sidebar": {
     "dashboard": "Dashboard",

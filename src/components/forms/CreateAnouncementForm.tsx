@@ -6,45 +6,55 @@ import { Card, CardContent } from "../ui/card.js";
 import { Loader2 } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { createAnnouncement } from "../../api/anouncementApi"; // Make sure your backend API method is correct
+import { createAnnouncement } from "../../api/anouncementApi";
+
+// 🔐 Define types
+type AnnouncementForm = {
+  title: string;
+  content: string;
+  postDate: Date;
+  expirationDate: Date | null;
+};
+
+type FormErrors = Partial<Record<keyof AnnouncementForm, string>>;
 
 const CreateAnouncementForm = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AnnouncementForm>({
     title: "",
     content: "",
-    postDate: new Date(), // Set current date for postDate
-    expirationDate: null, // Expiration date is initially null
+    postDate: new Date(),
+    expirationDate: null,
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
-  const [apiError, setApiError] = useState(null);
+  const [apiError, setApiError] = useState<string | null>(null); // ✅ allow string or null
 
-  // Validate form fields
+  // ✅ Validate form fields
   const validateForm = () => {
-    const newErrors = {};
-    if (!formData.title.trim()) newErrors.title = "Title is required.";
-    if (!formData.content.trim()) newErrors.content = "Content is required.";
+    const newErrors: FormErrors = {};
+    if (!formData.title.trim()) newErrors.title = "⚠️ Title is required.";
+    if (!formData.content.trim()) newErrors.content = "⚠️ Content is required.";
     if (!formData.expirationDate)
-      newErrors.expirationDate = "Expiration date is required.";
+      newErrors.expirationDate = "⚠️ Expiration date is required.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form field changes
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
     setLoading(true);
     setApiError(null);
     try {
-      await createAnnouncement(formData); // Make sure the API method is correct
-      alert("Announcement created successfully!");
+      await createAnnouncement(formData);
+      alert("📣 Announcement created successfully!");
       setFormData({
         title: "",
         content: "",
@@ -52,27 +62,27 @@ const CreateAnouncementForm = () => {
         expirationDate: null,
       });
     } catch (error) {
-      setApiError("Failed to create announcement. Please try again.");
+      setApiError("❌ Failed to create announcement. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center dark:bg-gray-900 p-4">
+    <div className="flex items-center justify-center  p-4">
       <Card className="max-w-md w-full p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center">
-          Create New Announcement
+          📢 Create New Announcement
         </h1>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Title Field */}
+            {/* Title */}
             <div>
               <Label
                 htmlFor="title"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 my-2"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300 my-2 block"
               >
-                Title
+                📝 Title
               </Label>
               <Input
                 type="text"
@@ -80,56 +90,59 @@ const CreateAnouncementForm = () => {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className={`border-white bg-gray-900 ${errors.title ? "border-red-500" : ""}`}
+                className={`border rounded-md p-2 dark:bg-gray-900 ${
+                  errors.title ? "border-red-500" : "border-gray-300"
+                }`}
+                placeholder="Change Title Placeholder"
               />
               {errors.title && (
                 <p className="text-red-500 text-xs mt-1">{errors.title}</p>
               )}
             </div>
 
-            {/* Content Field */}
+            {/* Content */}
             <div>
               <Label
                 htmlFor="content"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 my-2"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300 my-2 block"
               >
-                Content
+                ✏️ Content
               </Label>
               <textarea
                 id="content"
                 name="content"
                 value={formData.content}
                 onChange={handleChange}
-                className={`w-full h-24 p-2 bg-gray-900 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                className={`w-full h-24 p-2 border rounded-md p-2 dark:bg-gray-900  shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                   errors.content ? "border-red-500" : "border-gray-300"
                 }`}
-                placeholder="Enter announcement content"
+                placeholder="Change Announcement Placeholder"
               />
               {errors.content && (
                 <p className="text-red-500 text-xs mt-1">{errors.content}</p>
               )}
             </div>
 
-            {/* Expiration Date Picker */}
+            {/* Expiration Date */}
             <div>
               <Label
                 htmlFor="expirationDate"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 my-2"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300 my-2 block"
               >
-                Expiration Date
+                📅 Expiration Date
               </Label>
               <DatePicker
                 id="expirationDate"
                 selected={formData.expirationDate}
-                onChange={(date) =>
+                onChange={(date: Date | null) =>
                   setFormData({ ...formData, expirationDate: date })
                 }
-                className={`w-full bg-gray-900 p-2 border text-white text-center ${
+                className={`w-full border dark:bg-gray-900  p-2 border text-white text-center ${
                   errors.expirationDate ? "border-red-500" : "border-gray-300"
                 } rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                 dateFormat="dd.MM.yyyy"
-                minDate={new Date()} // Prevent past dates from being selected
-                placeholderText="Select expiration date"
+                minDate={new Date()}
+                placeholderText="Change expiration date placeholder"
               />
               {errors.expirationDate && (
                 <p className="text-red-500 text-xs mt-1">
@@ -138,17 +151,17 @@ const CreateAnouncementForm = () => {
               )}
             </div>
 
-            {/* API Error Message */}
+            {/* API Error */}
             {apiError && (
               <p className="text-red-500 text-sm text-center">{apiError}</p>
             )}
 
-            {/* Submit Button */}
+            {/* Submit */}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? (
                 <Loader2 className="animate-spin" />
               ) : (
-                "Create Announcement"
+                "🚀 Create Announcement"
               )}
             </Button>
           </form>

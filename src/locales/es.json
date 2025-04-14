@@ -34,7 +34,15 @@
     "create": "Registrar Habitación",
     "update": "Actualizar Habitación",
     "delete": "Eliminar Habitación",
-    "empty": "No hay Habitacones para mostar"
+    "empty": "No hay Habitacones para mostar",
+
+    "creation": {
+      "number": "Número de Habitación",
+      "type": "Tipo de Habitación",
+      "capacity": "Capacidad de la Habitación",
+      "price": "Precio de la habitación",
+      "create": "Registrar Habitación"
+    }
   },
   "sidebar": {
     "dashboard": "Panel",
