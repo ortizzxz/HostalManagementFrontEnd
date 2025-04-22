@@ -16,13 +16,25 @@
     "empty": "No Anouncements To Display"
   },
   "reservation": {
-    "list": "Reservations",
     "create": "Create Reservation",
+    "room": "Room",
+    "selectRoom": "Select a Room",
+    "inDate": "Check-In",
+    "outDate": "Check-Out",
+    "guest": "Guest",
+    "nif": "NIF",
+    "name": "Name",
+    "lastname": "Lastname",
+    "email": "Email",
+    "phone": "Phone",
+    "addGuest": "Add Another Guest",
+    "list": "Reservations",
     "update": "Update Reservation",
     "delete": "Delete Reservation",
     "empty": "No Reservation To Display"
   },
   "guest": {
+    "guest": "Guest",
     "list": "Guests",
     "create": "Register Guest",
     "update": "Update Guest",
@@ -30,11 +42,13 @@
     "empty": "No Guests To Display"
   },
   "room": {
+    "room": "Rooms",
     "list": "Rooms",
     "create": "Register Room",
     "update": "Update Room",
     "delete": "Delete Room",
     "empty": "No Rooms To Display",
+    "status": "Status",
 
     "creation": {
       "number": "Room Number",

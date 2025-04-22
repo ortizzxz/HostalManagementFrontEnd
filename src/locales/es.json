@@ -23,6 +23,7 @@
     "empty": "No hay Reservas para mostar"
   },
   "guest": {
+    "guest": "Huésped",
     "list": "Huéspedes",
     "create": "Registrar Huésped",
     "update": "Actualizar Huésped",
@@ -30,12 +31,13 @@
     "empty": "No hay Huéspedes para mostar"
   },
   "room": {
+    "room": "Habitación",
     "list": "Habitaciones",
     "create": "Registrar Habitación",
     "update": "Actualizar Habitación",
     "delete": "Eliminar Habitación",
     "empty": "No hay Habitacones para mostar",
-
+    "status": "Estado",
     "creation": {
       "number": "Número de Habitación",
       "type": "Tipo de Habitación",

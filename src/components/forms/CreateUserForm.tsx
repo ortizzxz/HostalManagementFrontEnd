@@ -55,6 +55,7 @@ const CreateUserForm = () => {
       setFormData({ name: "", lastname: "", email: "", password: "", rol: "" });
     } catch (error) {
       setApiError("Failed to create user. Please try again.");
+      console.log(error)
     } finally {
       setLoading(false);
     }

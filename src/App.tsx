@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import CreateUserForm from "./components/forms/CreateUserForm";
 import CreateAnouncementForm from "./components/forms/CreateAnouncementForm";
 import CreateRoomForm from "./components/forms/CreateRoomForm";
+import CreateReservationForm from "./components/forms/CreateReservationForm";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/create-user" element={<CreateUserForm />} />
             <Route path="/create-announcement" element={<CreateAnouncementForm />} />
             <Route path="/create-room" element={<CreateRoomForm />} />
+            <Route path="/create-reservation" element={<CreateReservationForm />} />
           </Routes>
         </div>
       </div>

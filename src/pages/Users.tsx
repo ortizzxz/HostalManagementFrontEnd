@@ -49,7 +49,7 @@ const Users = () => {
 
       {/* User list */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-        {users.length > 0 ? (
+        { (
           users.map((user) => (
             <div
               key={user.id}
@@ -69,9 +69,7 @@ const Users = () => {
               </div>
             </div>
           ))
-        ) : (
-          <h1>No users found.</h1>
-        )}
+        ) }
       </div>
     </div>
   );

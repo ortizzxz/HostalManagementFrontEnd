@@ -137,7 +137,7 @@ const CreateAnouncementForm = () => {
                 onChange={(date: Date | null) =>
                   setFormData({ ...formData, expirationDate: date })
                 }
-                className={`w-full border dark:bg-gray-900  p-2 border text-white text-center ${
+                className={`w-full border dark:bg-gray-900  p-2 border text-black dark:text-white text-center ${
                   errors.expirationDate ? "border-red-500" : "border-gray-300"
                 } rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                 dateFormat="dd.MM.yyyy"

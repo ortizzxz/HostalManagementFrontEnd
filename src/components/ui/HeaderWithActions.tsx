@@ -23,7 +23,7 @@ const HeaderWithActions: React.FC<HeaderWithActionsProps> = ({
 }) => {
   const [showActions, setShowActions] = useState(() => {
     const saved = localStorage.getItem("showActions");
-    return saved !== null ? JSON.parse(saved) : true;
+    return saved !== null ? JSON.parse(saved) : false;
   });
 
   useEffect(() => {

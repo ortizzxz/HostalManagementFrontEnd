@@ -71,35 +71,31 @@ const Announcements = () => {
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {announcements.length > 0 ? (
-          announcements.map((announcement) => (
-            <div
-              key={announcement.id}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-300 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-default"
-            >
-              <div className="p-6">
-                <h2 className="text-xl font-semibold mb-2">
-                  {announcement.title}
-                </h2>
-                <p className="text-sm text-gray-500 mb-4">
-                  {announcement.content}
-                </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-400">
-                    {t("announcement.postDate")} -{" "}
-                    {new Date(announcement.postDate).toLocaleDateString()}
-                  </span>
-                  <span className="text-sm text-gray-400">
-                    {t("announcement.expirationDate")} -{" "}
-                    {new Date(announcement.expirationDate).toLocaleDateString()}
-                  </span>
-                </div>
+        {announcements.map((announcement) => (
+          <div
+            key={announcement.id}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-300 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-default"
+          >
+            <div className="p-6">
+              <h2 className="text-xl font-semibold mb-2">
+                {announcement.title}
+              </h2>
+              <p className="text-sm text-gray-500 mb-4">
+                {announcement.content}
+              </p>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-400">
+                  {t("announcement.postDate")} -{" "}
+                  {new Date(announcement.postDate).toLocaleDateString()}
+                </span>
+                <span className="text-sm text-gray-400">
+                  {t("announcement.expirationDate")} -{" "}
+                  {new Date(announcement.expirationDate).toLocaleDateString()}
+                </span>
               </div>
             </div>
-          ))
-        ) : (
-          <p>{t("announcement.empty")}</p>
-        )}
+          </div>
+        ))}
       </div>
     </div>
   );

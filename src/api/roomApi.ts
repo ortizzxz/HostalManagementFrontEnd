@@ -13,7 +13,15 @@ interface Room {
 }
 
 // Get all Rooms
-
+export const getRooms = async (): Promise<Room[]> => {
+  try {
+    const response = await axios.get<Room[]>(API_URL);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw error; // Re-throw to let the caller handle it
+  }
+}
 
 // Create a new room
 export const createRoom = async (
