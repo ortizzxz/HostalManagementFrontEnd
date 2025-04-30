@@ -22,7 +22,7 @@ const Sidebar = () => {
 
       {/* Navigation Section */}
       <nav className="flex flex-col space-y-4 flex-1">
-        <Link to="/" className="sidebar-link">
+        <Link to="/dashboard" className="sidebar-link">
           <Home className="icon" /> {t("sidebar.dashboard")}
         </Link>
 

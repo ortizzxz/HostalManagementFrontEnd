@@ -78,5 +78,12 @@
     "enableNotifications": "Enable Notifications",
     "disableNotifications": "Disable Notifications",
     "close": "Close"
+  },
+  "login": {
+    "login": "Log In",
+    "email": "Email",
+    "password": "Password",
+    "wait": "Logging In...",
+    "enter": "Log In"
   }
 }

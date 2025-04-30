@@ -66,5 +66,12 @@
     "enableNotifications": "Activar Notificaciones",
     "disableNotifications": "Desactivar Notificaciones",
     "close": "Cerrar"
+  },
+  "login": {
+    "login": "Inicie Sesión",
+    "email": "Email",
+    "password": "Contraseña",
+    "wait": "Ingresando...",
+    "enter": "Ingresar"
   }
 }

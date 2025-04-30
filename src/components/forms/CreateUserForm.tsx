@@ -12,14 +12,37 @@ import {
 } from "../ui/select";
 import { Card, CardContent } from "../ui/card.js";
 import { Loader2 } from "lucide-react";
+import { jwtDecode } from "jwt-decode";
+import { redirect } from "react-router-dom";
+
+interface MyJwtPayload {
+  tenantId?: string | number;
+  // add other custom claims if needed
+}
 
 const CreateUserForm = () => {
+  const token = localStorage.getItem("token");
+  let tenantId = 0;
+
+  if (!token) {
+    console.log("Token not found");
+    redirect("/login");
+  }
+
+  try {
+    const decoded = jwtDecode<MyJwtPayload>(token);
+    tenantId = Number(decoded.tenantId) || 0;
+  } catch (err) {
+    console.error("Invalid token", err);
+  }
+
   const [formData, setFormData] = useState({
     name: "",
     lastname: "",
     email: "",
     password: "",
     rol: "",
+    tenant: tenantId,
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -52,10 +75,17 @@ const CreateUserForm = () => {
     try {
       await createUser(formData);
       alert("User created successfully!");
-      setFormData({ name: "", lastname: "", email: "", password: "", rol: "" });
+      setFormData({
+        name: "",
+        lastname: "",
+        email: "",
+        password: "",
+        rol: "",
+        tenant: tenantId,
+      });
     } catch (error) {
       setApiError("Failed to create user. Please try again.");
-      console.log(error)
+      console.log(error);
     } finally {
       setLoading(false);
     }
