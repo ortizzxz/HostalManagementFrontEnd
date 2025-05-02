@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -7,9 +7,11 @@ import { loginUser } from "../../api/userApi"; // this handles token storage
 import { useTranslation } from "react-i18next";
 
 const LoginPage = () => {
+  const location = useLocation();
+  const routeState = location.state as { error?: string };
+  const [error, setError] = useState<string | null>(routeState?.error || null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -22,7 +24,7 @@ const LoginPage = () => {
       await loginUser(email, password); // token is stored inside loginUser
       navigate("/dashboard"); // Redirect to dashboard after successful login
     } catch (err) {
-      setError("Login failed. Please check your credentials. " + err);
+      setError(t('login.login_failed'));
     } finally {
       setLoading(false);
     }

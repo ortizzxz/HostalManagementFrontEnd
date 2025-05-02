@@ -84,6 +84,8 @@
     "email": "Email",
     "password": "Password",
     "wait": "Logging In...",
-    "enter": "Log In"
+    "enter": "Log In",
+    "login_failed": "Login failed. Please check your credentials.",
+    "session_expired": "Session expired. Please log in again."
   }
 }

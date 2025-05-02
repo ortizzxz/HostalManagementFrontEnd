@@ -91,11 +91,8 @@ export const deleteUser = async (id: string): Promise<void> => {
 // log in an user
 export const loginUser = async (email, password) => {
   try {
-    // const response = await axios.post(AUTH_URL + '/login', { email, password });
     const response = await axios.post(`${AUTH_URL}/login`, { email, password });
-    console.log("Login response:", response); // Log the entire response to verify token
     const token = response.data;
-    console.log("Token from response:", token); // Ensure the token is in response.data.token
 
     if (token) {
       localStorage.setItem("token", token); // Store the token in localStorage
