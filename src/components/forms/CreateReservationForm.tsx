@@ -109,7 +109,7 @@ const CreateReservationForm = () => {
                 <option value="">{t("reservation.selectRoom")}</option>
                 {rooms.map(room => (
                   <option key={room.id} value={room.id}>
-                    {room.number} — {room.capacity} guests
+                    n.º {room.number} — {room.capacity} guests
                   </option>
                 ))}
               </select>
@@ -133,7 +133,7 @@ const CreateReservationForm = () => {
                 <h4 className="font-semibold dark:text-white">👤 {t("reservation.guest")} #{index + 1}</h4>
                 {["nif", "name", "lastname", "email", "phone"].map(field => (
                   <div key={field}>
-                    <Label className="block text-sm dark:text-gray-300 capitalize">{field}</Label>
+                    <Label className="block text-sm dark:text-gray-300 capitalize p-2">{field}</Label>
                     <Input
                       type="text"
                       value={guest[field as keyof Guest]}
