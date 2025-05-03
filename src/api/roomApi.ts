@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api/room";
+// const API_URL = "http://localhost:8080/api/room";
+const API_URL = "https://hostalmanagementbackend.onrender.com/api/room";
 
 // Define TypeScript interfaces for your data
 interface Room {

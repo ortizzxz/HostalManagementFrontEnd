@@ -1,8 +1,10 @@
 import axios from "axios";
 
 // Base URL for your API
-const API_URL = "http://localhost:8080/api/user";
-const AUTH_URL = "http://localhost:8080/api/auth"; // For authentication (login)
+// const API_URL = "http://localhost:8080/api/user";
+// const AUTH_URL = "http://localhost:8080/api/auth"; // For authentication (login)
+const API_URL = "https://hostalmanagementbackend.onrender.com/api/user";
+const AUTH_URL = "https://hostalmanagementbackend.onrender.com/api/auth"; // For authentication (login)
 
 // TypeScript interface for User data
 interface User {

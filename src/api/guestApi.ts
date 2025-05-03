@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const GUEST_API_URL = "http://localhost:8080/api/guest";
+// const GUEST_API_URL = "http://localhost:8080/api/guest";
+const GUEST_API_URL = "https://hostalmanagementbackend.onrender.com/api/guest";
 
 export interface Guest {
   nif: string;
@@ -15,6 +16,7 @@ export const getGuestByNIF = async (nif: string): Promise<Guest | null> => {
     const response = await axios.get<Guest>(`${GUEST_API_URL}/${nif}`);
     return response.data;
   } catch (error) {
+    console.log('Error: ', error)
     return null; // not found or error
   }
 };
