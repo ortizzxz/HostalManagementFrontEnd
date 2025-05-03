@@ -11,13 +11,14 @@
     "create": "Create Announcement",
     "update": "Update Announcement",
     "delete": "Delete Announcement",
-    "postDate": "Post Date",
-    "expirationDate": "Expiration Date",
+    "postDate": "Post",
+    "expirationDate": "Expiration",
     "empty": "No Anouncements To Display"
   },
   "reservation": {
+    "reservation": "Reservation",
     "create": "Create Reservation",
-    "room": "Room",
+    "room": "Room Number",
     "selectRoom": "Select a Room",
     "inDate": "Check-In",
     "outDate": "Check-Out",
@@ -31,7 +32,14 @@
     "list": "Reservations",
     "update": "Update Reservation",
     "delete": "Delete Reservation",
-    "empty": "No Reservation To Display"
+    "empty": "No Reservation To Display",
+    "guest_summary": "Guests Added",
+    "status": "Status",
+    "guests": "Num. Guests",
+    "confirmed": "Confirmed",
+    "pending": "Pending",
+    "cancelled": "Cancelled",
+    "guest_details": "Guests Details"
   },
   "guest": {
     "guest": "Guest",
@@ -42,7 +50,7 @@
     "empty": "No Guests To Display"
   },
   "room": {
-    "room": "Rooms",
+    "room": "Room",
     "list": "Rooms",
     "create": "Register Room",
     "update": "Update Room",

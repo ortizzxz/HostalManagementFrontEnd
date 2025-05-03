@@ -21,6 +21,7 @@ const Guests = () => {
       {/* Header with actions */}
       <HeaderWithActions
         title={t("guest.list")}
+        onCreate={handleCreateReservation}
         onUpdate={handleUpdateReservation}
         onDelete={handleDeleteReservation}
         updateLabel={t("guest.update")}

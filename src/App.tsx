@@ -13,6 +13,7 @@ import LoginPage from "./components/auth/LoginForm";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Announcements from "./pages/Anouncements";
 
+
 function App() {
   return (
     <Router>
@@ -28,9 +29,9 @@ function App() {
 
             {/* Standard Routes */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/guests" element={<ProtectedRoute><Guests /></ProtectedRoute>} />
             <Route path="/reservations" element={<ProtectedRoute><Reservations /></ProtectedRoute>} />
             <Route path="/rooms" element={<ProtectedRoute><Rooms/></ProtectedRoute>} />
-            <Route path="/guests" element={<ProtectedRoute><Guests /></ProtectedRoute>} />
             <Route path="/announcements" element={<ProtectedRoute><Announcements /></ProtectedRoute>} />
             <Route path="/users" element={<ProtectedRoute><Users/></ProtectedRoute>} />
 

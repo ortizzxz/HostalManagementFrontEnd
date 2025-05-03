@@ -1,5 +1,4 @@
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 
 // Base URL for your API
 const API_URL = "http://localhost:8080/api/user";
@@ -7,10 +6,11 @@ const AUTH_URL = "http://localhost:8080/api/auth"; // For authentication (login)
 
 // TypeScript interface for User data
 interface User {
-  id: string;
+  id: number;
   name: string;
   lastname: string;
   email: string;
+  password: string;
   role?: string; // Optional field
   tenantId?: number; // Assuming tenantId is part of the user data, optional if not required.
   createdAt?: Date;
@@ -89,7 +89,7 @@ export const deleteUser = async (id: string): Promise<void> => {
 };
 
 // log in an user
-export const loginUser = async (email, password) => {
+export const loginUser = async (email: string, password: string) => {
   try {
     const response = await axios.post(`${AUTH_URL}/login`, { email, password });
     const token = response.data;

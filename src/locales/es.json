@@ -16,11 +16,19 @@
     "empty": "No hay Anuncios para mostrar"
   },
   "reservation": {
+    "reservation": "Reserva",
     "list": "Reservas",
     "create": "Crear Reserva",
     "update": "Actualizar Reserva",
     "delete": "Eliminar Reservas",
-    "empty": "No hay Reservas para mostar"
+    "empty": "No hay Reservas para mostar",
+    "guest_summary": "Huéspedes Añadidos",
+    "status": "Estado",
+    "guests": "N.º Húespedes",
+    "confirmed": "Confirmada",
+    "pending": "Pendiente",
+    "cancelled": "Cancelada",
+    "guest_details": "Detalles de Huéspedes"
   },
   "guest": {
     "guest": "Huésped",

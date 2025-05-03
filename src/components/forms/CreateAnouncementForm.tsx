@@ -52,16 +52,24 @@ const CreateAnouncementForm = () => {
     if (!validateForm()) return;
     setLoading(true);
     setApiError(null);
+
+    // Ensure expirationDate is a valid Date or string
+    const announcementData = {
+      ...formData,
+      expirationDate: formData.expirationDate ?? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // two weeks from now
+    };
+
     try {
-      await createAnnouncement(formData);
+      await createAnnouncement(announcementData);
       alert("📣 Announcement created successfully!");
       setFormData({
         title: "",
         content: "",
         postDate: new Date(),
-        expirationDate: null,
+        expirationDate: null, // Resetting expirationDate
       });
     } catch (error) {
+      console.log("Error creating announcement: ", error);
       setApiError("❌ Failed to create announcement. Please try again.");
     } finally {
       setLoading(false);
@@ -127,7 +135,7 @@ const CreateAnouncementForm = () => {
             <div>
               <Label
                 htmlFor="expirationDate"
-                className="text-sm font-medium text-gray-700 dark:text-gray-300 my-2 block"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300 my-2 block "
               >
                 📅 Expiration Date
               </Label>
@@ -140,9 +148,9 @@ const CreateAnouncementForm = () => {
                 className={`w-full border dark:bg-gray-900  p-2 border text-black dark:text-white text-center ${
                   errors.expirationDate ? "border-red-500" : "border-gray-300"
                 } rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                dateFormat="dd.MM.yyyy"
+                dateFormat="dd-MM-yyyy"
                 minDate={new Date()}
-                placeholderText="Change expiration date placeholder"
+                placeholderText="01/01/2025"
               />
               {errors.expirationDate && (
                 <p className="text-red-500 text-xs mt-1">

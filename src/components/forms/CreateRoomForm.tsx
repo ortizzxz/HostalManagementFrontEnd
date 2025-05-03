@@ -1,14 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Button } from "../ui/button.js";
 import { Input } from "../ui/input.js";
 import { Label } from "../ui/label.js";
 import { Card, CardContent } from "../ui/card.js";
-import { Loader2, Hash, LayoutTemplate, Users, DollarSign } from "lucide-react"; // Icons
+import { Loader2, Hash, LayoutTemplate, Users, DollarSign } from "lucide-react";
 import { createRoom } from "../../api/roomApi";
 import { useTranslation } from "react-i18next";
 
-const CreateRoomForm = () => {
-  const [formData, setFormData] = useState({
+interface RoomFormData {
+  number: string;
+  type: string;
+  capacity: string;
+  baseRate: string;
+  state: "DISPONIBLE";
+}
+
+interface RoomFormErrors {
+  number?: string;
+  type?: string;
+  capacity?: string;
+  baseRate?: string;
+}
+
+const CreateRoomForm: React.FC = () => {
+  const [formData, setFormData] = useState<RoomFormData>({
     number: "",
     type: "",
     capacity: "",
@@ -17,42 +32,50 @@ const CreateRoomForm = () => {
   });
 
   const { t } = useTranslation();
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<RoomFormErrors>({});
   const [loading, setLoading] = useState(false);
-const [apiError, setApiError] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
 
-  const validateForm = () => {
-    const newErrors = {};
+  const validateForm = (): boolean => {
+    const newErrors: RoomFormErrors = {};
 
-    /* Room Number Validation */
-    if (!formData.number) newErrors.number = "Room number is required.";
-    /* Room Type Validation */
-    if (!formData.type) newErrors.type = "Room type is required.";
-    /* Room Capacity Validation */
-    if (!formData.capacity || isNaN(Number(formData.capacity)) || Number(formData.capacity) <= 0) {
-        newErrors.capacity = "Valid capacity is required.";
+    if (!formData.number.trim()) newErrors.number = "Room number is required.";
+    if (!formData.type.trim()) newErrors.type = "Room type is required.";
+
+    const capacityNum = Number(formData.capacity);
+    if (!formData.capacity || isNaN(capacityNum) || capacityNum <= 0) {
+      newErrors.capacity = "Valid capacity is required.";
     }
-    /* Room Rate Validation */
-    if (!formData.baseRate || isNaN(Number(formData.baseRate)) || Number(formData.baseRate) <= 0){
-        newErrors.baseRate = "Valid base rate is required.";
+
+    const baseRateNum = Number(formData.baseRate);
+    if (!formData.baseRate || isNaN(baseRateNum) || baseRateNum <= 0) {
+      newErrors.baseRate = "Valid base rate is required.";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm()) return;
+
     setLoading(true);
     setApiError(null);
+
     try {
-      await createRoom(formData);
+      await createRoom({
+        number: formData.number.trim(),
+        type: formData.type.trim(),
+        capacity: Number(formData.capacity),
+        baseRate: Number(formData.baseRate),
+        state: formData.state,
+      });
       alert("🎉 Room created successfully!");
       setFormData({
         number: "",
@@ -92,7 +115,7 @@ const [apiError, setApiError] = useState<string | null>(null);
                   value={formData.number}
                   onChange={handleChange}
                   className={`pl-8 ${errors.number ? "border-red-500" : ""}`}
-                  placeholder="Change room number placeholder"
+                  placeholder="Enter room number"
                 />
               </div>
               {errors.number && <p className="text-red-500 text-xs mt-1">{errors.number}</p>}
@@ -112,7 +135,7 @@ const [apiError, setApiError] = useState<string | null>(null);
                   value={formData.type}
                   onChange={handleChange}
                   className={`pl-8 ${errors.type ? "border-red-500" : ""}`}
-                  placeholder="Change room type placeholder"
+                  placeholder="Enter room type"
                 />
               </div>
               {errors.type && <p className="text-red-500 text-xs mt-1">{errors.type}</p>}
@@ -132,7 +155,7 @@ const [apiError, setApiError] = useState<string | null>(null);
                   value={formData.capacity}
                   onChange={handleChange}
                   className={`pl-8 ${errors.capacity ? "border-red-500" : ""}`}
-                  placeholder="Change room capacity placeholder"
+                  placeholder="Enter capacity"
                 />
               </div>
               {errors.capacity && <p className="text-red-500 text-xs mt-1">{errors.capacity}</p>}
@@ -152,7 +175,7 @@ const [apiError, setApiError] = useState<string | null>(null);
                   value={formData.baseRate}
                   onChange={handleChange}
                   className={`pl-8 ${errors.baseRate ? "border-red-500" : ""}`}
-                  placeholder="Change room rate placeholder"
+                  placeholder="Enter base rate"
                 />
               </div>
               {errors.baseRate && <p className="text-red-500 text-xs mt-1">{errors.baseRate}</p>}

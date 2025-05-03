@@ -21,7 +21,7 @@ interface MyJwtPayload {
 }
 
 const CreateUserForm = () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") || "";
   let tenantId = 0;
 
   if (!token) {
@@ -44,12 +44,12 @@ const CreateUserForm = () => {
     rol: "",
     tenant: tenantId,
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
-  const [apiError, setApiError] = useState(null);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: { [key: string]: string } = {};
     if (!formData.name.trim()) newErrors.name = "Name is required.";
     if (!formData.lastname.trim()) newErrors.lastname = "Lastname is required.";
     if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
@@ -63,11 +63,36 @@ const CreateUserForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  type FieldName = keyof typeof formData;
+
+  const fields: { name: FieldName; label: string; placeholder: string }[] = [
+    {
+      name: "name",
+      label: "🧑 First Name",
+      placeholder: "Enter first name",
+    },
+    {
+      name: "lastname",
+      label: "👤 Last Name",
+      placeholder: "Enter last name",
+    },
+    {
+      name: "email",
+      label: "📧 Email",
+      placeholder: "Enter email address",
+    },
+    {
+      name: "password",
+      label: "🔒 Password",
+      placeholder: "Create a secure password",
+    },
+  ];
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
     setLoading(true);
@@ -99,28 +124,7 @@ const CreateUserForm = () => {
         </h1>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {[
-              {
-                name: "name",
-                label: "🧑 First Name",
-                placeholder: "Enter first name",
-              },
-              {
-                name: "lastname",
-                label: "👤 Last Name",
-                placeholder: "Enter last name",
-              },
-              {
-                name: "email",
-                label: "📧 Email",
-                placeholder: "Enter email address",
-              },
-              {
-                name: "password",
-                label: "🔒 Password",
-                placeholder: "Create a secure password",
-              },
-            ].map(({ name, label, placeholder }) => (
+            {fields.map(({ name, label, placeholder }) => (
               <div key={name}>
                 <Label
                   htmlFor={name}

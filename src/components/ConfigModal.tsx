@@ -1,5 +1,5 @@
 import { Bell, BellOff, Languages, Moon, Sun } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 const ConfigModal = () => {
@@ -22,7 +22,7 @@ const ConfigModal = () => {
 
   // Close modal with Escape key
   useEffect(() => {
-    const handleKeyDown = (event) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
       }
@@ -38,16 +38,16 @@ const ConfigModal = () => {
   }, [isOpen]);
 
   // Toggle modal visibility
-  const toggleModal = () => setIsOpen(!isOpen);
+  const toggleModal = () => setIsOpen((prev) => !prev);
 
   // Change language
-  const handleLanguageChange = (lang) => {
+  const handleLanguageChange = (lang: string) => {
     i18n.changeLanguage(lang);
     localStorage.setItem("language", lang);
   };
 
   // Change theme
-  const handleThemeChange = (theme) => {
+  const handleThemeChange = (theme: "light" | "dark") => {
     if (theme === "light") {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("theme", "light");
@@ -58,12 +58,10 @@ const ConfigModal = () => {
   };
 
   // Helper for tab button classes
-  const getTabClass = (tab) =>
-    `px-4 py-2 w-1/3 text-center ${
-      activeTab === tab ? "bg-gray-600" : "bg-gray-700"
-    }`;
+  const getTabClass = (tab: string) =>
+    `px-4 py-2 w-1/3 text-center ${activeTab === tab ? "bg-gray-600" : "bg-gray-700"}`;
 
-  // Render tab content
+  // Render tab content based on activeTab
   const renderTabContent = () => {
     switch (activeTab) {
       case "languages":
@@ -136,7 +134,7 @@ const ConfigModal = () => {
             <h3 id="modal-title" className="text-xl font-semibold mb-4">
               {t("modal.settings")}
             </h3>
-  
+
             {/* Tab Navigation */}
             <div className="flex border-b-2 border-gray-600 mb-4">
               <button
@@ -155,10 +153,10 @@ const ConfigModal = () => {
                 {t("modal.notifications")}
               </button>
             </div>
-  
+
             {/* Tab Content */}
             <div className="mt-4">{renderTabContent()}</div>
-  
+
             {/* Close Button */}
             <div className="mt-4 flex justify-end">
               <button
@@ -171,7 +169,7 @@ const ConfigModal = () => {
           </div>
         </div>
       )}
-  
+
       {/* Button to open the modal */}
       <button
         onClick={toggleModal}
@@ -181,7 +179,6 @@ const ConfigModal = () => {
       </button>
     </>
   );
-  
 };
 
 export default ConfigModal;

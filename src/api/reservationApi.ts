@@ -13,6 +13,7 @@ export interface GuestDTO {
 }
 
 export interface ReservationDTO {
+  id: number;
   roomId: string | number;
   inDate: string; // ISO date string
   outDate: string; // ISO date string
@@ -40,7 +41,7 @@ export const getReservations = async (): Promise<ReservationDTO[]> => {
 // Create a new reservation
 export const createReservation = async (
   guestReservationData: GuestReservationDTO
-): Promise<any> => {
+): Promise<ReservationDTO> => {
   try {
     const response = await axios.post(API_URL, guestReservationData.reservationDTO);
     return response.data;

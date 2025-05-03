@@ -24,6 +24,7 @@ const LoginPage = () => {
       await loginUser(email, password); // token is stored inside loginUser
       navigate("/dashboard"); // Redirect to dashboard after successful login
     } catch (err) {
+      console.log('Error loging in ', err)
       setError(t('login.login_failed'));
     } finally {
       setLoading(false);

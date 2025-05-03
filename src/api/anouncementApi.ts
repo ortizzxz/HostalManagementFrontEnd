@@ -4,7 +4,7 @@ const API_URL = "http://localhost:8080/api/announcement";
 
 // Define TypeScript interfaces for your data
 interface Announcement {
-  id: string;
+  id: number;
   title: string;
   content: string;
   postDate: string | Date;

@@ -29,8 +29,8 @@ const Sidebar = () => {
         {/* Divider */}
         <div className="divider"></div>
 
-        <Link to="/reservations" className="sidebar-link">
-          <CalendarCheck className="icon" /> {t("sidebar.reservations")}
+        <Link to="/guests" className="sidebar-link">
+          <PersonStanding className="icon" /> {t("sidebar.guests")}
         </Link>
 
         {/* Divider */}
@@ -43,8 +43,8 @@ const Sidebar = () => {
         {/* Divider */}
         <div className="divider"></div>
 
-        <Link to="/guests" className="sidebar-link">
-          <PersonStanding className="icon" /> {t("sidebar.guests")}
+        <Link to="/reservations" className="sidebar-link">
+          <CalendarCheck className="icon" /> {t("sidebar.reservations")}
         </Link>
 
         {/* Divider */}
