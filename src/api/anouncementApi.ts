@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const API_URL = "http://localhost:8080/api/announcement";
-const API_URL = "https://hostalmanagementbackend.onrender.com/announcement";
+const API_URL = "https://hostalmanagementbackend.onrender.com/api/announcement";
 
 // Define TypeScript interfaces for your data
 interface Announcement {
