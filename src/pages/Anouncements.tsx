@@ -15,6 +15,7 @@ interface Announcement {
   content: string;
   postDate: string | Date;
   expirationDate: string | Date;
+  tenantId: number;
 }
 
 const Announcements = () => {
@@ -47,16 +48,17 @@ const Announcements = () => {
     fetchAnnouncements();
   }, []);
 
-  useEffect(() => {
-    if (realTimeAnnouncements.length > 0) {
-      setAnnouncements((prev) => {
-        const newAnnouncements = realTimeAnnouncements.filter(
-          (msg) => !prev.some((announcement) => announcement.id === msg.id)
-        );
-        return [...prev, ...newAnnouncements];
-      });
-    }
-  }, [realTimeAnnouncements]);
+  // Add tenantId to filtered announcements before merging
+  setAnnouncements((prev) => {
+    const newAnnouncements = realTimeAnnouncements
+      .filter((msg) => !prev.some((announcement) => announcement.id === msg.id))
+      .map((msg) => ({
+        ...msg,
+        tenantId: msg.tenantId || Number(localStorage.getItem("tenantid")), // Add missing tenantId
+      }));
+
+    return [...prev, ...newAnnouncements];
+  });
 
   const handleCreateAnnouncement = () => {
     navigate("/create-announcement");
@@ -123,7 +125,7 @@ const Announcements = () => {
             >
               <div className="p-6">
                 <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
-                  #{announcement.id} - {announcement.title} {""} 
+                  #{announcement.id} - {announcement.title} {""}
                   <button
                     onClick={() => handleDeleteAnnouncement(announcement.id)}
                     className="text-red-500 hover:text-red-700"

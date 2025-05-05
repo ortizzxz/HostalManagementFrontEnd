@@ -13,6 +13,7 @@ interface Announcement {
   content: string;
   postDate: string | Date;
   expirationDate: string | Date;
+  tenantId: number;
 }
 
 // Create WebSocket context

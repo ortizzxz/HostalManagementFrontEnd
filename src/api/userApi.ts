@@ -46,9 +46,9 @@ axiosInstance.interceptors.request.use(
 );
 
 // Get all users with proper typing, handling tenant information
-export const getUsers = async (tenantId: number): Promise<User[]> => {
+export const getUsers = async (): Promise<User[]> => {
   try {
-    tenantId = Number(localStorage.getItem("tenantId"));
+    const tenantId = Number(localStorage.getItem("tenantId"));
     const response = await axiosInstance.get<User[]>(API_URL, {
       params: { tenantId },
     });

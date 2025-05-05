@@ -12,10 +12,6 @@ const Guests = () => {
     console.log("Actualizando");
   };
 
-  const handleDeleteReservation = () => {
-    console.log("Borrando");
-  };
-
   return (
     <div className="text-black dark:text-white">
       {/* Header with actions */}
@@ -23,9 +19,7 @@ const Guests = () => {
         title={t("guest.list")}
         onCreate={handleCreateReservation}
         onUpdate={handleUpdateReservation}
-        onDelete={handleDeleteReservation}
         updateLabel={t("guest.update")}
-        deleteLabel={t("guest.delete")}
       />
     </div>
   );

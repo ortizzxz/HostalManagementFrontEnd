@@ -14,6 +14,7 @@ type AnnouncementForm = {
   content: string;
   postDate: Date;
   expirationDate: Date | null;
+  tenantId: number;
 };
 
 type FormErrors = Partial<Record<keyof AnnouncementForm, string>>;
@@ -24,6 +25,7 @@ const CreateAnouncementForm = () => {
     content: "",
     postDate: new Date(),
     expirationDate: null,
+    tenantId: Number(localStorage.getItem("tenantId"))| 0
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -67,6 +69,7 @@ const CreateAnouncementForm = () => {
         content: "",
         postDate: new Date(),
         expirationDate: null, // Resetting expirationDate
+        tenantId: Number(localStorage.getItem("tenantId"))| 0
       });
     } catch (error) {
       console.log("Error creating announcement: ", error);

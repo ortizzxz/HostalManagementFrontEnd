@@ -11,16 +11,24 @@ import { getGuestByNIF } from "../../api/guestApi";
 
 // This reflects the raw API data
 interface RoomFromApi {
-  id: string;
+  id: number;
   number: string | number;
+  type: string;
   capacity: string | number;
+  baseRate: string | number;
+  state: string;
+  tenantId: number;
 }
 
 // This is the normalized type used in your UI
 interface Room {
-  id: string;
-  number: string;
+  id: number;
+  number: string | number;
+  type: string;
   capacity: number;
+  baseRate: number;
+  state: string;
+  tenantId: number;
 }
 
 interface Guest {
@@ -65,7 +73,11 @@ const CreateReservationForm: React.FC = () => {
         const normalized: Room[] = data.map((room) => ({
           id: room.id,
           number: String(room.number),
+          type: room.type,
           capacity: Number(room.capacity),
+          baseRate: Number(room.baseRate),
+          state: room.state,
+          tenantId: room.tenantId
         }));
         setRooms(normalized);
       } catch (error) {
@@ -77,18 +89,22 @@ const CreateReservationForm: React.FC = () => {
 
   const handleGuestChange = async (
     index: number,
-    field: keyof Guest,
+    field: Exclude<keyof Guest, 'tenantDTO'>,
     value: string
   ) => {
     const updatedGuests = [...formData.guests];
-    updatedGuests[index][field] = value;
-
+  
+    // Only assign value to string fields
+    if (typeof updatedGuests[index][field] === "string") {
+      updatedGuests[index][field] = value as Guest[typeof field];
+    }
+  
     // Add tenantId from localStorage if it's available
     const tenantId = localStorage.getItem("tenantid");
     if (tenantId) {
       updatedGuests[index].tenantDTO.id = Number(tenantId);
     }
-
+  
     // Handle guest lookup for NIF
     if (field === "nif" && value.length >= 7) {
       try {
@@ -100,9 +116,10 @@ const CreateReservationForm: React.FC = () => {
         console.warn("Error fetching guest by NIF:", error);
       }
     }
-
+  
     setFormData({ ...formData, guests: updatedGuests });
   };
+  
 
   const addGuest = () => {
     const newGuest: Guest = {
@@ -165,7 +182,7 @@ const CreateReservationForm: React.FC = () => {
             email: "",
             phone: "",
             tenantDTO: { id: Number(localStorage.getItem("tenantid")) || 0 },
-          }
+          },
         ],
       });
     } catch (error) {
