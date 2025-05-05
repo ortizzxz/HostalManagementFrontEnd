@@ -72,7 +72,8 @@
     "rooms": "Rooms",
     "guests": "Guests",
     "announcements": "Announcements",
-    "users": "Users"
+    "users": "Users",
+    "checkins": "Check In/Out"
   },
   "modal": {
     "settings": "Settings",

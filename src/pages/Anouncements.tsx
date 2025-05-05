@@ -49,17 +49,21 @@ const Announcements = () => {
   }, []);
 
   // Add tenantId to filtered announcements before merging
-  setAnnouncements((prev) => {
-    const newAnnouncements = realTimeAnnouncements
-      .filter((msg) => !prev.some((announcement) => announcement.id === msg.id))
-      .map((msg) => ({
-        ...msg,
-        tenantId: msg.tenantId || Number(localStorage.getItem("tenantid")), // Add missing tenantId
-      }));
-
-    return [...prev, ...newAnnouncements];
-  });
-
+  useEffect(() => {
+    if (!realTimeAnnouncements || realTimeAnnouncements.length === 0) return;
+  
+    setAnnouncements((prev) => {
+      const newAnnouncements = realTimeAnnouncements
+        .filter((msg) => !prev.some((announcement) => announcement.id === msg.id))
+        .map((msg) => ({
+          ...msg,
+          tenantId: msg.tenantId || Number(localStorage.getItem("tenantid")),
+        }));
+  
+      return [...prev, ...newAnnouncements];
+    });
+  }, [realTimeAnnouncements]);
+  
   const handleCreateAnnouncement = () => {
     navigate("/create-announcement");
   };

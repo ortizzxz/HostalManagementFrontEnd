@@ -60,7 +60,8 @@
     "rooms": "Habitaciones",
     "guests": "Huéspedes",
     "announcements": "Anuncios",
-    "users": "Usuarios"
+    "users": "Usuarios",
+    "checkins": "Check In/Out"
   },
   "modal": {
     "settings": "Ajustes",

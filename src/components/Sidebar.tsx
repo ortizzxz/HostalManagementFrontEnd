@@ -6,6 +6,7 @@ import {
   Users,
   MessageCircle,
   PersonStanding,
+  UserRoundCheck,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import ConfigModal from "./ConfigModal";
@@ -45,6 +46,13 @@ const Sidebar = () => {
 
         <Link to="/reservations" className="sidebar-link">
           <CalendarCheck className="icon" /> {t("sidebar.reservations")}
+        </Link>
+
+        {/* Divider */}
+        <div className="divider"></div>
+        
+        <Link to="/checkins" className="sidebar-link">
+          <UserRoundCheck  className="icon" /> {t("sidebar.checkins")}
         </Link>
 
         {/* Divider */}

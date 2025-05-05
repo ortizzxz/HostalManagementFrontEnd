@@ -13,6 +13,7 @@ import LoginPage from "./components/auth/LoginForm";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Announcements from "./pages/Anouncements";
 import { UserProvider } from "./components/auth/UserContext";
+import CheckInOut from "./pages/CheckInOut";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             {/* Standard Routes */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/guests" element={<ProtectedRoute><Guests /></ProtectedRoute>} />
+            <Route path="/checkins" element={<ProtectedRoute><CheckInOut /></ProtectedRoute>} />
             <Route path="/reservations" element={<ProtectedRoute><Reservations /></ProtectedRoute>} />
             <Route path="/rooms" element={<ProtectedRoute><Rooms/></ProtectedRoute>} />
             <Route path="/announcements" element={<ProtectedRoute><Announcements /></ProtectedRoute>} />
