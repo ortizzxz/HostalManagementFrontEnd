@@ -98,5 +98,9 @@
   },
   "filterbar":{
     "search_placeholder": "Search..."
+  },
+  "delete":{
+    "verification_room": "Are you sure you want to delete Room #{{roomNumber}}?",
+    "verification_announcement": "Are you sure you want to delete Announcement #{{announcementNumber}}?"
   }
 }

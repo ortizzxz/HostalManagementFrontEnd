@@ -22,7 +22,7 @@ export const getRooms = async (): Promise<Room[]> => {
     console.error("Error fetching users:", error);
     throw error; // Re-throw to let the caller handle it
   }
-}
+};
 
 // Create a new room
 export const createRoom = async (
@@ -35,4 +35,10 @@ export const createRoom = async (
     console.error("Error creating room:", error);
     throw error; // Re-throw for error handling in components
   }
+};
+
+// Delete a room
+export const deleteRoom = async (id: number) => {
+  const response = await axios.delete(`${API_URL}/${id}`);
+  return response.data;
 };

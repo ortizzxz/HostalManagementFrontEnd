@@ -86,5 +86,9 @@
   },
   "filterbar":{
     "search_placeholder": "Search..."
+  },
+  "delete":{
+    "verification_room": "¿Está seguro que desea eliminar la Habitación #{{roomNumber}}?",
+    "verification_announcement": "¿Está seguro que desea eliminar el Anuncio #{{announcementNumber}}?"
   }
 }

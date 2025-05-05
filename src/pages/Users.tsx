@@ -68,10 +68,7 @@ const Users = () => {
     navigate(`/update-user/${userId}`);
   };
 
-  const handleDeleteUser = (userId: number) => {
-    console.log("Manejar la lógica de eliminación de usuario con ID:", userId);
-    // Implementar lógica de eliminación
-  };
+
 
   return (
     <div className="text-black dark:text-white">
@@ -80,10 +77,8 @@ const Users = () => {
         title={t("user.list")}
         onCreate={handleCreateUser}
         onUpdate={handleUpdateUser} // Now expects userId
-        onDelete={handleDeleteUser} // Now expects userId
         createLabel={t("user.create")}
         updateLabel={t("user.update")}
-        deleteLabel={t("user.delete")}
       />
       {/* Filter Bar */}
       <FilterBar

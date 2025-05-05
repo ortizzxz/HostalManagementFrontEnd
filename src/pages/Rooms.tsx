@@ -2,8 +2,9 @@ import { useTranslation } from "react-i18next";
 import HeaderWithActions from "../components/ui/HeaderWithActions";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getRooms } from "../api/roomApi";
+import { getRooms, deleteRoom } from "../api/roomApi";
 import FilterBar from "../components/ui/FilterBar";
+import DeleteRoomForm from "../components/forms/DeleteRoomForm";
 
 interface Room {
   id: number;
@@ -20,14 +21,21 @@ const Rooms = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const [searchTerm, setSearchTerm] = useState("");
   const [activeRoomFilter, setActiveRoomFilter] = useState(""); // State for custom filter
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [roomToDelete, setRoomToDelete] = useState<Room | null>(null);
 
   // Filter rooms based on search term and active filter
   const filteredRooms = rooms.filter((room) => {
-    const matchesSearch = room.number.toString().toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = activeRoomFilter ? room.state === activeRoomFilter : true;
+    const matchesSearch = room.number
+      .toString()
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesFilter = activeRoomFilter
+      ? room.state === activeRoomFilter
+      : true;
     return matchesSearch && matchesFilter;
   });
-  
+
   // Define filter buttons
   const roomFilterButtons = [
     { label: "Busy Rooms", value: "OCUPADO" },
@@ -35,7 +43,6 @@ const Rooms = () => {
     { label: "On Maintenance", value: "MANTENIMIENTO" },
     { label: "All Rooms", value: "" }, // No filter
   ];
-  
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -60,9 +67,27 @@ const Rooms = () => {
   };
 
   const handleDeleteRoom = (id: number) => {
-    console.log(`Handle deletion for room id: ${id}`);
-    // Logic for room deletion
+    const selectedRoom = rooms.find((r) => r.id === id);
+    if (selectedRoom) {
+      setRoomToDelete(selectedRoom);
+      setShowDeleteModal(true);
+    }
   };
+
+  const confirmDeleteRoom = async () => {
+    if (roomToDelete) {
+      try {
+        await deleteRoom(roomToDelete.id); // API call
+        setRooms((prev) => prev.filter((room) => room.id !== roomToDelete.id));
+      } catch (err) {
+        console.error("Error deleting room:", err);
+      } finally {
+        setShowDeleteModal(false);
+        setRoomToDelete(null);
+      }
+    }
+  };
+  
 
   return (
     <div className="text-black dark:text-white">
@@ -99,13 +124,17 @@ const Rooms = () => {
               </h3>
               <p className="text-sm text-gray-500 mb-1">
                 {t("room.creation.capacity")}: {room.capacity}{" "}
-                {parseInt(room.capacity.toString()) > 1 ? t("guest.list") : t("room.guest")}
+                {parseInt(room.capacity.toString()) > 1
+                  ? t("guest.list")
+                  : t("room.guest")}
               </p>
               <p className="text-sm text-gray-500 mb-1">
                 {t("room.status")}:{" "}
                 <span
                   className={`${
-                    room.state === "DISPONIBLE" ? "text-green-500" : "text-red-500"
+                    room.state === "DISPONIBLE"
+                      ? "text-green-500"
+                      : "text-red-500"
                   } font-semibold`}
                 >
                   {room.state.charAt(0) + room.state.slice(1).toLowerCase()}
@@ -129,6 +158,12 @@ const Rooms = () => {
           </div>
         ))}
       </div>
+      <DeleteRoomForm
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={confirmDeleteRoom}
+        roomNumber={roomToDelete?.number ?? ""}
+      />
     </div>
   );
 };

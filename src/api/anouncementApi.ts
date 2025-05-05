@@ -35,3 +35,10 @@ export const createAnnouncement = async (
     throw error; // Re-throw for error handling in components
   }
 };
+
+
+// Delete an announcement
+export const deleteAnnouncement = async (id: number) => {
+  const response = await axios.delete(`${API_URL}/${id}`);
+  return response.data;
+};
