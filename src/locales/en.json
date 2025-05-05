@@ -95,5 +95,8 @@
     "enter": "Log In",
     "login_failed": "Login failed. Please check your credentials.",
     "session_expired": "Session expired. Please log in again."
+  },
+  "filterbar":{
+    "search_placeholder": "Search..."
   }
 }

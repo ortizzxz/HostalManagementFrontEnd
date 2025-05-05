@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import HeaderWithActions from "../components/ui/HeaderWithActions";
 import { useNavigate } from "react-router-dom";
 import { FaUserShield, FaUserAlt } from "react-icons/fa"; // Usamos iconos de react-icons
+import FilterBar from "../components/ui/FilterBar";
 
 interface User {
   id: number;
@@ -11,7 +12,7 @@ interface User {
   lastname: string;
   email: string;
   password?: string;
-  role?: string;
+  rol?: string;
   tenantId?: number;
   createdAt?: Date;
   updatedAt?: Date;
@@ -21,6 +22,25 @@ const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
   const { t } = useTranslation();
   const navigate = useNavigate(); // Inicializamos useNavigate
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activateUserFilter, setActiveUserFilter] = useState(""); // State for custom filter
+
+  // Filter rooms based on search term and active filter
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch = user.id.toString().toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = activateUserFilter ? user.rol === activateUserFilter : true;
+    return matchesSearch && matchesFilter;
+  });
+  
+  // Define filter buttons
+  const userFilterButtons = [
+    { label: "Admin", value: "ADMIN" },
+    { label: "Reception", value: "RECEPCION" },
+    { label: "Janitors", value: "LIMPIEZA" },
+    { label: "Maintenance", value: "MANTENIMIENTO" },
+    { label: "All", value: "" }, // No filter
+  ];
+  
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -29,6 +49,7 @@ const Users = () => {
         // Filtramos el password
         const filteredUsers = data.map(({...userWithoutPassword }: User) => userWithoutPassword); // Only return the user properties excluding password
         setUsers(filteredUsers); // Establecemos los usuarios
+        console.log(filteredUsers)
       } catch (error) {
         console.error("Error al obtener usuarios:", error);
       }
@@ -64,10 +85,19 @@ const Users = () => {
         updateLabel={t("user.update")}
         deleteLabel={t("user.delete")}
       />
+      {/* Filter Bar */}
+      <FilterBar
+        placeholder={t("filterbar.search_placeholder")}
+        value={searchTerm}
+        onSearchChange={setSearchTerm}
+        activeFilter={activateUserFilter}
+        onFilterChange={setActiveUserFilter}
+        filterButtons={userFilterButtons} // Custom buttons
+      />
 
       {/* Lista de usuarios */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {users.map((user) => (
+        {filteredUsers.map((user) => (
           <div
             key={user.id}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-300 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer"
@@ -90,13 +120,13 @@ const Users = () => {
                 <div className="flex items-center">
                   <span className="text-sm text-gray-500">{t("user.role")}: </span>
                   <span className="ml-2 flex items-center">
-                    {user.role === "ADMIN" ? (
+                    {user.rol === "ADMIN" ? (
                       <FaUserShield className="text-red-500 mr-2" />
                     ) : (
                       <FaUserAlt className="text-blue-500 mr-2" />
                     )}
                     <span className="font-medium text-sm">
-                    {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase() : 'No Role'}
+                    {user.rol ? user.rol.charAt(0).toUpperCase() + user.rol.slice(1).toLowerCase() : 'No Role'}
                     </span>
                   </span>
                 </div>

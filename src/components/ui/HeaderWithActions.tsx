@@ -10,6 +10,8 @@ interface HeaderWithActionsProps {
   createLabel?: string;
   updateLabel?: string;
   deleteLabel?: string;
+  showFilter?: boolean;
+  onToggleFilter?: () => void;
 }
 
 const HeaderWithActions: React.FC<HeaderWithActionsProps> = ({

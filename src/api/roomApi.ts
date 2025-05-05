@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_ROOM;
 
 // Define TypeScript interfaces for your data
 interface Room {
-  id: string;
+  id: number;
   number: string | number;
   type: string;
   capacity: string | number;

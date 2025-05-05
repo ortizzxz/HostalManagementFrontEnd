@@ -3,11 +3,39 @@ import HeaderWithActions from "../components/ui/HeaderWithActions";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getRooms } from "../api/roomApi";
+import FilterBar from "../components/ui/FilterBar";
+
+interface Room {
+  id: number;
+  number: string | number;
+  type: string;
+  capacity: string | number;
+  baseRate: string | number;
+  state: string;
+}
 
 const Rooms = () => {
-  const [rooms, setRooms] = useState<any[]>([]); // Adjust the type for rooms data
+  const [rooms, setRooms] = useState<Room[]>([]); // Adjust the type for rooms data
   const { t } = useTranslation();
   const navigate = useNavigate(); // Initialize useNavigate
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeRoomFilter, setActiveRoomFilter] = useState(""); // State for custom filter
+
+  // Filter rooms based on search term and active filter
+  const filteredRooms = rooms.filter((room) => {
+    const matchesSearch = room.number.toString().toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = activeRoomFilter ? room.state === activeRoomFilter : true;
+    return matchesSearch && matchesFilter;
+  });
+  
+  // Define filter buttons
+  const roomFilterButtons = [
+    { label: "Busy Rooms", value: "OCUPADO" },
+    { label: "Free Rooms", value: "DISPONIBLE" },
+    { label: "On Maintenance", value: "MANTENIMIENTO" },
+    { label: "All Rooms", value: "" }, // No filter
+  ];
+  
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -45,9 +73,19 @@ const Rooms = () => {
         createLabel={t("room.create")}
       />
 
+      {/* Filter Bar */}
+      <FilterBar
+        placeholder={t("filterbar.search_placeholder")}
+        value={searchTerm}
+        onSearchChange={setSearchTerm}
+        activeFilter={activeRoomFilter}
+        onFilterChange={setActiveRoomFilter}
+        filterButtons={roomFilterButtons} // Custom buttons
+      />
+
       {/* Room list */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
-        {rooms.map((room) => (
+        {filteredRooms.map((room) => (
           <div
             key={room.id}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-300 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer"
@@ -61,7 +99,7 @@ const Rooms = () => {
               </h3>
               <p className="text-sm text-gray-500 mb-1">
                 {t("room.creation.capacity")}: {room.capacity}{" "}
-                {room.capacity > 1 ? t("guest.list") : t("room.guest")}
+                {parseInt(room.capacity.toString()) > 1 ? t("guest.list") : t("room.guest")}
               </p>
               <p className="text-sm text-gray-500 mb-1">
                 {t("room.status")}:{" "}
