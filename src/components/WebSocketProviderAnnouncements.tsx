@@ -21,10 +21,10 @@ export const WebSocketContext = createContext<WebSocketContextType | undefined>(
 // WebSocketProvider component with proper typing
 export const WebSocketProviderAnnouncements = ({ children }: { children: React.ReactNode }) => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]); // Announcements should be an array of strings or your specific type
-  
+  const API_WS = import.meta.env.VITE_WS_URL;
   useEffect(() => {
     const stompClient = new Client({
-      webSocketFactory: () => new SockJS("http://localhost:8080/ws"),
+      webSocketFactory: () => new SockJS(API_WS),
       reconnectDelay: 5000,
     });
   

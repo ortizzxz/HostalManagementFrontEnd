@@ -32,6 +32,7 @@ interface Guest {
 }
 
 const CreateReservationForm: React.FC = () => {
+  const API_RESERVATION = import.meta.env.VITE_API_RESERVATIONS;
   const { t } = useTranslation();
 
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -110,7 +111,7 @@ const CreateReservationForm: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post("http://localhost:8080/api/reservations", formData);
+      await axios.post(API_RESERVATION, formData);
       alert("🎉 Reservation created successfully!");
       setFormData({
         roomId: "",

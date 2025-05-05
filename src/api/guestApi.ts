@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const GUEST_API_URL = "http://localhost:8080/api/guest";
-const GUEST_API_URL = "https://hostalmanagementbackend.onrender.com/api/guest";
+const GUEST_API_URL = import.meta.env.VITE_API_GUEST;
 
 export interface Guest {
   nif: string;

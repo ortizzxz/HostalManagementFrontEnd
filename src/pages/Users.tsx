@@ -38,6 +38,7 @@ const Users = () => {
   }, []);
   
   const handleCreateUser = () => {
+    console.log('click on create user')
     navigate("/create-user");
   };
 

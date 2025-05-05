@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Adjust the API URL to match your backend
 // const API_URL = "http://localhost:8080/api/reservations";
-const API_URL = "https://hostalmanagementbackend.onrender.com/api/reservations";
+const API_URL = import.meta.env.VITE_API_RESERVATIONS;
 
 // TypeScript interfaces for your data
 export interface GuestDTO {
