@@ -48,6 +48,7 @@ const Rooms = () => {
     const fetchRooms = async () => {
       try {
         const data = await getRooms();
+        console.log(data)
         setRooms(data);
       } catch (error) {
         console.error("Error fetching rooms: ", error);

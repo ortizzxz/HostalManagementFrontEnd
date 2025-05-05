@@ -10,12 +10,16 @@ interface Announcement {
   content: string;
   postDate: string | Date;
   expirationDate: string | Date;
+  tenantId: number;
 }
 
 // Get all announcements
 export const getAnnouncements = async (): Promise<Announcement[]> => {
   try {
-    const response = await axios.get<Announcement[]>(API_URL);
+    const tenantId = Number(localStorage.getItem("tenantId"));
+    const response = await axios.get<Announcement[]>(API_URL, {
+      params: { tenantId },
+    });
     return response.data;
   } catch (error) {
     console.error("Failed to fetch announcements:", error);

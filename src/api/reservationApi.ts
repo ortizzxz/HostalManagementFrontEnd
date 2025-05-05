@@ -31,7 +31,10 @@ export interface GuestReservationDTO {
 // Get all reservations (if implemented in backend)
 export const getReservations = async (): Promise<ReservationDTO[]> => {
   try {
-    const response = await axios.get<ReservationDTO[]>(API_URL);
+    const tenantId = Number(localStorage.getItem("tenantId"));
+    const response = await axios.get<ReservationDTO[]>(API_URL, {
+      params: {tenantId}
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching reservations:", error);

@@ -9,6 +9,9 @@ export interface Guest {
   lastname: string;
   email: string;
   phone: string;
+  tenantDTO: {
+    id: number
+  };
 }
 
 export const getGuestByNIF = async (nif: string): Promise<Guest | null> => {

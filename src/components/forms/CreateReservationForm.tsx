@@ -29,6 +29,9 @@ interface Guest {
   lastname: string;
   email: string;
   phone: string;
+  tenantDTO: {
+    id: number;
+  };
 }
 
 const CreateReservationForm: React.FC = () => {
@@ -37,12 +40,22 @@ const CreateReservationForm: React.FC = () => {
 
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     roomId: "",
     inDate: "",
     outDate: "",
     state: "CONFIRMADA",
-    guests: [{ nif: "", name: "", lastname: "", email: "", phone: "" } as Guest],
+    guests: [
+      {
+        nif: "",
+        name: "",
+        lastname: "",
+        email: "",
+        phone: "",
+        tenantDTO: { id: Number(localStorage.getItem("tenantid")) || 0 },
+      } as Guest, // Type assertion to make it clear it's a Guest object
+    ],
   });
 
   useEffect(() => {
@@ -70,6 +83,13 @@ const CreateReservationForm: React.FC = () => {
     const updatedGuests = [...formData.guests];
     updatedGuests[index][field] = value;
 
+    // Add tenantId from localStorage if it's available
+    const tenantId = localStorage.getItem("tenantid");
+    if (tenantId) {
+      updatedGuests[index].tenantDTO.id = Number(tenantId);
+    }
+
+    // Handle guest lookup for NIF
     if (field === "nif" && value.length >= 7) {
       try {
         const existingGuest = await getGuestByNIF(value);
@@ -85,12 +105,18 @@ const CreateReservationForm: React.FC = () => {
   };
 
   const addGuest = () => {
+    const newGuest: Guest = {
+      nif: "",
+      name: "",
+      lastname: "",
+      email: "",
+      phone: "",
+      tenantDTO: { id: Number(localStorage.getItem("tenantid")) || 0 },
+    };
+
     setFormData({
       ...formData,
-      guests: [
-        ...formData.guests,
-        { nif: "", name: "", lastname: "", email: "", phone: "" },
-      ],
+      guests: [...formData.guests, newGuest],
     });
   };
 
@@ -110,15 +136,37 @@ const CreateReservationForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
+    // Ensure each guest has the tenantId from localStorage before submission
+    const tenantId = localStorage.getItem("tenantid");
+    const guestsWithTenantId = formData.guests.map((guest) => ({
+      ...guest,
+      tenantId: tenantId ? Number(tenantId) : 0, // Ensure tenantId is attached
+    }));
+
     try {
-      await axios.post(API_RESERVATION, formData);
+      // Post data including the tenantId in the guests
+      await axios.post(API_RESERVATION, {
+        ...formData,
+        guests: guestsWithTenantId,
+      });
+
       alert("🎉 Reservation created successfully!");
       setFormData({
         roomId: "",
         inDate: "",
         outDate: "",
         state: "CONFIRMADA",
-        guests: [{ nif: "", name: "", lastname: "", email: "", phone: "" }],
+        guests: [
+          {
+            nif: "",
+            name: "",
+            lastname: "",
+            email: "",
+            phone: "",
+            tenantDTO: { id: Number(localStorage.getItem("tenantid")) || 0 },
+          }
+        ],
       });
     } catch (error) {
       console.error(error);

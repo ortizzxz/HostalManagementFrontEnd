@@ -1,4 +1,5 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 // Base URL for your API
 // const API_URL = "http://localhost:8080/api/user";
@@ -19,6 +20,14 @@ interface User {
   updatedAt?: Date;
 }
 
+interface DecodedToken {
+  sub: string;
+  tenantId: number;
+  rol: string;
+  iat: number;
+  exp: number;
+}
+
 // Centralized axios instance with token handling
 const axiosInstance = axios.create();
 
@@ -37,9 +46,12 @@ axiosInstance.interceptors.request.use(
 );
 
 // Get all users with proper typing, handling tenant information
-export const getUsers = async (): Promise<User[]> => {
+export const getUsers = async (tenantId: number): Promise<User[]> => {
   try {
-    const response = await axiosInstance.get<User[]>(API_URL);
+    tenantId = Number(localStorage.getItem("tenantId"));
+    const response = await axiosInstance.get<User[]>(API_URL, {
+      params: { tenantId },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -81,7 +93,7 @@ export const updateUser = async (
 };
 
 // Delete a user
-export const deleteUser = async (id: string): Promise<void> => {
+export const deleteUser = async (id: number): Promise<void> => {
   try {
     await axiosInstance.delete(`${API_URL}/${id}`);
   } catch (error) {
@@ -89,22 +101,28 @@ export const deleteUser = async (id: string): Promise<void> => {
     throw error;
   }
 };
-
-// log in an user
+ 
 export const loginUser = async (email: string, password: string) => {
   try {
     const response = await axios.post(`${AUTH_URL}/login`, { email, password });
     const token = response.data;
+    console.log("Token received:", token);
 
     if (token) {
-      localStorage.setItem("token", token); // Store the token in localStorage
+      localStorage.setItem("token", token); // Store JWT
+
+      // Decode token to extract tenantId
+      const decoded: DecodedToken = jwtDecode(token);
+      localStorage.setItem("tenantId", decoded.tenantId.toString()); // Store tenantId separately
+
+      return { token, tenantId: decoded.tenantId };
     } else {
       console.error("No token found in response!");
+      return null;
     }
-
-    return token;
   } catch (error) {
     console.error("Error logging in:", error);
     throw error;
   }
 };
+ 

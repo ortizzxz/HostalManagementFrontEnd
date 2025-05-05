@@ -89,6 +89,8 @@
   },
   "delete":{
     "verification_room": "¿Está seguro que desea eliminar la Habitación #{{roomNumber}}?",
-    "verification_announcement": "¿Está seguro que desea eliminar el Anuncio #{{announcementNumber}}?"
+    "verification_announcement": "¿Está seguro que desea eliminar el Anuncio #{{announcementNumber}}?",
+    "verification_user": "¿Está seguro que desea eliminar el Usuario #{{userNumber}}?"
+
   }
 }

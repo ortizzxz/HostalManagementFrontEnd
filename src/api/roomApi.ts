@@ -11,12 +11,16 @@ interface Room {
   capacity: string | number;
   baseRate: string | number;
   state: string;
+  tenantId: number;
 }
 
 // Get all Rooms
 export const getRooms = async (): Promise<Room[]> => {
   try {
-    const response = await axios.get<Room[]>(API_URL);
+    const tenantId = Number(localStorage.getItem("tenantId"));
+    const response = await axios.get<Room[]>(API_URL, {
+      params: {tenantId},
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);

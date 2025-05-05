@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { getUsers } from "../api/userApi";
+import { getUsers, deleteUser } from "../api/userApi";
 import { useTranslation } from "react-i18next";
 import HeaderWithActions from "../components/ui/HeaderWithActions";
 import { useNavigate } from "react-router-dom";
 import { FaUserShield, FaUserAlt } from "react-icons/fa"; // Usamos iconos de react-icons
 import FilterBar from "../components/ui/FilterBar";
+import DeleteUserForm from "../components/forms/DeleteUserForm";
 
 interface User {
   id: number;
@@ -19,6 +20,9 @@ interface User {
 }
 
 const Users = () => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+
   const [users, setUsers] = useState<User[]>([]);
   const { t } = useTranslation();
   const navigate = useNavigate(); // Inicializamos useNavigate
@@ -27,11 +31,16 @@ const Users = () => {
 
   // Filter rooms based on search term and active filter
   const filteredUsers = users.filter((user) => {
-    const matchesSearch = user.id.toString().toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = activateUserFilter ? user.rol === activateUserFilter : true;
+    const matchesSearch = user.id
+      .toString()
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesFilter = activateUserFilter
+      ? user.rol === activateUserFilter
+      : true;
     return matchesSearch && matchesFilter;
   });
-  
+
   // Define filter buttons
   const userFilterButtons = [
     { label: "Admin", value: "ADMIN" },
@@ -40,26 +49,27 @@ const Users = () => {
     { label: "Maintenance", value: "MANTENIMIENTO" },
     { label: "All", value: "" }, // No filter
   ];
-  
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const data = await getUsers(); // Llamada a la API
         // Filtramos el password
-        const filteredUsers = data.map(({...userWithoutPassword }: User) => userWithoutPassword); // Only return the user properties excluding password
+        const filteredUsers = data.map(
+          ({ ...userWithoutPassword }: User) => userWithoutPassword
+        ); // Only return the user properties excluding password
         setUsers(filteredUsers); // Establecemos los usuarios
-        console.log(filteredUsers)
+        console.log(filteredUsers);
       } catch (error) {
         console.error("Error al obtener usuarios:", error);
       }
     };
-  
+
     fetchUsers();
   }, []);
-  
+
   const handleCreateUser = () => {
-    console.log('click on create user')
+    console.log("click on create user");
     navigate("/create-user");
   };
 
@@ -68,7 +78,28 @@ const Users = () => {
     navigate(`/update-user/${userId}`);
   };
 
-
+    const handleDeleteUser = (id: number) => {
+      const selectedUser = users.find((r) => r.id === id);
+      if (selectedUser) {
+        setUserToDelete(selectedUser);
+        setShowDeleteModal(true);
+      }
+    };
+  
+    const confirmDeleteUser = async () => {
+      if (userToDelete) {
+        try {
+          await deleteUser(userToDelete.id); // API call
+          setUsers((prev) => prev.filter((user) => user.id !== userToDelete.id));
+        } catch (err) {
+          console.error("Error deleting user:", err);
+        } finally {
+          setShowDeleteModal(false);
+          setUserToDelete(null);
+        }
+      }
+    };
+    
 
   return (
     <div className="text-black dark:text-white">
@@ -113,7 +144,9 @@ const Users = () => {
               <div className="flex items-center justify-between">
                 {/* Aquí está el icono junto al rol */}
                 <div className="flex items-center">
-                  <span className="text-sm text-gray-500">{t("user.role")}: </span>
+                  <span className="text-sm text-gray-500">
+                    {t("user.role")}:{" "}
+                  </span>
                   <span className="ml-2 flex items-center">
                     {user.rol === "ADMIN" ? (
                       <FaUserShield className="text-red-500 mr-2" />
@@ -121,7 +154,10 @@ const Users = () => {
                       <FaUserAlt className="text-blue-500 mr-2" />
                     )}
                     <span className="font-medium text-sm">
-                    {user.rol ? user.rol.charAt(0).toUpperCase() + user.rol.slice(1).toLowerCase() : 'No Role'}
+                      {user.rol
+                        ? user.rol.charAt(0).toUpperCase() +
+                          user.rol.slice(1).toLowerCase()
+                        : "No Role"}
                     </span>
                   </span>
                 </div>
@@ -144,6 +180,12 @@ const Users = () => {
           </div>
         ))}
       </div>
+      <DeleteUserForm
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={confirmDeleteUser}
+        userId={userToDelete?.id ?? ""}
+      />
     </div>
   );
 };
