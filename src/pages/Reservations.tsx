@@ -65,11 +65,6 @@ const Reservations = () => {
     // Add logic for updating reservation (e.g., navigate to an update page)
   };
 
-  const handleDeleteReservation = (id: number) => {
-    console.log(`Deleting reservation with id: ${id}`);
-    // Add logic for deleting reservation
-  };
-
   // Helper function to format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -97,10 +92,8 @@ const Reservations = () => {
         title={t("reservation.list")}
         onCreate={handleCreateReservation}
         onUpdate={(id: number) => handleUpdateReservation(id)}
-        onDelete={(id: number) => handleDeleteReservation(id)}
         createLabel={t("reservation.create")}
         updateLabel={t("reservation.update")}
-        deleteLabel={t("reservation.delete")}
       />
 
       {/* Reservation list */}

@@ -1,11 +1,12 @@
 import { useEffect, useState, useContext } from "react";
-import { getAnnouncements } from "../api/anouncementApi";
+import { getAnnouncements, deleteAnnouncement } from "../api/anouncementApi";
 import { WebSocketContext } from "../components/WebSocketProviderAnnouncements";
 import { useTranslation } from "react-i18next";
 import HeaderWithActions from "../components/ui/HeaderWithActions";
 import { useNavigate } from "react-router-dom";
 import { FaCalendarAlt, FaCalendarCheck } from "react-icons/fa";
 import { format } from "date-fns";
+import DeleteAnnouncementForm from "../components/forms/DeleteAnnouncementForm";
 
 // Define types for the announcements
 interface Announcement {
@@ -16,13 +17,17 @@ interface Announcement {
   expirationDate: string | Date;
 }
 
-
 const Announcements = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // Track loading state
   const [error, setError] = useState<string | null>(null); // Track error state
-  
-  const { announcements: realTimeAnnouncements } = useContext(WebSocketContext) || { announcements: [] };
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [announcementToDelete, setAnnouncementToDelete] =
+    useState<Announcement | null>(null);
+
+  const { announcements: realTimeAnnouncements } = useContext(
+    WebSocketContext
+  ) || { announcements: [] };
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -58,11 +63,36 @@ const Announcements = () => {
   };
 
   const handleUpdateAnnouncement = (announcementId: number) => {
-    console.log("Redirect to announcement update form or open modal for id:", announcementId);
+    console.log(
+      "Redirect to announcement update form or open modal for id:",
+      announcementId
+    );
   };
 
-  const handleDeleteAnnouncement = (announcementId: number) => {
-    console.log("Handle announcement deletion logic for id:", announcementId);
+  const handleDeleteAnnouncement = (id: number) => {
+    const selectedAnnouncement = announcements.find((r) => r.id === id);
+    if (selectedAnnouncement) {
+      setAnnouncementToDelete(selectedAnnouncement);
+      setShowDeleteModal(true);
+    }
+  };
+
+  const confirmDeleteAnnouncement = async () => {
+    if (announcementToDelete) {
+      try {
+        await deleteAnnouncement(announcementToDelete.id); // API call
+        setAnnouncements((prev) =>
+          prev.filter(
+            (announcement) => announcement.id !== announcementToDelete.id
+          )
+        );
+      } catch (err) {
+        console.error("Error deleting announcement:", err);
+      } finally {
+        setShowDeleteModal(false);
+        setAnnouncementToDelete(null);
+      }
+    }
   };
 
   if (loading) {
@@ -80,10 +110,8 @@ const Announcements = () => {
         title={t("announcement.list")}
         onCreate={handleCreateAnnouncement}
         onUpdate={handleUpdateAnnouncement}
-        onDelete={handleDeleteAnnouncement}
         createLabel={t("announcement.create")}
         updateLabel={t("announcement.update")}
-        deleteLabel={t("announcement.delete")}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -91,12 +119,19 @@ const Announcements = () => {
           announcements.map((announcement) => (
             <div
               key={announcement.id}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-300 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-300 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-default"
             >
               <div className="p-6">
                 <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
-                  {announcement.title}
+                  #{announcement.id} - {announcement.title} {""} 
+                  <button
+                    onClick={() => handleDeleteAnnouncement(announcement.id)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <i className="fas fa-trash-alt mr-2"></i>{" "}
+                  </button>
                 </h2>
+
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                   {announcement.content}
                 </p>
@@ -105,14 +140,21 @@ const Announcements = () => {
                     <FaCalendarAlt className="text-blue-500 mr-2" />
                     <span className="text-sm text-gray-400">
                       {t("announcement.postDate")} -{" "}
-                      {announcement.postDate ? format(new Date(announcement.postDate), "dd-MM-yyyy") : t("announcement.noDate")}
+                      {announcement.postDate
+                        ? format(new Date(announcement.postDate), "dd-MM-yyyy")
+                        : t("announcement.noDate")}
                     </span>
                   </div>
                   <div className="flex items-center">
                     <FaCalendarCheck className="text-green-500 mr-2" />
                     <span className="text-sm text-gray-400">
                       {t("announcement.expirationDate")} -{" "}
-                      {announcement.expirationDate ? format(new Date(announcement.expirationDate), "dd-MM-yyyy") : t("announcement.noDate")}
+                      {announcement.expirationDate
+                        ? format(
+                            new Date(announcement.expirationDate),
+                            "dd-MM-yyyy"
+                          )
+                        : t("announcement.noDate")}
                     </span>
                   </div>
                 </div>
@@ -120,9 +162,17 @@ const Announcements = () => {
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500 dark:text-gray-400">{t("announcement.empty")}</p>
+          <p className="text-center text-gray-500 dark:text-gray-400">
+            {t("announcement.empty")}
+          </p>
         )}
       </div>
+      <DeleteAnnouncementForm
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={confirmDeleteAnnouncement}
+        announcementNumber={announcementToDelete?.id ?? ""}
+      />
     </div>
   );
 };

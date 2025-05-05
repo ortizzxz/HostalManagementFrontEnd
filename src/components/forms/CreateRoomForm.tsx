@@ -6,6 +6,7 @@ import { Card, CardContent } from "../ui/card.js";
 import { Loader2, Hash, LayoutTemplate, Users, DollarSign } from "lucide-react";
 import { createRoom } from "../../api/roomApi";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 interface RoomFormData {
   number: string;
@@ -23,6 +24,8 @@ interface RoomFormErrors {
 }
 
 const CreateRoomForm: React.FC = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
+
   const [formData, setFormData] = useState<RoomFormData>({
     number: "",
     type: "",
@@ -75,6 +78,7 @@ const CreateRoomForm: React.FC = () => {
         capacity: Number(formData.capacity),
         baseRate: Number(formData.baseRate),
         state: formData.state,
+        tenantId: Number(localStorage.getItem("tenantId"))
       });
       alert("🎉 Room created successfully!");
       setFormData({
@@ -84,6 +88,9 @@ const CreateRoomForm: React.FC = () => {
         baseRate: "",
         state: "DISPONIBLE",
       });
+      
+      // redirect to rooms 
+      navigate("/rooms")
     } catch (error) {
       console.error(error);
       setApiError("❌ Failed to create room. Please try again.");

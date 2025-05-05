@@ -2,17 +2,53 @@ import { useTranslation } from "react-i18next";
 import HeaderWithActions from "../components/ui/HeaderWithActions";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getRooms } from "../api/roomApi";
+import { getRooms, deleteRoom } from "../api/roomApi";
+import FilterBar from "../components/ui/FilterBar";
+import DeleteRoomForm from "../components/forms/DeleteRoomForm";
+
+interface Room {
+  id: number;
+  number: string | number;
+  type: string;
+  capacity: string | number;
+  baseRate: string | number;
+  state: string;
+}
 
 const Rooms = () => {
-  const [rooms, setRooms] = useState<any[]>([]); // Adjust the type for rooms data
+  const [rooms, setRooms] = useState<Room[]>([]); // Adjust the type for rooms data
   const { t } = useTranslation();
   const navigate = useNavigate(); // Initialize useNavigate
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeRoomFilter, setActiveRoomFilter] = useState(""); // State for custom filter
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [roomToDelete, setRoomToDelete] = useState<Room | null>(null);
+
+  // Filter rooms based on search term and active filter
+  const filteredRooms = rooms.filter((room) => {
+    const matchesSearch = room.number
+      .toString()
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesFilter = activeRoomFilter
+      ? room.state === activeRoomFilter
+      : true;
+    return matchesSearch && matchesFilter;
+  });
+
+  // Define filter buttons
+  const roomFilterButtons = [
+    { label: "Busy Rooms", value: "OCUPADO" },
+    { label: "Free Rooms", value: "DISPONIBLE" },
+    { label: "On Maintenance", value: "MANTENIMIENTO" },
+    { label: "All Rooms", value: "" }, // No filter
+  ];
 
   useEffect(() => {
     const fetchRooms = async () => {
       try {
         const data = await getRooms();
+        console.log(data)
         setRooms(data);
       } catch (error) {
         console.error("Error fetching rooms: ", error);
@@ -32,9 +68,27 @@ const Rooms = () => {
   };
 
   const handleDeleteRoom = (id: number) => {
-    console.log(`Handle deletion for room id: ${id}`);
-    // Logic for room deletion
+    const selectedRoom = rooms.find((r) => r.id === id);
+    if (selectedRoom) {
+      setRoomToDelete(selectedRoom);
+      setShowDeleteModal(true);
+    }
   };
+
+  const confirmDeleteRoom = async () => {
+    if (roomToDelete) {
+      try {
+        await deleteRoom(roomToDelete.id); // API call
+        setRooms((prev) => prev.filter((room) => room.id !== roomToDelete.id));
+      } catch (err) {
+        console.error("Error deleting room:", err);
+      } finally {
+        setShowDeleteModal(false);
+        setRoomToDelete(null);
+      }
+    }
+  };
+  
 
   return (
     <div className="text-black dark:text-white">
@@ -45,9 +99,19 @@ const Rooms = () => {
         createLabel={t("room.create")}
       />
 
+      {/* Filter Bar */}
+      <FilterBar
+        placeholder={t("filterbar.search_placeholder")}
+        value={searchTerm}
+        onSearchChange={setSearchTerm}
+        activeFilter={activeRoomFilter}
+        onFilterChange={setActiveRoomFilter}
+        filterButtons={roomFilterButtons} // Custom buttons
+      />
+
       {/* Room list */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
-        {rooms.map((room) => (
+        {filteredRooms.map((room) => (
           <div
             key={room.id}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-300 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer"
@@ -61,13 +125,17 @@ const Rooms = () => {
               </h3>
               <p className="text-sm text-gray-500 mb-1">
                 {t("room.creation.capacity")}: {room.capacity}{" "}
-                {room.capacity > 1 ? t("guest.list") : t("room.guest")}
+                {parseInt(room.capacity.toString()) > 1
+                  ? t("guest.list")
+                  : t("room.guest")}
               </p>
               <p className="text-sm text-gray-500 mb-1">
                 {t("room.status")}:{" "}
                 <span
                   className={`${
-                    room.state === "DISPONIBLE" ? "text-green-500" : "text-red-500"
+                    room.state === "DISPONIBLE"
+                      ? "text-green-500"
+                      : "text-red-500"
                   } font-semibold`}
                 >
                   {room.state.charAt(0) + room.state.slice(1).toLowerCase()}
@@ -91,6 +159,12 @@ const Rooms = () => {
           </div>
         ))}
       </div>
+      <DeleteRoomForm
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={confirmDeleteRoom}
+        roomNumber={roomToDelete?.number ?? ""}
+      />
     </div>
   );
 };
