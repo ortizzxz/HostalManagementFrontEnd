@@ -1,0 +1,9 @@
+VITE_API_BASE_URL=http://localhost:8080/api/
+VITE_WS_URL=http://localhost:8080/ws
+
+VITE_API_RESERVATIONS=http://localhost:8080/api/reservations
+VITE_API_USERS=http://localhost:8080/api/user
+VITE_API_AUTH=http://localhost:8080/api/auth
+VITE_API_GUEST=http://localhost:8080/api/guest
+VITE_API_ROOM=http://localhost:8080/api/room
+VITE_API_ANNOUNCEMENT=http://localhost:8080/api/announcement
