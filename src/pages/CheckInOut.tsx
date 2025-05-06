@@ -26,36 +26,33 @@ interface ReservationDTO {
   tenantId: number;
 }
 
-interface CheckInOut {
-  id: number;
-  reservationDTO: ReservationDTO;
-}
-
 const CheckInOut = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const [reservations, setReservations] = useState<CheckInOut[]>([]);
+  const [reservations, setReservations] = useState<ReservationDTO[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterState, setFilterState] = useState("");
+
   const filteredReservations = reservations.filter((r) => {
     const matchesSearch =
-    r.id.toString().includes(searchTerm.toLowerCase()) ||
-    r.guests.some((guest) =>
-      `${guest.name} ${guest.lastname}`.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    
+      r.id.toString().includes(searchTerm.toLowerCase()) ||
+      r.guests.some((guest: Guest) =>
+        `${guest.name} ${guest.lastname}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      );
+
     const matchesFilter = filterState
       ? r.state === filterState ||
-        r.guests.some((guest) =>
+        r.guests.some((guest: Guest) =>
           guest.name.toLowerCase().includes(filterState.toLowerCase())
         )
       : true;
-  
+
     return matchesSearch && matchesFilter;
   });
-  
-  
+
   const stateFilterButtons = [
     { label: "Confirmed", value: "CONFIRMADA" },
     { label: "Cancelled", value: "CANCELADA" },
@@ -67,7 +64,8 @@ const CheckInOut = () => {
     const fetchReservations = async () => {
       try {
         const data = await getCheckInsOuts();
-        setReservations(data);
+        const extractedReservations = data.map((item) => item.reservationDTO);
+        setReservations(extractedReservations);
       } catch (error) {
         console.error("Error fetching reservations:", error);
       }
@@ -108,35 +106,40 @@ const CheckInOut = () => {
           return (
             <div
               key={res.id}
-              className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-2xl transform transition-all duration-300 hover:scale-[1.02]"
+              className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-transform transform hover:scale-[1.02]"
             >
-              <div className="p-6">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <div className="p-6 space-y-3">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                   #{res.id}
                 </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                  {t("reservation.status")}:{" "}
-                  <span className="font-medium">
-                    {res.state.charAt(0).toUpperCase() +
-                      res.state.slice(1).toLowerCase()}
+
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <span className="font-medium text-gray-800 dark:text-gray-200">
+                    {t("reservation.status")}:
+                  </span>{" "}
+                  <span className="capitalize font-semibold text-blue-600 dark:text-blue-400">
+                    {res.state.toLowerCase()}
                   </span>
                 </p>
-                <div className="text-sm text-gray-600 dark:text-gray-300 mb-2 flex items-center">
+
+                <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
                   <FaCalendarAlt className="mr-2 text-blue-500" />
-                  {format(new Date(res.inDate), "dd-MM-yyyy")} →{" "}
-                  {format(new Date(res.outDate), "dd-MM-yyyy")}
+                  {format(new Date(res.inDate), "dd-MM hh:mm")} →{" "}
+                  {format(new Date(res.outDate), "dd-MM hh:mm")}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300 flex items-start">
+
+                <div className="flex items-start text-sm text-gray-600 dark:text-gray-300">
                   <FaUserFriends className="mr-2 text-green-500 mt-1" />
                   <span>
                     {res.guests
-                      .map((g) => `${g.name} ${g.lastname}`)
+                      .map((g: Guest) => `${g.name} ${g.lastname}`)
                       .join(", ")}
                   </span>
                 </div>
-                <div className="flex justify-end mt-4">
+
+                <div className="flex justify-end pt-2">
                   <button
-                    className="text-sm font-medium text-blue-600 hover:text-blue-800 transition"
+                    className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
                     onClick={() => handleUpdateReservation(res.id)}
                   >
                     {t("reservation.update")}
