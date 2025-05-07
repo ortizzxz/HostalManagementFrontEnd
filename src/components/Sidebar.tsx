@@ -11,6 +11,8 @@ import {
 import { useTranslation } from "react-i18next";
 import ConfigModal from "./ConfigModal";
 import "../assets/css/Sidebar.css";
+import { LogOut } from "lucide-react";
+import { logoutUser } from "../api/userApi"; 
 
 const Sidebar = () => {
   const { t } = useTranslation();
@@ -50,9 +52,9 @@ const Sidebar = () => {
 
         {/* Divider */}
         <div className="divider"></div>
-        
+
         <Link to="/checkins" className="sidebar-link">
-          <UserRoundCheck  className="icon" /> {t("sidebar.checkins")}
+          <UserRoundCheck className="icon" /> {t("sidebar.checkins")}
         </Link>
 
         {/* Divider */}
@@ -79,7 +81,12 @@ const Sidebar = () => {
         >
           v0.1 - Jesús Ortiz
         </a>
-        <ConfigModal /> {/* Button to open the configuration modal */}
+        <div className="w-full flex justify-center items-center gap-2">
+          <ConfigModal /> {/* Button to open the configuration modal */}
+          <button  onClick={logoutUser} className="w-12 py-2 px-4 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition-all duration-200 dark:bg-red-500 dark:hover:bg-red-600">
+            <LogOut  />
+          </button>
+        </div>
       </div>
     </div>
   );

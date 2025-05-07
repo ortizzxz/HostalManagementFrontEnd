@@ -8,7 +8,7 @@ interface TenantDTO {
 }
 
 // Define TypeScript interfaces for your data
-interface Room {
+export interface Room {
   id: number;
   number: string | number;
   type: string;

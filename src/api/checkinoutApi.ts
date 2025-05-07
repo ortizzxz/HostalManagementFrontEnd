@@ -21,7 +21,7 @@ interface ReservationDTO {
   tenantId: number;
 }
 
-interface ReservationApiResponse {
+export interface ReservationApiResponse {
   reservationDTO: ReservationDTO;
 }
 

@@ -61,13 +61,12 @@ const Reservations = () => {
 
   const handleUpdateReservation = (id: number) => {
     console.log(`Updating reservation with id: ${id}`);
-    // Add logic for updating reservation (e.g., navigate to an update page)
   };
 
   // Helper function to format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return format(date, "dd-MM-yyyy"); // Format as "DD-MM-YYYY"
+    return format(date, "dd-MM-yyyy");  
   };
 
   // Helper function to format status
@@ -105,41 +104,41 @@ const Reservations = () => {
             <div className="p-6">
               {/* Reservation Header */}
               <h2 className="text-2xl font-semibold mb-4 flex items-center">
-                <FaBed className="mr-2 text-gray-500" />
+                <FaBed className="mr-2 text-gray-500 dark:text-gray-200" />
                 {t("reservation.reservation")} #{reservation.id}
               </h2>
 
               {/* Reservation Details */}
               <div className="space-y-3">
-                <p className="text-sm text-gray-500 flex items-center">
+                <p className="text-sm text-gray-500 dark:text-gray-200 flex items-center">
                   <FaCalendarAlt className="mr-2" />
                   {t("reservation.room")}: #{reservation.roomId}
                 </p>
 
-                <p className="text-sm text-gray-500 flex items-center">
+                <p className="text-sm text-gray-500 dark:text-gray-200 flex items-center">
                   <FaCalendarAlt className="mr-2" />
                   {t("reservation.inDate")}: {formatDate(reservation.inDate)} || {t("reservation.outDate")}: {formatDate(reservation.outDate)}
                 </p>
 
-                <p className="text-sm text-gray-500 flex items-center">
+                <p className="text-sm text-gray-500 dark:text-gray-200 flex items-center">
                   <FaUser className="mr-2" />
                   {t("reservation.guests")}: {reservation.guests?.length || 0}
                 </p>
 
                 {/* Display Guest Information */}
-                <div className="bg-gray-100 p-4 rounded-lg mt-4">
-                  <p className="text-sm text-gray-500 font-semibold">{t("reservation.guest_details")}</p>
+                <div className="bg-gray-100 dark:bg-gray-500 p-4 rounded-lg mt-4 dark:text-white">
+                  <p className="text-sm font-semibold">{t("reservation.guest_details")}</p>
                   {reservation.guests?.map((guest, index) => (
                     <div key={index} className="flex flex-col space-y-2 mt-2">
-                      <p className="text-sm text-gray-500 flex items-center">
+                      <p className="text-sm  flex items-center">
                         <FaUser className="mr-2" />
                         {guest.name} {guest.lastname}
                       </p>
-                      <p className="text-sm text-gray-500 flex items-center">
+                      <p className="text-sm flex items-center">
                         <FaPhone className="mr-2" />
                         {guest.phone}
                       </p>
-                      <p className="text-sm text-gray-500 flex items-center">
+                      <p className="text-sm flex items-center">
                         <FaEnvelope className="mr-2" />
                         {guest.email}
                       </p>
@@ -148,7 +147,7 @@ const Reservations = () => {
                 </div>
 
                 {/* Status Badge */}
-                <p className="text-sm text-gray-500 flex items-center">
+                <p className="text-sm text-gray-500 dark:text-gray-200 flex items-center">
                   <span className="mr-2">{t("reservation.status")}:</span>
                   {getStatusBadge(reservation.state)}
                 </p>
