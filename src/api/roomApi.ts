@@ -15,7 +15,7 @@ interface Room {
   capacity: string | number;
   baseRate: string | number;
   state: string;
-  tenant: TenantDTO; // Now tenant is a TenantDTO object
+  tenantDTO: TenantDTO; // Now tenant is a TenantDTO object
 }
 
 // Get all Rooms

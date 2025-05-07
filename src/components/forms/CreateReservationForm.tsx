@@ -17,7 +17,7 @@ interface RoomFromApi {
   capacity: string | number;
   baseRate: string | number;
   state: string;
-  tenant: TenantDTO;
+  tenantDTO: TenantDTO; // Now tenant is a TenantDTO object
 }
 
 interface TenantDTO {
@@ -32,7 +32,7 @@ interface Room {
   capacity: number;
   baseRate: number;
   state: string;
-  tenant: TenantDTO;
+  tenantDTO: TenantDTO; // Now tenant is a TenantDTO object
 }
 
 interface Guest {
@@ -76,16 +76,23 @@ const CreateReservationForm: React.FC = () => {
       setRoomsLoading(true);
       try {
         const data: RoomFromApi[] = await getRooms();
-        const normalized: Room[] = data.map((room) => ({
+        console.log("Rooms API response:", data); // Debug the response
+        console.log("Raw rooms data:", data);
+
+        const normalizedRooms: Room[] = data.map((room) => ({
           id: room.id,
           number: String(room.number),
           type: room.type,
           capacity: Number(room.capacity),
           baseRate: Number(room.baseRate),
           state: room.state,
-          tenant: { id: room.tenant.id },
+          tenantDTO: room.tenantDTO?.id ? { id: room.tenantDTO.id } : { id: 0 }, // Ensure tenantDTO is not undefined
         }));
-        setRooms(normalized);
+        
+        
+        console.log("Normalized rooms:", normalizedRooms); // Debug normalized data
+
+        setRooms(normalizedRooms);
       } catch (error) {
         console.error("Failed to fetch rooms", error);
       } finally {
@@ -231,11 +238,17 @@ const CreateReservationForm: React.FC = () => {
                     ) : (
                       <>
                         <option value="">{t("reservation.selectRoom")}</option>
-                        {rooms.map((room) => (
-                          <option key={room.id} value={room.id}>
-                            n.º {room.number} — {room.capacity} guests
+                        {rooms.length === 0 ? (
+                          <option value="" disabled>
+                            No available rooms
                           </option>
-                        ))}
+                        ) : (
+                          rooms.map((room) => (
+                            <option key={room.id} value={room.id}>
+                              n.º {room.number} — {room.capacity} guests
+                            </option>
+                          ))
+                        )}
                       </>
                     )}
                   </select>
