@@ -45,7 +45,6 @@ const Reservations = () => {
           guests: reservation.guests,
           state: reservation.state,
         }));
-  
         setReservations(transformedReservations); // Set the transformed reservations to state
       } catch (error) {
         console.error("Error fetching reservations: ", error);

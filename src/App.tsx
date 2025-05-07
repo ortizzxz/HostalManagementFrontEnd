@@ -14,6 +14,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Announcements from "./pages/Anouncements";
 import { UserProvider } from "./components/auth/UserContext";
 import CheckInOut from "./pages/CheckInOut";
+import NotFound from "./components/ui/NotFound";
 
 function App() {
   return (
@@ -46,6 +47,8 @@ function App() {
             <Route path="/create-reservation" element={<ProtectedRoute><CreateReservationForm /></ProtectedRoute>} />
 
             {/* Delete - Protected */}
+            {/* Fallback route */}
+            <Route path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
           </Routes>
 
         </div>

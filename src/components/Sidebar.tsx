@@ -5,7 +5,7 @@ import {
   BedDouble,
   Users,
   MessageCircle,
-  PersonStanding,
+  // PersonStanding,
   UserRoundCheck,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -27,12 +27,12 @@ const Sidebar = () => {
           <Home className="icon" /> {t("sidebar.dashboard")}
         </Link>
 
-        {/* Divider */}
+        {/* Divider
         <div className="divider"></div>
 
         <Link to="/guests" className="sidebar-link">
           <PersonStanding className="icon" /> {t("sidebar.guests")}
-        </Link>
+        </Link> */}
 
         {/* Divider */}
         <div className="divider"></div>

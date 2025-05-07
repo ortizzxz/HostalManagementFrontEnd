@@ -62,7 +62,6 @@ const Announcements = () => {
           tenantId: Number(localStorage.getItem("tenantid")),
           tenant: msg.tenant || "defaultTenant", // Add tenant property if required
         }));
-  
       return [...prev, ...newAnnouncements];
     });
   }, [realTimeAnnouncements]);
