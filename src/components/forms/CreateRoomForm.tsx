@@ -78,7 +78,7 @@ const CreateRoomForm: React.FC = () => {
         capacity: Number(formData.capacity),
         baseRate: Number(formData.baseRate),
         state: formData.state,
-        tenant:{id: tenantId},
+        tenantDTO:{id: tenantId},
       });
 
       alert("🏨 Room created successfully!");
