@@ -17,7 +17,11 @@ interface RoomFromApi {
   capacity: string | number;
   baseRate: string | number;
   state: string;
-  tenantId: number;
+  tenant: TenantDTO;
+}
+
+interface TenantDTO{
+  id: number;
 }
 
 // This is the normalized type used in your UI
@@ -28,7 +32,7 @@ interface Room {
   capacity: number;
   baseRate: number;
   state: string;
-  tenantId: number;
+  tenant: TenantDTO;
 }
 
 interface Guest {
@@ -77,7 +81,9 @@ const CreateReservationForm: React.FC = () => {
           capacity: Number(room.capacity),
           baseRate: Number(room.baseRate),
           state: room.state,
-          tenantId: room.tenantId
+          tenant: {
+            id: room.tenant.id
+          }
         }));
         setRooms(normalized);
       } catch (error) {

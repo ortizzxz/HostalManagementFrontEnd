@@ -26,26 +26,28 @@ interface ReservationDTO {
   tenantId: number;
 }
 
+interface ReservationApiResponse {
+  reservationDTO: ReservationDTO;
+}
+
 const CheckInOut = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const [reservations, setReservations] = useState<ReservationDTO[]>([]);
+  const [checkInsOuts, setCheckInsOuts] = useState<ReservationApiResponse[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterState, setFilterState] = useState("");
 
-  const filteredReservations = reservations.filter((r) => {
+  const filteredCheckInsOuts = checkInsOuts.filter((entry) => {
     const matchesSearch =
-      r.id.toString().includes(searchTerm.toLowerCase()) ||
-      r.guests.some((guest: Guest) =>
-        `${guest.name} ${guest.lastname}`
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase())
+      entry.reservationDTO.id.toString().includes(searchTerm.toLowerCase()) ||
+      entry.reservationDTO.guests.some((guest) =>
+        `${guest.name} ${guest.lastname}`.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
     const matchesFilter = filterState
-      ? r.state === filterState ||
-        r.guests.some((guest: Guest) =>
+      ? entry.reservationDTO.state === filterState ||
+        entry.reservationDTO.guests.some((guest) =>
           guest.name.toLowerCase().includes(filterState.toLowerCase())
         )
       : true;
@@ -61,35 +63,29 @@ const CheckInOut = () => {
   ];
 
   useEffect(() => {
-    const fetchReservations = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getCheckInsOuts();
-        const extractedReservations = data.map((item) => item.reservationDTO);
-        setReservations(extractedReservations);
+        const rawData = await getCheckInsOuts(); // This now returns ReservationApiResponse[]
+
+        setCheckInsOuts(rawData); // No need to map again, data is already in the correct format
       } catch (error) {
-        console.error("Error fetching reservations:", error);
+        console.error("Error fetching check-in/out data:", error);
       }
     };
 
-    fetchReservations();
+    fetchData();
   }, []);
 
-  const handleCreateReservation = () => {
-    navigate("/create-reservation");
-  };
-
-  const handleUpdateReservation = (id: number) => {
+  const handleUpdate = (id: number) => {
     navigate(`/update-reservation/${id}`);
   };
 
   return (
     <div className="text-black dark:text-white">
       <HeaderWithActions
-        title={t("reservation.list")}
-        onCreate={handleCreateReservation}
-        onUpdate={handleUpdateReservation}
-        createLabel={t("reservation.create")}
-        updateLabel={t("reservation.update")}
+        title={t("checkinout.list") || "Check-In/Out List"}
+        onUpdate={handleUpdate}
+        updateLabel={t("checkinout.update") || "Update"}
       />
 
       <FilterBar
@@ -102,53 +98,50 @@ const CheckInOut = () => {
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredReservations.map((res) => {
-          return (
-            <div
-              key={res.id}
-              className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-transform transform hover:scale-[1.02]"
-            >
-              <div className="p-6 space-y-3">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  #{res.id}
-                </h2>
+        {filteredCheckInsOuts.map((entry) => (
+          <div
+            key={entry.reservationDTO.id}
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-transform transform hover:scale-[1.02]"
+          >
+            <div className="p-6 space-y-3">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                #{entry.reservationDTO.id}
+              </h2>
 
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    {t("reservation.status")}:
-                  </span>{" "}
-                  <span className="capitalize font-semibold text-blue-600 dark:text-blue-400">
-                    {res.state.toLowerCase()}
-                  </span>
-                </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                <span className="font-medium text-gray-800 dark:text-gray-200">
+                  {t("checkinout.status") || "Status"}:
+                </span>{" "}
+                <span className="capitalize font-semibold text-blue-600 dark:text-blue-400">
+                  {entry.reservationDTO.state.toLowerCase()}
+                </span>
+              </p>
 
-                <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
-                  <FaCalendarAlt className="mr-2 text-blue-500" />
-                  {format(new Date(res.inDate), "dd-MM hh:mm")} →{" "}
-                  {format(new Date(res.outDate), "dd-MM hh:mm")}
-                </div>
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                <FaCalendarAlt className="mr-2 text-blue-500" />
+                {format(new Date(entry.reservationDTO.inDate), "dd-MM HH:mm")} →{" "}
+                {format(new Date(entry.reservationDTO.outDate), "dd-MM HH:mm")}
+              </div>
 
-                <div className="flex items-start text-sm text-gray-600 dark:text-gray-300">
-                  <FaUserFriends className="mr-2 text-green-500 mt-1" />
-                  <span>
-                    {res.guests
-                      .map((g: Guest) => `${g.name} ${g.lastname}`)
-                      .join(", ")}
-                  </span>
-                </div>
+              <div className="flex items-start text-sm text-gray-600 dark:text-gray-300">
+                <FaUserFriends className="mr-2 text-green-500 mt-1" />
+                <span>
+                  {entry.reservationDTO.guests?.map((g) => `${g.name} ${g.lastname}`).join(", ") ||
+                    "No guests"}
+                </span>
+              </div>
 
-                <div className="flex justify-end pt-2">
-                  <button
-                    className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
-                    onClick={() => handleUpdateReservation(res.id)}
-                  >
-                    {t("reservation.update")}
-                  </button>
-                </div>
+              <div className="flex justify-end pt-2">
+                <button
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                  onClick={() => handleUpdate(entry.reservationDTO.id)}
+                >
+                  {t("checkinout.update") || "Update"}
+                </button>
               </div>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </div>
   );

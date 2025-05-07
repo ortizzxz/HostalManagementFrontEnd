@@ -88,6 +88,11 @@
     "disableNotifications": "Disable Notifications",
     "close": "Close"
   },
+  "checkinout":{
+    "list": "Check In/Out",
+    "status": "Status",
+    "update": "Update Check In/Out"
+  },
   "login": {
     "login": "Log In",
     "email": "Email",

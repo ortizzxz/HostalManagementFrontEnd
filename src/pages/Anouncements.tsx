@@ -15,7 +15,9 @@ interface Announcement {
   content: string;
   postDate: string | Date;
   expirationDate: string | Date;
-  tenantId: number;
+  tenant:{
+    id: number;
+  } 
 }
 
 const Announcements = () => {
@@ -57,12 +59,14 @@ const Announcements = () => {
         .filter((msg) => !prev.some((announcement) => announcement.id === msg.id))
         .map((msg) => ({
           ...msg,
-          tenantId: msg.tenantId || Number(localStorage.getItem("tenantid")),
+          tenantId: Number(localStorage.getItem("tenantid")),
+          tenant: msg.tenant || "defaultTenant", // Add tenant property if required
         }));
   
       return [...prev, ...newAnnouncements];
     });
   }, [realTimeAnnouncements]);
+  
   
   const handleCreateAnnouncement = () => {
     navigate("/create-announcement");

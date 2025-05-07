@@ -24,7 +24,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const decoded: User = jwtDecode(token);
         setUser(decoded);
-        console.log('Decoded token: ', decoded)
       } catch (err) {
         console.error("Failed to decode token", err);
         setUser(null);
