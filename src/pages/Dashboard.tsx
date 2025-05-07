@@ -4,18 +4,20 @@ import {
   getUsers,
   getRooms,
   getAnnouncements,
-  getCheckInsOuts,
 } from "../api/dispositionApi";
 import HeaderWithActions from "../components/ui/HeaderWithActions";
 import "../assets/css/Dashboard.css";
+import { User } from "../api/userApi";
+import { Room } from "../api/roomApi";
+import { Announcement } from "../api/anouncementApi";
+import { ReservationDTO } from "../api/reservationApi";
 
 
 const Dashboard = () => {
-  const [reservations, setReservations] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [rooms, setRooms] = useState([]);
-  const [announcements, setAnnouncements] = useState([]);
-  const [checkins, setCheckins] = useState([]);
+  const [reservations, setReservations] = useState<ReservationDTO[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,13 +26,11 @@ const Dashboard = () => {
         const userData = await getUsers();
         const roomData = await getRooms();
         const announcementData = await getAnnouncements();
-        const checkinData = await getCheckInsOuts();
 
         setReservations(reservationData);
         setUsers(userData);
         setRooms(roomData);
         setAnnouncements(announcementData);
-        setCheckins(checkinData);
         console.log('Room data Dashboard: ', roomData)
       } catch (error) {
         console.error("Error fetching data:", error);
