@@ -20,7 +20,7 @@ interface RoomFromApi {
   tenant: TenantDTO;
 }
 
-interface TenantDTO{
+interface TenantDTO {
   id: number;
 }
 
@@ -52,6 +52,7 @@ const CreateReservationForm: React.FC = () => {
 
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(false);
+  const [roomsLoading, setRoomsLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     roomId: "",
@@ -72,6 +73,7 @@ const CreateReservationForm: React.FC = () => {
 
   useEffect(() => {
     const loadRooms = async () => {
+      setRoomsLoading(true);
       try {
         const data: RoomFromApi[] = await getRooms();
         const normalized: Room[] = data.map((room) => ({
@@ -81,36 +83,37 @@ const CreateReservationForm: React.FC = () => {
           capacity: Number(room.capacity),
           baseRate: Number(room.baseRate),
           state: room.state,
-          tenant: {
-            id: room.tenant.id
-          }
+          tenant: { id: room.tenant.id },
         }));
         setRooms(normalized);
       } catch (error) {
         console.error("Failed to fetch rooms", error);
+      } finally {
+        setRoomsLoading(false);
       }
     };
+
     loadRooms();
   }, []);
 
   const handleGuestChange = async (
     index: number,
-    field: Exclude<keyof Guest, 'tenantDTO'>,
+    field: Exclude<keyof Guest, "tenantDTO">,
     value: string
   ) => {
     const updatedGuests = [...formData.guests];
-  
+
     // Only assign value to string fields
     if (typeof updatedGuests[index][field] === "string") {
       updatedGuests[index][field] = value as Guest[typeof field];
     }
-  
+
     // Add tenantId from localStorage if it's available
     const tenantId = localStorage.getItem("tenantid");
     if (tenantId) {
       updatedGuests[index].tenantDTO.id = Number(tenantId);
     }
-  
+
     // Handle guest lookup for NIF
     if (field === "nif" && value.length >= 7) {
       try {
@@ -122,10 +125,9 @@ const CreateReservationForm: React.FC = () => {
         console.warn("Error fetching guest by NIF:", error);
       }
     }
-  
+
     setFormData({ ...formData, guests: updatedGuests });
   };
-  
 
   const addGuest = () => {
     const newGuest: Guest = {
@@ -220,13 +222,22 @@ const CreateReservationForm: React.FC = () => {
                     value={formData.roomId}
                     onChange={handleChange}
                     className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                    disabled={roomsLoading}
                   >
-                    <option value="">{t("reservation.selectRoom")}</option>
-                    {rooms.map((room) => (
-                      <option key={room.id} value={room.id}>
-                        n.º {room.number} — {room.capacity} guests
+                    {roomsLoading ? (
+                      <option>
+                        {t("reservation.loadingRooms") || "Loading rooms..."}
                       </option>
-                    ))}
+                    ) : (
+                      <>
+                        <option value="">{t("reservation.selectRoom")}</option>
+                        {rooms.map((room) => (
+                          <option key={room.id} value={room.id}>
+                            n.º {room.number} — {room.capacity} guests
+                          </option>
+                        ))}
+                      </>
+                    )}
                   </select>
                 </div>
 
