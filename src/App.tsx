@@ -15,6 +15,7 @@ import Announcements from "./pages/Anouncements";
 import { UserProvider } from "./components/auth/UserContext";
 import CheckInOut from "./pages/CheckInOut";
 import NotFound from "./components/ui/NotFound";
+import Finances from "./pages/Finances";
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function App() {
         {/* Sidebar */}
         <Sidebar />
         {/* Main Content */}
-        <div className="flex-1 p-5 dark:bg-gray-900">
+        <div className="flex-1 p-5 dark:bg-gray-900 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
           <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<LoginPage />} />
@@ -38,7 +39,8 @@ function App() {
             <Route path="/reservations" element={<ProtectedRoute><Reservations /></ProtectedRoute>} />
             <Route path="/rooms" element={<ProtectedRoute><Rooms/></ProtectedRoute>} />
             <Route path="/announcements" element={<ProtectedRoute><Announcements /></ProtectedRoute>} />
-            <Route path="/users" element={<ProtectedRoute><Users/></ProtectedRoute>} />
+            <Route path="/users-overview" element={<ProtectedRoute><Users/></ProtectedRoute>} />
+            <Route path="/finances" element={<ProtectedRoute><Finances/></ProtectedRoute>} />
 
             {/* Creation Routes - Protected */}
             <Route path="/create-user" element={<ProtectedRoute><CreateUserForm /></ProtectedRoute>} />

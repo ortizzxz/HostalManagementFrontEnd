@@ -85,6 +85,10 @@ const Users = () => {
     }
   };
 
+  const handleGoToFinances = () => {
+    navigate("/finances");
+  };
+
   const confirmDeleteUser = async () => {
     if (userToDelete) {
       try {
@@ -105,9 +109,11 @@ const Users = () => {
       <HeaderWithActions
         title={t("user.list")}
         onCreate={handleCreateUser}
-        onUpdate={handleUpdateUser} // Now expects userId
+        onUpdate={handleUpdateUser}
+        onExtra={handleGoToFinances}
         createLabel={t("user.create")}
         updateLabel={t("user.update")}
+        extraLabel={t("Finances")} // Label for the nav button
       />
       {/* Filter Bar */}
       <FilterBar
