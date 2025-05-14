@@ -26,10 +26,10 @@ const AppRoutes = () => {
       {isAuthenticated && <Sidebar />}
 
       {/* Main Content */}
-      <div className="flex-1 p-5 dark:bg-gray-900">
+      <div className="flex-1 p-5 dark:bg-gray-900 overflow-y-auto sidebar">
         <Routes>
           {/* Public Route */}
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={isAuthenticated ? <ProtectedRoute><Dashboard /></ProtectedRoute> : <LoginPage />} />
 
           {/* Protected Routes */}
           <Route path="/" element={isAuthenticated ? <ProtectedRoute><Dashboard /></ProtectedRoute> : <LoginPage />}/>

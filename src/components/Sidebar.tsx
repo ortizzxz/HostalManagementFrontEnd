@@ -32,7 +32,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-48 h-screen bg-gray-900 dark:bg-gray-800 text-white p-3 flex flex-col">
+    <div className="w-48 h-screen bg-gray-900 dark:bg-gray-800 text-white p-3 flex flex-col sidebar">
       <h1 className="text-2xl mb-2 bg-gray-600 dark:bg-gray-900 p-2 rounded-lg text-center cursor-default">
         EasyHostal
       </h1>
