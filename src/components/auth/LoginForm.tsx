@@ -49,7 +49,7 @@ const LoginPage = () => {
         {/* Logo Section */}
         <div className="text-center mb-6">
           <img
-            src="/public/images/eh_logo.png"  
+            src="/images/eh_logo.png"  
             alt="Logo"
             className="w-48 h-auto mx-auto"
           />
