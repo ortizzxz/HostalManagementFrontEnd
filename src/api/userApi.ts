@@ -8,7 +8,7 @@ const API_URL = import.meta.env.VITE_API_USERS;
 const AUTH_URL = import.meta.env.VITE_API_AUTH;// For authentication (login)
 
 // TypeScript interface for User data
-interface User {
+export interface User {
   id: number;
   name: string;
   lastname: string;
@@ -126,3 +126,8 @@ export const loginUser = async (email: string, password: string) => {
   }
 };
  
+export const logoutUser = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("tenantId");
+  window.location.href = "/login"; // Or use React Router navigation
+};

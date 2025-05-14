@@ -48,7 +48,6 @@ const Rooms = () => {
     const fetchRooms = async () => {
       try {
         const data = await getRooms();
-        console.log(data)
         setRooms(data);
       } catch (error) {
         console.error("Error fetching rooms: ", error);
@@ -142,7 +141,7 @@ const Rooms = () => {
                 </span>
               </p>
             </div>
-            <div className="flex justify-between items-center p-4 bg-gray-100 dark:bg-gray-700">
+            <div className="flex justify-between items-center p-4 bg-gray-200 dark:bg-gray-700">
               <button
                 onClick={() => handleUpdateRoom(room.id)}
                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none"

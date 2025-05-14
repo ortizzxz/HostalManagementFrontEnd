@@ -5,11 +5,10 @@ import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { Plus, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
 import { getRooms } from "../../api/roomApi";
 import { getGuestByNIF } from "../../api/guestApi";
-
-// This reflects the raw API data
+import { createReservation } from "../../api/reservationApi";
+  
 interface RoomFromApi {
   id: number;
   number: string | number;
@@ -17,10 +16,13 @@ interface RoomFromApi {
   capacity: string | number;
   baseRate: string | number;
   state: string;
-  tenantId: number;
+  tenantDTO: TenantDTO;
 }
 
-// This is the normalized type used in your UI
+interface TenantDTO {
+  id: number;
+}
+
 interface Room {
   id: number;
   number: string | number;
@@ -28,7 +30,7 @@ interface Room {
   capacity: number;
   baseRate: number;
   state: string;
-  tenantId: number;
+  tenantDTO: TenantDTO;
 }
 
 interface Guest {
@@ -37,17 +39,25 @@ interface Guest {
   lastname: string;
   email: string;
   phone: string;
-  tenantDTO: {
-    id: number;
-  };
+  tenantId: number;
+}
+
+interface ReservationDTO {
+  id: number;
+  roomId: string | number;
+  inDate: string; // ISO date string
+  outDate: string; // ISO date string
+  state: string;
+  guests: Guest[];
+  tenantId: number;
 }
 
 const CreateReservationForm: React.FC = () => {
-  const API_RESERVATION = import.meta.env.VITE_API_RESERVATIONS;
   const { t } = useTranslation();
 
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(false);
+  const [roomsLoading, setRoomsLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     roomId: "",
@@ -61,65 +71,76 @@ const CreateReservationForm: React.FC = () => {
         lastname: "",
         email: "",
         phone: "",
-        tenantDTO: { id: Number(localStorage.getItem("tenantid")) || 0 },
-      } as Guest, // Type assertion to make it clear it's a Guest object
+        tenantId: Number(localStorage.getItem("tenantid")) || 0,
+      },
     ],
   });
 
   useEffect(() => {
     const loadRooms = async () => {
+      setRoomsLoading(true);
       try {
         const data: RoomFromApi[] = await getRooms();
-        const normalized: Room[] = data.map((room) => ({
+        const normalizedRooms: Room[] = data.map((room) => ({
           id: room.id,
           number: String(room.number),
           type: room.type,
           capacity: Number(room.capacity),
           baseRate: Number(room.baseRate),
           state: room.state,
-          tenantId: room.tenantId
+          tenantDTO: room.tenantDTO?.id ? { id: room.tenantDTO.id } : { id: 0 },
         }));
-        setRooms(normalized);
+        setRooms(normalizedRooms);
       } catch (error) {
         console.error("Failed to fetch rooms", error);
+      } finally {
+        setRoomsLoading(false);
       }
     };
+
     loadRooms();
   }, []);
 
   const handleGuestChange = async (
     index: number,
-    field: Exclude<keyof Guest, 'tenantDTO'>,
+    field: keyof Guest, // Explicitly type `field`
     value: string
   ) => {
     const updatedGuests = [...formData.guests];
-  
-    // Only assign value to string fields
-    if (typeof updatedGuests[index][field] === "string") {
-      updatedGuests[index][field] = value as Guest[typeof field];
+
+    // Handle tenantId separately since it's a number
+    if (field === "tenantId") {
+      updatedGuests[index][field] = Number(value); // Cast value to number for tenantId
+    } else {
+      updatedGuests[index][field] = value; // For other fields, it's safe to use as string
     }
-  
-    // Add tenantId from localStorage if it's available
+    // Ensure tenantId is assigned from localStorage
     const tenantId = localStorage.getItem("tenantid");
     if (tenantId) {
-      updatedGuests[index].tenantDTO.id = Number(tenantId);
+      updatedGuests[index].tenantId = Number(tenantId); // Ensure tenantId is included
     }
-  
+
     // Handle guest lookup for NIF
     if (field === "nif" && value.length >= 7) {
       try {
         const existingGuest = await getGuestByNIF(value);
+
+        // Check if existingGuest is returned and it contains tenantDTO
         if (existingGuest) {
-          updatedGuests[index] = { ...existingGuest, nif: value };
+          // Ensure the updated guest has tenantId mapped from tenantDTO.id
+          updatedGuests[index] = {
+            ...existingGuest,
+            nif: value, // Update nif with the new value
+            tenantId: existingGuest.tenantDTO ? existingGuest.tenantDTO.id : 0, // Map tenantDTO.id to tenantId
+          };
         }
       } catch (error) {
         console.warn("Error fetching guest by NIF:", error);
       }
     }
-  
+
     setFormData({ ...formData, guests: updatedGuests });
   };
-  
 
   const addGuest = () => {
     const newGuest: Guest = {
@@ -128,7 +149,7 @@ const CreateReservationForm: React.FC = () => {
       lastname: "",
       email: "",
       phone: "",
-      tenantDTO: { id: Number(localStorage.getItem("tenantid")) || 0 },
+      tenantId: Number(localStorage.getItem("tenantid")) || 0, // Add tenantId here
     };
 
     setFormData({
@@ -153,21 +174,29 @@ const CreateReservationForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
+  
     // Ensure each guest has the tenantId from localStorage before submission
     const tenantId = localStorage.getItem("tenantid");
     const guestsWithTenantId = formData.guests.map((guest) => ({
       ...guest,
       tenantId: tenantId ? Number(tenantId) : 0, // Ensure tenantId is attached
     }));
-
+  
     try {
-      // Post data including the tenantId in the guests
-      await axios.post(API_RESERVATION, {
-        ...formData,
-        guests: guestsWithTenantId,
-      });
-
+      // Prepare the reservation data (reservationDTO)
+      const reservationDTO: ReservationDTO = {
+        roomId: formData.roomId,  // The room the user selected
+        inDate: formData.inDate,  // The start date of the reservation
+        outDate: formData.outDate,  // The end date of the reservation
+        state: formData.state,  // The state of the reservation (e.g., "CONFIRMADA")
+        guests: guestsWithTenantId,  // Include the updated list of guests with tenantId
+        tenantId: tenantId ? Number(tenantId) : 0, // Add tenantId from localStorage
+        id: 0,  // ID is typically generated by the backend, so we set it to 0 here
+      };
+  
+      // Call createReservation with the reservationDTO
+      await createReservation(reservationDTO);
+  
       alert("🎉 Reservation created successfully!");
       setFormData({
         roomId: "",
@@ -181,7 +210,7 @@ const CreateReservationForm: React.FC = () => {
             lastname: "",
             email: "",
             phone: "",
-            tenantDTO: { id: Number(localStorage.getItem("tenantid")) || 0 },
+            tenantId: Number(localStorage.getItem("tenantid")) || 0,
           },
         ],
       });
@@ -192,10 +221,12 @@ const CreateReservationForm: React.FC = () => {
       setLoading(false);
     }
   };
+  
+  
 
   return (
     <div className="flex justify-center p-4 dark:bg-gray-900 max-h-full">
-      <Card className=" w-full p-6 shadow-xl rounded-xl bg-white dark:bg-gray-800">
+      <Card className="w-full p-6 shadow-xl rounded-xl bg-white dark:bg-gray-800">
         <h2 className="text-2xl font-bold text-center mb-4 text-gray-800 dark:text-white">
           📆 {t("reservation.create")}
         </h2>
@@ -214,13 +245,28 @@ const CreateReservationForm: React.FC = () => {
                     value={formData.roomId}
                     onChange={handleChange}
                     className="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                    disabled={roomsLoading}
                   >
-                    <option value="">{t("reservation.selectRoom")}</option>
-                    {rooms.map((room) => (
-                      <option key={room.id} value={room.id}>
-                        n.º {room.number} — {room.capacity} guests
+                    {roomsLoading ? (
+                      <option>
+                        {t("reservation.loadingRooms") || "Loading rooms..."}
                       </option>
-                    ))}
+                    ) : (
+                      <>
+                        <option value="">{t("reservation.selectRoom")}</option>
+                        {rooms.length === 0 ? (
+                          <option value="" disabled>
+                            No available rooms
+                          </option>
+                        ) : (
+                          rooms.map((room) => (
+                            <option key={room.id} value={room.id}>
+                              n.º {room.number} — {room.capacity} guests
+                            </option>
+                          ))
+                        )}
+                      </>
+                    )}
                   </select>
                 </div>
 

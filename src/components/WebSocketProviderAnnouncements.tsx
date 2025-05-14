@@ -13,14 +13,20 @@ interface Announcement {
   content: string;
   postDate: string | Date;
   expirationDate: string | Date;
-  tenantId: number;
+  tenant: { id: number };
 }
 
 // Create WebSocket context
-export const WebSocketContext = createContext<WebSocketContextType | undefined>(undefined);
+export const WebSocketContext = createContext<WebSocketContextType | undefined>(
+  undefined
+);
 
 // WebSocketProvider component with proper typing
-export const WebSocketProviderAnnouncements = ({ children }: { children: React.ReactNode }) => {
+export const WebSocketProviderAnnouncements = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]); // Announcements should be an array of strings or your specific type
   const API_WS = import.meta.env.VITE_WS_URL;
   useEffect(() => {
@@ -28,7 +34,7 @@ export const WebSocketProviderAnnouncements = ({ children }: { children: React.R
       webSocketFactory: () => new SockJS(API_WS),
       reconnectDelay: 5000,
     });
-  
+
     const connect = async () => {
       stompClient.onConnect = () => {
         console.log("Connected to WebSocket!");
@@ -37,22 +43,22 @@ export const WebSocketProviderAnnouncements = ({ children }: { children: React.R
           console.log("Received announcement via WebSocket:", parsedMessage);
           setAnnouncements((prev) => [...prev, parsedMessage]);
         });
-  
+
         // Clean up by unsubscribing
         return subscription;
       };
-  
+
       stompClient.activate();
     };
-  
+
     connect(); // Call the async function to establish the connection
-  
+
     // Cleanup function - unsubscribe from the WebSocket topic when effect is cleaned up
     return () => {
       stompClient.deactivate();
     };
   }, []);
-  
+
   return (
     <WebSocketContext.Provider value={{ announcements }}>
       {children}

@@ -23,14 +23,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decoded: User & { exp: number } = jwtDecode(token);
-        const now = Date.now() / 1000;
-        if (decoded.exp > now) {
-          setUser(decoded);
-        } else {
-          localStorage.removeItem("token");
-          setUser(null);
-        }
+        const decoded: User = jwtDecode(token);
+        setUser(decoded);
       } catch (err) {
         console.error("Failed to decode token", err);
         localStorage.removeItem("token");

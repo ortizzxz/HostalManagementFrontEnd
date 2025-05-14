@@ -4,13 +4,18 @@ import axios from "axios";
 // const API_URL = "http://localhost:8080/api/reservations";
 const API_URL = import.meta.env.VITE_API_RESERVATIONS;
 
-// TypeScript interfaces for your data
+export interface GuestReservationDTO {
+  guests: GuestDTO[];
+  reservationDTO: ReservationDTO;
+}
+
 export interface GuestDTO {
   nif: string;
   name: string;
   lastname: string;
   email: string;
   phone: string;
+  tenantId: number;
 }
 
 export interface ReservationDTO {
@@ -20,13 +25,20 @@ export interface ReservationDTO {
   outDate: string; // ISO date string
   state: string;
   guests: GuestDTO[];
+  tenantId: number;
 }
 
-// If you want to wrap guests and reservation as in your backend DTO:
-export interface GuestReservationDTO {
-  guests: GuestDTO[];
-  reservationDTO: ReservationDTO;
-}
+export const createReservation = async (
+  reservationDTO: ReservationDTO
+): Promise<ReservationDTO> => {
+  try {
+    const response = await axios.post(API_URL, reservationDTO);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating reservation:", error);
+    throw error;
+  }
+};
 
 // Get all reservations (if implemented in backend)
 export const getReservations = async (): Promise<ReservationDTO[]> => {
@@ -42,15 +54,3 @@ export const getReservations = async (): Promise<ReservationDTO[]> => {
   }
 };
 
-// Create a new reservation
-export const createReservation = async (
-  guestReservationData: GuestReservationDTO
-): Promise<ReservationDTO> => {
-  try {
-    const response = await axios.post(API_URL, guestReservationData.reservationDTO);
-    return response.data;
-  } catch (error) {
-    console.error("Error creating reservation:", error);
-    throw error;
-  }
-};

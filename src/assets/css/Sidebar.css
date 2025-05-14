@@ -27,8 +27,29 @@
 }
 
 .icon {
-    width: 1.25rem; /* 20px */
-    height: 1.25rem; /* 20px */
-    margin-right: 0.5rem; /* 8px */
-  }
-  
+  width: 1.25rem; /* 20px */
+  height: 1.25rem; /* 20px */
+  margin-right: 0.5rem; /* 8px */
+}
+
+/* Hover Effect */
+.sidebar-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Active Link Styling */
+.active-link {
+  background-color: rgba(255, 255, 255, 0.2); /* Active tab background */
+  color: #fff;
+  font-weight: bold; /* Optionally make the active link bold */
+}
+
+/* Click animation - Scale effect */
+.sidebar-link:active {
+  transform: scale(0.98); /* Slightly shrink on click */
+}
+
+/* Focus Effect for Accessibility */
+.sidebar-link:focus-visible {
+  box-shadow: 0 0 0 2px rgba(34, 153, 255, 0.5); /* Blue outline on focus */
+}

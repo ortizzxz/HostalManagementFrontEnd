@@ -3,15 +3,19 @@ import axios from "axios";
 // const API_URL = "http://localhost:8080/api/room";
 const API_URL = import.meta.env.VITE_API_ROOM;
 
+interface TenantDTO {
+  id: number;
+}
+
 // Define TypeScript interfaces for your data
-interface Room {
+export interface Room {
   id: number;
   number: string | number;
   type: string;
   capacity: string | number;
   baseRate: string | number;
   state: string;
-  tenantId: number;
+  tenantDTO: TenantDTO; // Now tenant is a TenantDTO object
 }
 
 // Get all Rooms

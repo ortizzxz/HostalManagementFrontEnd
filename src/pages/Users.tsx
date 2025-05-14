@@ -59,7 +59,6 @@ const Users = () => {
           ({ ...userWithoutPassword }: User) => userWithoutPassword
         ); // Only return the user properties excluding password
         setUsers(filteredUsers); // Establecemos los usuarios
-        console.log(filteredUsers);
       } catch (error) {
         console.error("Error al obtener usuarios:", error);
       }
@@ -78,28 +77,31 @@ const Users = () => {
     navigate(`/update-user/${userId}`);
   };
 
-    const handleDeleteUser = (id: number) => {
-      const selectedUser = users.find((r) => r.id === id);
-      if (selectedUser) {
-        setUserToDelete(selectedUser);
-        setShowDeleteModal(true);
+  const handleDeleteUser = (id: number) => {
+    const selectedUser = users.find((r) => r.id === id);
+    if (selectedUser) {
+      setUserToDelete(selectedUser);
+      setShowDeleteModal(true);
+    }
+  };
+
+  const handleGoToFinances = () => {
+    navigate("/finances");
+  };
+
+  const confirmDeleteUser = async () => {
+    if (userToDelete) {
+      try {
+        await deleteUser(userToDelete.id); // API call
+        setUsers((prev) => prev.filter((user) => user.id !== userToDelete.id));
+      } catch (err) {
+        console.error("Error deleting user:", err);
+      } finally {
+        setShowDeleteModal(false);
+        setUserToDelete(null);
       }
-    };
-  
-    const confirmDeleteUser = async () => {
-      if (userToDelete) {
-        try {
-          await deleteUser(userToDelete.id); // API call
-          setUsers((prev) => prev.filter((user) => user.id !== userToDelete.id));
-        } catch (err) {
-          console.error("Error deleting user:", err);
-        } finally {
-          setShowDeleteModal(false);
-          setUserToDelete(null);
-        }
-      }
-    };
-    
+    }
+  };
 
   return (
     <div className="text-black dark:text-white">
@@ -107,9 +109,11 @@ const Users = () => {
       <HeaderWithActions
         title={t("user.list")}
         onCreate={handleCreateUser}
-        onUpdate={handleUpdateUser} // Now expects userId
+        onUpdate={handleUpdateUser}
+        onExtra={handleGoToFinances}
         createLabel={t("user.create")}
         updateLabel={t("user.update")}
+        extraLabel={t("Finances")} // Label for the nav button
       />
       {/* Filter Bar */}
       <FilterBar
@@ -122,11 +126,12 @@ const Users = () => {
       />
 
       {/* Lista de usuarios */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {/* Lista de usuarios */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
         {filteredUsers.map((user) => (
           <div
             key={user.id}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-300 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer"
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-400 dark:border-gray-200 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer"
           >
             <div className="p-6">
               <div className="flex items-center mb-4">
@@ -163,13 +168,13 @@ const Users = () => {
                 </div>
                 <div className="flex gap-2">
                   <button
-                    className="text-sm text-blue-500 hover:text-blue-700"
+                    className="text-sm text-white focus:outline-none focus:ring-2 bg-yellow-500 dark:bg-yellow-600 hover:bg-yellow-700 dark:hover:bg-yellow-500 focus:ring-opacity-75 border border-transparent p-2 rounded-lg transition duration-200"
                     onClick={() => handleUpdateUser(user.id)} // Pass user.id
                   >
                     {t("user.update")}
                   </button>
                   <button
-                    className="text-sm text-red-500 hover:text-red-700"
+                    className="text-sm text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 border border-transparent p-2 rounded-lg transition duration-200"
                     onClick={() => handleDeleteUser(user.id)} // Pass user.id
                   >
                     {t("user.delete")}
@@ -180,6 +185,7 @@ const Users = () => {
           </div>
         ))}
       </div>
+
       <DeleteUserForm
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}

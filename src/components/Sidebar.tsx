@@ -1,77 +1,180 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   Home,
   CalendarCheck,
   BedDouble,
   Users,
   MessageCircle,
-  PersonStanding,
+  ReceiptEuro,
+  LayoutDashboard,
+  CalendarIcon,
 } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import ConfigModal from "./ConfigModal";
 import "../assets/css/Sidebar.css";
+import { LogOut } from "lucide-react";
+import { logoutUser } from "../api/userApi";
 
 const Sidebar = () => {
   const { t } = useTranslation();
+  // State for managing dropdown visibility
+  const [showUsersDropdown, setShowUsersDropdown] = useState(false);
+  const [showReservationsDropdown, setShowReservationsDropdown] =
+    useState(false);
+
+  const toggleUsersDropdown = () => {
+    setShowUsersDropdown(!showUsersDropdown); // Toggle dropdown visibility
+  };
+
+  const toggleReservationDropdown = () => {
+    setShowReservationsDropdown(!showReservationsDropdown); // Toggle dropdown visibility
+  };
 
   return (
-    <div className="w-48 h-screen bg-gray-900 dark:bg-gray-800 text-white dark:white p-3 flex flex-col">
-      <h1 className="text-2xl mb-5 bg-gray-600 dark:bg-gray-900 p-2 rounded-lg text-center cursor-default">
+    <div className="w-48 h-screen bg-gray-900 dark:bg-gray-800 text-white p-3 flex flex-col">
+      <h1 className="text-2xl mb-2 bg-gray-600 dark:bg-gray-900 p-2 rounded-lg text-center cursor-default">
         EasyHostal
       </h1>
 
+      <div className="divider"></div>
       {/* Navigation Section */}
       <nav className="flex flex-col space-y-4 flex-1">
-        <Link to="/dashboard" className="sidebar-link">
+        <NavLink
+          to="/dashboard"
+          className={({ isActive }) =>
+            isActive ? "sidebar-link active-link" : "sidebar-link"
+          }
+        >
           <Home className="icon" /> {t("sidebar.dashboard")}
-        </Link>
+        </NavLink>
 
-        {/* Divider */}
         <div className="divider"></div>
 
-        <Link to="/guests" className="sidebar-link">
-          <PersonStanding className="icon" /> {t("sidebar.guests")}
-        </Link>
-
-        {/* Divider */}
-        <div className="divider"></div>
-
-        <Link to="/rooms" className="sidebar-link">
+        <NavLink
+          to="/rooms"
+          className={({ isActive }) =>
+            isActive ? "sidebar-link active-link" : "sidebar-link"
+          }
+        >
           <BedDouble className="icon" /> {t("sidebar.rooms")}
-        </Link>
+        </NavLink>
 
-        {/* Divider */}
         <div className="divider"></div>
 
-        <Link to="/reservations" className="sidebar-link">
-          <CalendarCheck className="icon" /> {t("sidebar.reservations")}
-        </Link>
+        {/* Reservation section with dropdown */}
+        <div>
+          <button
+            onClick={toggleReservationDropdown}
+            className="sidebar-link w-full mb-1"
+          >
+            <CalendarCheck className="icon" /> {t("sidebar.reservations")}
+          </button>
+          {/* Dropdown menu for Overview and Finances */}
+          {showReservationsDropdown && (
+            <div className="ml-4 space-y-2">
+              
+              {/* Reservations Overview */}
+              <NavLink
+                to="/reservations"
+                className={({ isActive }) =>
+                  isActive
+                    ? "sidebar-link active-link pl-4"
+                    : "sidebar-link pl-4"
+                }
+              >
+                <LayoutDashboard className="icon" />
+                {t("sidebar.overview")}
+              </NavLink>
 
-        {/* Divider */}
+              {/* Reservations Checkins */}
+              <NavLink
+                to="/checkins"
+                className={({ isActive }) =>
+                  isActive
+                    ? "sidebar-link active-link pl-4"
+                    : "sidebar-link pl-4"
+                }
+              >
+                <CalendarIcon className="icon" />
+                {t("sidebar.checkins")}
+              </NavLink>
+            </div>
+          )}
+        </div>
+
         <div className="divider"></div>
 
-        <Link to="/announcements" className="sidebar-link">
+        {/* Users section with dropdown */}
+        <div>
+          <button
+            onClick={toggleUsersDropdown}
+            className="sidebar-link w-full mb-1"
+          >
+            <Users className="icon" /> {t("sidebar.users")}
+          </button>
+          {/* Dropdown menu for Overview and Finances */}
+          {showUsersDropdown && (
+            <div className="ml-4 space-y-2">
+
+              {/* Users Overview */}
+              <NavLink
+                to="/users-overview"
+                className={({ isActive }) =>
+                  isActive
+                    ? "sidebar-link active-link pl-4"
+                    : "sidebar-link pl-4"
+                }
+              >
+                <LayoutDashboard className="icon" />
+                {t("sidebar.overview")}
+              </NavLink>
+      
+              {/* Users Finances */}
+              <NavLink
+                to="/finances"
+                className={({ isActive }) =>
+                  isActive
+                    ? "sidebar-link pl-4 active-link"
+                    : "sidebar-link pl-4 text-md"
+                }
+              >
+                <ReceiptEuro className="icon" /> {t("sidebar.finances")}
+              </NavLink>
+            </div>
+          )}
+        </div>
+
+        {/* Anouncement */}
+        <div className="divider"></div>
+        <NavLink
+          to="/announcements"
+          className={({ isActive }) =>
+            isActive ? "sidebar-link active-link" : "sidebar-link"
+          }
+        >
           <MessageCircle className="icon" /> {t("sidebar.announcements")}
-        </Link>
-
-        {/* Divider */}
-        <div className="divider"></div>
-
-        <Link to="/users" className="sidebar-link">
-          <Users className="icon" /> {t("sidebar.users")}
-        </Link>
+        </NavLink>
       </nav>
 
       {/* Version and Config Button */}
       <div className="flex flex-col justify-between items-center pb-2 gap-2">
         <a
-          href="https://www.github.com/ortizzxz"
+          href="https://www.linkedin.com/in/jesusdortizreyes/"
           target="_blank"
           className="text-center text-gray-400 text-sm"
         >
-          v0.1 - Jesús Ortiz
+          v1.0.0 - Jesús Ortiz
         </a>
-        <ConfigModal /> {/* Button to open the configuration modal */}
+        <div className="w-full flex justify-center items-center gap-2">
+          <ConfigModal /> {/* Button to open the configuration modal */}
+          <button
+            onClick={logoutUser}
+            className="w-12 py-2 px-4 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition-all duration-200 dark:bg-red-500 dark:hover:bg-red-600"
+          >
+            <LogOut />
+          </button>
+        </div>
       </div>
     </div>
   );
