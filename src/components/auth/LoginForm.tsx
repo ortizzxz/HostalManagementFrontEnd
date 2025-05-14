@@ -32,6 +32,7 @@ const LoginPage = () => {
     try {
       await loginUser(email, password);
       navigate("/dashboard");
+      window.location.reload();
     } catch (err) {
       console.log("Error logging in", err);
       setError(t("login.login_failed"));
