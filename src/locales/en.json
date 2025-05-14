@@ -49,6 +49,17 @@
     "delete": "Delete Guest",
     "empty": "No Guests To Display"
   },
+  "finances":{
+    "list": "Finances",
+    "employee": "Employee",
+    "create_wage": "Assign Wage",
+    "role": "Rol",
+    "hourly_rate": "Pago por Hora",
+    "weekly_hours": "Horas Semanales",
+    "tax_imposed": "IRPF",
+    "extra_payments": "Pagos Extras",
+    "back": "Back to Users"
+  },
   "room": {
     "room": "Room",
     "list": "Rooms",
@@ -73,7 +84,9 @@
     "guests": "Guests",
     "announcements": "Announcements",
     "users": "Users",
-    "checkins": "Check In/Out"
+    "checkins": "Check In/Out",
+    "overview": "Dashboard",
+    "finances": "Finances"
   },
   "modal": {
     "settings": "Settings",
@@ -88,7 +101,7 @@
     "disableNotifications": "Disable Notifications",
     "close": "Close"
   },
-  "checkinout":{
+  "checkinout": {
     "list": "Check In/Out",
     "status": "Status",
     "update": "Update Check In/Out"
@@ -102,13 +115,16 @@
     "login_failed": "Login failed. Please check your credentials.",
     "session_expired": "Session expired. Please log in again."
   },
-  "filterbar":{
+  "filterbar": {
     "search_placeholder": "Search..."
   },
-  "delete":{
+  "delete": {
     "verification_room": "Are you sure you want to delete Room #{{roomNumber}}?",
     "verification_announcement": "Are you sure you want to delete Announcement #{{announcementNumber}}?",
     "verification_user": "Are you sure you want to delete User #{{userNumber}}?"
-
+  },
+  "common": {
+    "save": "Save",
+    "actions": "Actions"
   }
 }

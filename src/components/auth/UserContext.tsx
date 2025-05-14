@@ -11,6 +11,7 @@ interface User {
 interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
+  isAuthenticated: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -26,12 +27,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(decoded);
       } catch (err) {
         console.error("Failed to decode token", err);
+        localStorage.removeItem("token");
         setUser(null);
       }
     }
   }, []);
 
-  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ user, setUser, isAuthenticated: !!user }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export const useUser = (): UserContextType => {
