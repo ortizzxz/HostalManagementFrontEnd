@@ -2,12 +2,7 @@
   height: 1px;
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
-  background: linear-gradient(
-    to right,
-    transparent,
-    #6b7280,
-    transparent
-  ); /* gray-500 */
+  background: linear-gradient(to right, transparent, #6b7280, transparent); /* gray-500 */
 }
 
 .sidebar-link {
@@ -19,22 +14,11 @@
 }
 
 .sidebar-link:hover {
-  background-color: #4a5568; /* gray-700 */
+  background-color: rgba(74, 85, 104, 0.1); /* Slightly lighter gray on hover */
 }
 
 .sidebar-link.dark:hover {
-  background-color: #2d3748; /* gray-600 */
-}
-
-.icon {
-  width: 1.25rem; /* 20px */
-  height: 1.25rem; /* 20px */
-  margin-right: 0.5rem; /* 8px */
-}
-
-/* Hover Effect */
-.sidebar-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(45, 55, 72, 0.1); /* Dark gray for hover in dark mode */
 }
 
 /* Active Link Styling */
@@ -52,4 +36,36 @@
 /* Focus Effect for Accessibility */
 .sidebar-link:focus-visible {
   box-shadow: 0 0 0 2px rgba(34, 153, 255, 0.5); /* Blue outline on focus */
+}
+
+.icon {
+  width: 1.25rem; /* 20px */
+  height: 1.25rem; /* 20px */
+  margin-right: 0.5rem; /* 8px */
+}
+
+/* Scrollbar Styling */
+.sidebar {
+  overflow-y: auto;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #4A4A4A #2D2D2D; /* Firefox: thumb color and track color */
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #4A4A4A;
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background-color: #2D2D2D; /* Dark gray for track */
+}
+
+/* Hover effect for scrollbar */
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
 }

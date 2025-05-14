@@ -146,7 +146,7 @@ const Reservations = () => {
       />
 
       {/* Reservation list */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 mt-6">  
         {reservations.map((reservation) => {
           const { textClass } = getStatusClasses(
             reservation.editedState ?? reservation.state

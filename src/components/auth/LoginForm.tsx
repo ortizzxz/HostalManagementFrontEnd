@@ -41,11 +41,19 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen ">
+    <div className="flex justify-center items-center mt-4">
       <form
         onSubmit={handleLogin}
         className="max-w-md w-full p-8 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-400"
       >
+        {/* Logo Section */}
+        <div className="text-center mb-6">
+          <img
+            src="/public/images/eh_logo.png"  
+            alt="Logo"
+            className="w-48 h-auto mx-auto"
+          />
+        </div>
         <h2 className="text-2xl font-semibold mb-6">{t("login.login")}</h2>
         <div>
           <Label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
