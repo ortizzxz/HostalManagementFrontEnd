@@ -1,13 +1,13 @@
 // CreateAnnouncementForm.tsx
 import React, { useState } from "react";
-import { Button } from "../ui/button.js";
-import { Input } from "../ui/input.js";
-import { Label } from "../ui/label.js";
-import { Card, CardContent } from "../ui/card.js";
+import { Button } from "../../ui/button.js";
+import { Input } from "../../ui/input.js";
+import { Label } from "../../ui/label.js";
+import { Card, CardContent } from "../../ui/card.js";
 import { Loader2 } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { createAnnouncement } from "../../api/anouncementApi";
+import { createAnnouncement } from "../../../api/anouncementApi.js";
 
 // --- API types, keep in sync with your API layer ---
 interface TenantDTO {

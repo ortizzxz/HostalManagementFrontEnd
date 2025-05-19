@@ -5,7 +5,7 @@ import HeaderWithActions from "../components/ui/HeaderWithActions";
 import { useNavigate } from "react-router-dom";
 import { FaUserShield, FaUserAlt } from "react-icons/fa"; // Usamos iconos de react-icons
 import FilterBar from "../components/ui/FilterBar";
-import DeleteUserForm from "../components/forms/DeleteUserForm";
+import DeleteUserForm from "../components/forms/create/DeleteUserForm";
 
 interface User {
   id: number;

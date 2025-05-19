@@ -8,14 +8,15 @@ import Reservations from "./pages/Reservations";
 import Rooms from "./pages/Rooms";
 import Announcements from "./pages/Anouncements";
 import Users from "./pages/Users";
-import CreateUserForm from "./components/forms/CreateUserForm";
-import CreateAnouncementForm from "./components/forms/CreateAnouncementForm";
-import CreateRoomForm from "./components/forms/CreateRoomForm";
-import CreateReservationForm from "./components/forms/CreateReservationForm";
+import CreateUserForm from "./components/forms/create/CreateUserForm";
+import CreateAnouncementForm from "./components/forms/create/CreateAnouncementForm";
+import CreateRoomForm from "./components/forms/create/CreateRoomForm";
+import CreateReservationForm from "./components/forms/create/CreateReservationForm";
 import LoginPage from "./components/auth/LoginForm";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Finances from "./pages/Finances";
 import CheckInOut from "./pages/CheckInOut";
+import UpdateRoomForm from "./components/forms/update/UpdateRoomForm";
 
 const AppRoutes = () => {
   const { isAuthenticated } = useUser();
@@ -45,6 +46,8 @@ const AppRoutes = () => {
           <Route path="/create-announcement" element={<ProtectedRoute><CreateAnouncementForm /></ProtectedRoute>} />
           <Route path="/create-room" element={<ProtectedRoute><CreateRoomForm /></ProtectedRoute>} />
           <Route path="/create-reservation" element={<ProtectedRoute><CreateReservationForm /></ProtectedRoute>} />
+          <Route path="/update-room/:id" element={<ProtectedRoute><UpdateRoomForm/></ProtectedRoute>} />
+
         </Routes>
       </div>
     </div>

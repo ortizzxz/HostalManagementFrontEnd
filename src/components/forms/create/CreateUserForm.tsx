@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { createUser } from "../../api/userApi";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { createUser } from "../../../api/userApi.js";
+import { Button } from "../../ui/button.js";
+import { Input } from "../../ui/input.js";
+import { Label } from "../../ui/label.js";
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "../ui/select";
-import { Card, CardContent } from "../ui/card.js";
+} from "../../ui/select.js";
+import { Card, CardContent } from "../../ui/card.js";
 import { Loader2 } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
 import { redirect } from "react-router-dom";

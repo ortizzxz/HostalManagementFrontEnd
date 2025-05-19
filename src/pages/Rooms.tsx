@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getRooms, deleteRoom } from "../api/roomApi";
 import FilterBar from "../components/ui/FilterBar";
-import DeleteRoomForm from "../components/forms/DeleteRoomForm";
+import DeleteRoomForm from "../components/forms/create/DeleteRoomForm";
 
 interface Room {
   id: number;
@@ -62,8 +62,7 @@ const Rooms = () => {
   };
 
   const handleUpdateRoom = (id: number) => {
-    console.log(`Redirect to update room form for room id: ${id}`);
-    // Logic for room update
+    navigate(`/update-room/${id}`);
   };
 
   const handleDeleteRoom = (id: number) => {
