@@ -5,7 +5,9 @@ interface User {
   id: number;
   email: string;
   rol: string;
-  [key: string]: unknown;
+  tenantId: number;
+  exp: number;
+  iat: number;
 }
 
 interface UserContextType {
@@ -16,17 +18,33 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decoded: User = jwtDecode(token);
-        setUser(decoded);
+        const decoded: User = jwtDecode<User>(token);
+        const currentTime = Date.now() / 1000; // en segundos
+        if (decoded.exp && decoded.exp > currentTime) {
+          setUser({
+            id: decoded.id || 0,
+            email: decoded.email,
+            rol: decoded.rol,
+            tenantId: decoded.tenantId,
+            exp: decoded.exp,
+            iat: decoded.iat
+          });
+        } else {
+          console.warn("Token expirado");
+          localStorage.removeItem("token");
+          setUser(null);
+        }
       } catch (err) {
-        console.error("Failed to decode token", err);
+        console.error("Fallo al decodificar el token", err);
         localStorage.removeItem("token");
         setUser(null);
       }
@@ -34,7 +52,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser, isAuthenticated: !!user }}>
+    <UserContext.Provider value={{ user, setUser, isAuthenticated: !!user && (user.exp > Date.now() / 1000)}}>
       {children}
     </UserContext.Provider>
   );
