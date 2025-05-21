@@ -54,10 +54,10 @@
     "employee": "Employee",
     "create_wage": "Assign Wage",
     "role": "Rol",
-    "hourly_rate": "Pago por Hora",
-    "weekly_hours": "Horas Semanales",
-    "tax_imposed": "IRPF",
-    "extra_payments": "Pagos Extras",
+    "hourly_rate": "Hourly Rate",
+    "weekly_hours": "Weekly Hours",
+    "tax_imposed": "Taxes",
+    "extra_payments": "Extra Payments",
     "back": "Back to Users"
   },
   "room": {
@@ -68,13 +68,18 @@
     "delete": "Delete Room",
     "empty": "No Rooms To Display",
     "status": "Status",
-
     "creation": {
       "number": "Room Number",
       "type": "Room Type",
       "capacity": "Room Capacity",
       "price": "Room Rate",
-      "create": "Register Room"
+      "create": "Register Room",
+      "baserate": "Base Rate"
+    },
+    "state": {
+      "available": "Available",
+      "busy": "Busy",
+      "maintenance": "Under Maintenance"
     }
   },
   "sidebar": {

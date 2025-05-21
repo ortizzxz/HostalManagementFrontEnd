@@ -2,12 +2,20 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { getRooms, updateRoom } from "../../../api/roomApi";
+import {
+  Hash,
+  Building2,
+  Users,
+  DollarSign,
+  Settings,
+  Loader2,
+  Save,
+} from "lucide-react";
 
 interface TenantDTO {
   id: number;
 }
 
-// Define TypeScript interfaces for your data
 export interface Room {
   id: number;
   number: string | number;
@@ -15,7 +23,7 @@ export interface Room {
   capacity: string | number;
   baseRate: string | number;
   state: string;
-  tenantDTO: TenantDTO; // Now tenant is a TenantDTO object
+  tenantDTO: TenantDTO;
 }
 
 const UpdateRoomForm = () => {
@@ -26,9 +34,7 @@ const UpdateRoomForm = () => {
     capacity: "",
     baseRate: "",
     state: "",
-    tenantDTO: {
-        id: 0,
-    },
+    tenantDTO: { id: 0 },
   });
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
@@ -61,76 +67,112 @@ const UpdateRoomForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await updateRoom(Number(id), {...room, tenantDTO: room.tenantDTO ?? null});
+      await updateRoom(Number(id), { ...room, tenantDTO: room.tenantDTO ?? null });
       navigate("/rooms");
     } catch (err) {
       console.error("Failed to update room", err);
     }
   };
 
-  if (loading) return <div>{t("loading")}</div>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center mt-10">
+        <Loader2 className="animate-spin mr-2" />
+        {t("loading")}
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-xl mx-auto mt-8 p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg">
-      <h1 className="text-2xl font-bold mb-4">{t("room.update")}</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-2xl mx-auto p-6 bg-gray-100 dark:bg-gray-800 rounded-2xl shadow-xl border">
+      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-white">
+        {t("room.update")}
+      </h1>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Room Number */}
         <div>
-          <label className="block mb-1">{t("room.creation.number")}</label>
+          <label className="flex items-center gap-2 text-gray-700 dark:text-gray-200 font-medium mb-1">
+            <Hash className="w-5 h-5" />
+            {t("room.creation.number")}
+          </label>
           <input
             type="text"
             name="number"
             value={room.number}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-lg dark:text-black"
           />
         </div>
+
+        {/* Room Type */}
         <div>
-          <label className="block mb-1">{t("room.creation.type")}</label>
+          <label className="flex items-center gap-2 text-gray-700 dark:text-gray-200 font-medium mb-1">
+            <Building2 className="w-5 h-5" />
+            {t("room.creation.type")}
+          </label>
           <input
             type="text"
             name="type"
             value={room.type}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-lg dark:text-black"
           />
         </div>
+
+        {/* Capacity */}
         <div>
-          <label className="block mb-1">{t("room.creation.capacity")}</label>
+          <label className="flex items-center gap-2 text-gray-700 dark:text-gray-200 font-medium mb-1">
+            <Users className="w-5 h-5" />
+            {t("room.creation.capacity")}
+          </label>
           <input
             type="number"
             name="capacity"
             value={room.capacity}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-lg dark:text-black"
           />
         </div>
+
+        {/* Base Rate */}
         <div>
-          <label className="block mb-1">{t("room.creation.baserate")}</label>
+          <label className="flex items-center gap-2 text-gray-700 dark:text-gray-200 font-medium mb-1">
+            <DollarSign className="w-5 h-5" />
+            {t("room.creation.baserate")}
+          </label>
           <input
             type="number"
             name="baseRate"
             value={room.baseRate}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-lg dark:text-black"
           />
         </div>
+
+        {/* Room State */}
         <div>
-          <label className="block mb-1">{t("room.status")}</label>
+          <label className="flex items-center gap-2 text-gray-700 dark:text-gray-200 font-medium mb-1">
+            <Settings className="w-5 h-5" />
+            {t("room.status")}
+          </label>
           <select
             name="state"
             value={room.state}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-lg dark:text-black"
           >
             <option value="DISPONIBLE">{t("room.state.available")}</option>
             <option value="OCUPADO">{t("room.state.busy")}</option>
             <option value="MANTENIMIENTO">{t("room.state.maintenance")}</option>
           </select>
         </div>
+
+        {/* Submit Button */}
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition"
         >
+          <Save className="w-5 h-5" />
           {t("room.update")}
         </button>
       </form>

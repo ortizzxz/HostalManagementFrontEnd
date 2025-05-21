@@ -45,11 +45,23 @@ export const getReservations = async (): Promise<ReservationDTO[]> => {
   try {
     const tenantId = Number(localStorage.getItem("tenantId"));
     const response = await axios.get<ReservationDTO[]>(API_URL, {
-      params: {tenantId}
+      params: { tenantId },
     });
     return response.data;
   } catch (error) {
     console.error("Error fetching reservations:", error);
+    throw error;
+  }
+};
+
+export const updateReservation = async (
+  reservation: ReservationDTO
+): Promise<ReservationDTO> => {
+  try {
+    const response = await axios.put(`${API_URL}/${reservation.id}`, reservation);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating reservation:", error);
     throw error;
   }
 };
