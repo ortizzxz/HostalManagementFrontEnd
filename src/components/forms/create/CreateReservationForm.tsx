@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
+import { Button } from "../../ui/button";
+import { Card, CardContent } from "../../ui/card";
 import { Plus, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { getRooms } from "../../api/roomApi";
-import { getGuestByNIF } from "../../api/guestApi";
-import { createReservation } from "../../api/reservationApi";
+import { getRooms } from "../../../api/roomApi";
+import { getGuestByNIF } from "../../../api/guestApi";
+import { createReservation } from "../../../api/reservationApi";
   
 interface RoomFromApi {
   id: number;

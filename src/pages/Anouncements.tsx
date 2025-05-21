@@ -6,7 +6,7 @@ import HeaderWithActions from "../components/ui/HeaderWithActions";
 import { useNavigate } from "react-router-dom";
 import { FaCalendarAlt, FaCalendarCheck } from "react-icons/fa";
 import { format } from "date-fns";
-import DeleteAnnouncementForm from "../components/forms/DeleteAnnouncementForm";
+import DeleteAnnouncementForm from "../components/forms/create/DeleteAnnouncementForm";
 
 // Define types for the announcements
 interface Announcement {

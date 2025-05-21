@@ -62,7 +62,13 @@
       "type": "Tipo de Habitación",
       "capacity": "Capacidad de la Habitación",
       "price": "Precio de la habitación",
-      "create": "Registrar Habitación"
+      "create": "Registrar Habitación",
+      "state": {
+      "available": "Disponible",
+      "busy": "Ocupada",
+      "maintenance": "En Mantenimiento",
+      "baserate": "Precio Base"
+    }
     }
   },
   "sidebar": {

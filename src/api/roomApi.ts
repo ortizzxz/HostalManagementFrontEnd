@@ -50,3 +50,14 @@ export const deleteRoom = async (id: number) => {
   const response = await axios.delete(`${API_URL}/${id}`);
   return response.data;
 };
+
+// Update a room
+export const updateRoom = async (id: number, roomData: Omit<Room, "id">): Promise<Room> => {
+  try {
+    const response = await axios.put<Room>(`${API_URL}/${id}`, roomData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating room:", error);
+    throw error;
+  }
+};

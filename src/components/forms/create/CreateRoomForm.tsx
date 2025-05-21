@@ -1,10 +1,10 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { Button } from "../ui/button.js";
-import { Input } from "../ui/input.js";
-import { Label } from "../ui/label.js";
-import { Card, CardContent } from "../ui/card.js";
+import { Button } from "../../ui/button.js";
+import { Input } from "../../ui/input.js";
+import { Label } from "../../ui/label.js";
+import { Card, CardContent } from "../../ui/card.js";
 import { Loader2 } from "lucide-react";
-import { createRoom } from "../../api/roomApi";
+import { createRoom } from "../../../api/roomApi.js";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 

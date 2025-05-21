@@ -37,3 +37,8 @@ export const getCheckInsOuts = async (): Promise<ReservationApiResponse[]> => {
     throw error;
   }
 };
+
+export const updateCheckInOut = async (checkInOutData: any) => {
+  const response = await axios.post(API_URL + "/update", checkInOutData);
+  return response.data;
+};
