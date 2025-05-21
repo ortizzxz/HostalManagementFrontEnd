@@ -48,6 +48,7 @@ const AppRoutes = () => {
           <Route path="/create-reservation" element={<ProtectedRoute><CreateReservationForm /></ProtectedRoute>} />
           <Route path="/update-room/:id" element={<ProtectedRoute><UpdateRoomForm/></ProtectedRoute>} />
 
+          <Route path="/*" element={isAuthenticated ? <ProtectedRoute><Dashboard /></ProtectedRoute> : <LoginPage />} />
         </Routes>
       </div>
     </div>
