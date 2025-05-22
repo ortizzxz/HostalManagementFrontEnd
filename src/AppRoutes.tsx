@@ -17,6 +17,8 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Finances from "./pages/Finances";
 import CheckInOut from "./pages/CheckInOut";
 import UpdateRoomForm from "./components/forms/update/UpdateRoomForm";
+import UpdateUserForm from "./components/forms/update/UpdateUserForm";
+import UpdateReservationForm from "./components/forms/update/UpdateReservationComponent";
 
 const AppRoutes = () => {
   const { isAuthenticated } = useUser();
@@ -47,6 +49,8 @@ const AppRoutes = () => {
           <Route path="/create-room" element={<ProtectedRoute><CreateRoomForm /></ProtectedRoute>} />
           <Route path="/create-reservation" element={<ProtectedRoute><CreateReservationForm /></ProtectedRoute>} />
           <Route path="/update-room/:id" element={<ProtectedRoute><UpdateRoomForm/></ProtectedRoute>} />
+          <Route path="/update-user/:id" element={<ProtectedRoute><UpdateUserForm/></ProtectedRoute>} />
+          <Route path="/update-reservation/:id" element={<ProtectedRoute><UpdateReservationForm/></ProtectedRoute>} />
 
           <Route path="/*" element={isAuthenticated ? <ProtectedRoute><Dashboard /></ProtectedRoute> : <LoginPage />} />
         </Routes>

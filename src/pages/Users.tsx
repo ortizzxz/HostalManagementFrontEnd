@@ -73,7 +73,6 @@ const Users = () => {
   };
 
   const handleUpdateUser = (userId: number) => {
-    // Pasamos el ID del usuario para redirigir al formulario de actualización
     navigate(`/update-user/${userId}`);
   };
 

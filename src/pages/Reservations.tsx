@@ -23,6 +23,7 @@ interface Guest {
 }
 
 interface ReservationDTO {
+  id: number;
   roomId: string | number; // roomId can be string or number
   inDate: string;
   outDate: string;
@@ -44,11 +45,10 @@ const Reservations = () => {
     const fetchReservations = async () => {
       try {
         const data: ReservationDTO[] = await getReservations(); // Fetch data as ReservationDTO[]
-
         // Transform ReservationDTO to Reservation
         const transformedReservations: Reservation[] = data.map(
-          (reservation, index) => ({
-            id: index + 1, // Assuming a simple way of generating the id, can be from API if available
+          (reservation) => ({
+            id: reservation.id, // Assuming a simple way of generating the id, can be from API if available
             roomId:
               typeof reservation.roomId === "string"
                 ? Number(reservation.roomId)
@@ -73,7 +73,7 @@ const Reservations = () => {
   };
 
   const handleUpdateReservation = (id: number) => {
-    console.log(`Updating reservation with id: ${id}`);
+    navigate(`/update-reservation/${id}`);
   };
 
   const handleStatusChange = (id: number, newState: string) => {
@@ -140,9 +140,7 @@ const Reservations = () => {
       <HeaderWithActions
         title={t("reservation.list")}
         onCreate={handleCreateReservation}
-        onUpdate={(id: number) => handleUpdateReservation(id)}
         createLabel={t("reservation.create")}
-        updateLabel={t("reservation.update")}
       />
 
       {/* Reservation list */}
@@ -248,6 +246,10 @@ const Reservations = () => {
                           {t("common.save")}
                         </button>
                       )}
+                      <button
+                          onClick={() => handleUpdateReservation(reservation.id)}
+                          className="self-start px-3 py-1 rounded transition bg-yellow-500 dark:bg-yellow-600 hover:bg-yellow-700 dark:hover:bg-yellow-500"
+                        >Update</button>
                   </div>
                 </div>
               </div>
