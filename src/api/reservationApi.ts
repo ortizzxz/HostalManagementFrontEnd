@@ -66,3 +66,14 @@ export const updateReservation = async (
   }
 };
 
+export const UpdateState = async (
+  reservation: ReservationDTO
+): Promise<ReservationDTO> => {
+  try {
+    const response = await axios.put(`${API_URL}/status/${reservation.id}`, reservation);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating reservation:", error);
+    throw error;
+  }
+};
