@@ -124,17 +124,17 @@ const Reservations = () => {
   // Helper function to get status classes
   const getStatusClasses = (status: string) => {
     switch (status) {
-      case "CONFIRMADA":
+      case "COMPLETADA":
         return {
           textClass: "text-green-600 dark:text-green-400", // Text color for light and dark mode
           bgClass: "bg-green-100 dark:bg-green-700", // Optional background color if needed
         };
-      case "CANCELADA":
+      case "CONFIRMADA":
         return {
           textClass: "text-yellow-600 dark:text-yellow-400",
           bgClass: "bg-yellow-100 dark:bg-yellow-700",
         };
-      case "COMPLETADA":
+      case "CANCELADA":
         return {
           textClass: "text-red-600 dark:text-red-400",
           bgClass: "bg-red-100 dark:bg-red-700",
@@ -248,7 +248,7 @@ const Reservations = () => {
                           {t("reservation.confirmed")}
                         </option>
                         <option value="COMPLETADA">
-                          {t("reservation.pending")}
+                          {t("reservation.completed")}
                         </option>
                         <option value="CANCELADA">
                           {t("reservation.cancelled")}
@@ -270,7 +270,7 @@ const Reservations = () => {
                       onClick={() => handleUpdateReservation(reservation.id)}
                       className="self-start px-3 py-1 rounded transition bg-yellow-500 dark:bg-yellow-600 hover:bg-yellow-700 dark:hover:bg-yellow-500"
                     >
-                      Update
+                      {t("reservation.update")}
                     </button>
                   </div>
                 </div>

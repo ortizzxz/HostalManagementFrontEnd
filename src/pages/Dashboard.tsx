@@ -11,6 +11,7 @@ import { User } from "../api/userApi";
 import { Room } from "../api/roomApi";
 import { Announcement } from "../api/anouncementApi";
 import { ReservationDTO } from "../api/reservationApi";
+import { useTranslation } from "react-i18next";
 
 
 const Dashboard = () => {
@@ -18,7 +19,7 @@ const Dashboard = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
-
+  const {t} = useTranslation();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,14 +49,14 @@ const Dashboard = () => {
   return (
     <div className="text-black dark:text-white">
       {/* Header with actions */}
-      <HeaderWithActions title="Disposition" />
+      <HeaderWithActions title={t("dashboard.disposition")} />
 
       {/* Stats grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
         <div className="card-dashboard">
           <div className="p-6">
             <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
-              Total Rooms
+              {t("dashboard.totalrooms")}
             </h3>
             <p className="text-3xl text-gray-900 dark:text-white">
               {roomStats}
@@ -66,7 +67,7 @@ const Dashboard = () => {
         <div className="card-dashboard">
           <div className="p-6">
             <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
-              Rented Rooms
+            {t("dashboard.rentedrooms")}
             </h3>
             <p className="text-3xl text-gray-900 dark:text-white">
               {rentedRooms}
@@ -77,7 +78,7 @@ const Dashboard = () => {
         <div className="card-dashboard">
           <div className="p-6">
             <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
-              Total Reservations
+            {t("dashboard.totalreservations")}
             </h3>
             <p className="text-3xl text-gray-900 dark:text-white">
               {reservationStats}
@@ -88,7 +89,7 @@ const Dashboard = () => {
         <div className="card-dashboard">
           <div className="p-6">
             <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
-              Active Workers
+            {t("dashboard.activeworkers")}
             </h3>
             <p className="text-3xl text-gray-900 dark:text-white">
               {userStats}
@@ -99,7 +100,7 @@ const Dashboard = () => {
       
       {/* Announcements Section */}
       <div className="mb-8 w-1/2 bg-gray-200 dark:bg-gray-700 p-3 rounded-md">
-        <h2 className="text-3xl text-center mb-4">Announcements</h2>
+        <h2 className="text-3xl text-center mb-4">{t("dashboard.announcements")}</h2>
         {announcements.length > 0 ? (
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {announcements.map((announcement, index) => (
@@ -118,7 +119,7 @@ const Dashboard = () => {
           </ul>
         ) : (
           <p className="text-center text-gray-400">
-            No announcements available
+            {t("dashboard.noannouncements")}
           </p>
         )}
       </div>

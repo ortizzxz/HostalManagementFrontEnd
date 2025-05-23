@@ -47,7 +47,8 @@ const UpdateUserForm = () => {
     setError("");
     try {
       if (id && user) {
-        await updateUser(id, user);
+        const { password, ...userData } = user; 
+        await updateUser(id, userData);
         navigate("/users-overview");
       }
     } catch (err) {

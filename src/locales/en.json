@@ -30,7 +30,7 @@
     "phone": "Phone",
     "addGuest": "Add Another Guest",
     "list": "Reservations",
-    "update": "Update Reservation",
+    "update": "Update",
     "delete": "Delete Reservation",
     "empty": "No Reservation To Display",
     "guest_summary": "Guests Added",
@@ -39,7 +39,17 @@
     "confirmed": "Confirmed",
     "pending": "Pending",
     "cancelled": "Cancelled",
+    "completed": "Completed",
     "guest_details": "Guests Details"
+  },
+  "dashboard": {
+    "disposition": "Dashboard",
+    "totalrooms": "Total Rooms",
+    "rentedrooms": "Rented Rooms",
+    "totalreservations": "Total Reservations",
+    "totalworkers": "Total Workers",
+    "announcements": "Last Announcements",
+    "noannouncements": "There are no recent announcements"
   },
   "guest": {
     "guest": "Guest",
@@ -93,6 +103,11 @@
     "overview": "Dashboard",
     "finances": "Finances"
   },
+  "checkin":{
+    "datein": "Check In Date",
+    "dateout": "Check Out Date",
+    "update": "Update Check In/Out"
+  },
   "modal": {
     "settings": "Settings",
     "languages": "Languages",
@@ -108,8 +123,7 @@
   },
   "checkinout": {
     "list": "Check In/Out",
-    "status": "Status",
-    "update": "Update Check In/Out"
+    "status": "Status"
   },
   "login": {
     "login": "Log In",
@@ -130,6 +144,7 @@
   },
   "common": {
     "save": "Save",
-    "actions": "Actions"
+    "actions": "Actions",
+    "cancel": "Cancel"
   }
 }
