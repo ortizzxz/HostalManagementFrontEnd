@@ -25,7 +25,7 @@ export interface UserDTO {
   lastname: string;
   email: string;
   password: string;
-  rol: "ADMIN" | "RECEPCION" | "LIMPIEZA" | "MANTENIMIENTO" | "UNKNOWN"; // Extend with your actual enums
+  rol: "admin" | "recepcion" | "limpieza" | "mantenimiento" | "unknown"; // Extend with your actual enums
   tenant: number;
 }
 

@@ -1,8 +1,13 @@
-import { JSX, useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUsers, User } from "../../../api/userApi";
-import { getWages, createWage } from "../../../api/wageApi";
-
+import { getUsers } from "../../../api/userApi";
+import {
+  createWage,
+  UserDTO,
+  WageCreateRequest,
+  getWages,
+  WageDTO,
+} from "../../../api/wageApi";
 import {
   UserIcon,
   CurrencyDollarIcon,
@@ -12,80 +17,89 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
-
-
-export interface WageDTO {
-  id?: number; // <-- make this optional
-  userDTO: User;
-  hourRate: number;
-  weeklyHours: number;
-  taxImposed: number;
-  extraPayments: number;
+interface FormData {
+  userId: number | "";
+  hourRate: number | "";
+  weeklyHours: number | "";
+  taxImposed: number | "";
+  extraPayments: number | "";
 }
 
 const CreateWageForm = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [wages, setWages] = useState<WageDTO[]>([]);
+  const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    userId: 0,
-    hourRate: 0,
-    weeklyHours: 0,
-    taxImposed: 0,
-    extraPayments: 0,
+  const [users, setUsers] = useState<UserDTO[]>([]);
+  const [formData, setFormData] = useState<FormData>({
+    userId: "",
+    hourRate: "",
+    weeklyHours: "",
+    taxImposed: "",
+    extraPayments: "",
   });
-
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [wages, setWages] = useState<WageDTO[]>([]);
   const [userHasWageWarning, setUserHasWageWarning] = useState<string | null>(
     null
   );
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const navigate = useNavigate();
-
+  // existing useEffect to fetch users...
   useEffect(() => {
     const fetchUsersAndWages = async () => {
       try {
         const users = await getUsers();
         setUsers(users);
-
-        const wages = await getWages();
+        const wages = await getWages(); // fetch wages here
         setWages(wages);
-      } catch (err) {
-        console.error("Failed to load users or wages:", err);
+      } catch (error) {
+        setErrorMessage("Failed to load users or wages.");
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchUsersAndWages();
   }, []);
 
-  useEffect(() => {
-    if (formData.userId && wages.length > 0) {
-      const existingWage = wages.find((w) => w.userDTO.id === formData.userId);
-      if (existingWage) {
-        setUserHasWageWarning(
-          "Warning: This user already has a wage assigned."
-        );
-      } else {
-        setUserHasWageWarning(null);
-      }
-    } else {
-      setUserHasWageWarning(null);
-    }
-  }, [formData.userId, wages]);
-
+  // modify handleChange to check for existing wage on user select
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === "userId" ? Number(value) : parseFloat(value),
-    }));
+
+    setFormData((prev) => {
+      const newFormData = {
+        ...prev,
+        [name]:
+          value === ""
+            ? ""
+            : name === "userId"
+            ? Number(value)
+            : parseFloat(value),
+      };
+
+      // Check for existing wage if userId changed
+      if (name === "userId" && value !== "") {
+        const userIdNum = Number(value);
+        const existingWage = wages.find((w) => w.userDTO.id === userIdNum);
+        if (existingWage) {
+          setUserHasWageWarning(
+            "Warning: This user already has a wage assigned."
+          );
+        } else {
+          setUserHasWageWarning(null);
+        }
+      } else if (name === "userId" && value === "") {
+        setUserHasWageWarning(null);
+      }
+
+      return newFormData;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setErrorMessage(null);
     setSuccessMessage(null);
 
@@ -94,22 +108,42 @@ const CreateWageForm = () => {
       return;
     }
 
-    const payload = {
-      userId: formData.userId,
-      hourRate: formData.hourRate,
-      weeklyHours: formData.weeklyHours,
-      taxImposed: formData.taxImposed,
-      extraPayments: formData.extraPayments,
-    };
+    // Validate inputs
+    if (
+      formData.userId === "" ||
+      formData.hourRate === "" ||
+      formData.weeklyHours === "" ||
+      formData.taxImposed === "" ||
+      formData.extraPayments === ""
+    ) {
+      setErrorMessage("Please fill in all fields.");
+      return;
+    }
 
     try {
+      const selectedUser = users.find((user) => user.id === formData.userId);
+
+      if (!selectedUser) {
+        setErrorMessage("Selected user not found.");
+        return;
+      }
+
+      const payload: WageCreateRequest = {
+        userId: selectedUser.id,
+        hourRate: formData.hourRate as number,
+        weeklyHours: formData.weeklyHours as number,
+        taxImposed: formData.taxImposed as number,
+        extraPayments: formData.extraPayments as number,
+      };
+
       await createWage(payload);
       setSuccessMessage("Wage created successfully!");
+
       setTimeout(() => {
         navigate("/finances");
       }, 1500);
     } catch (err: any) {
-      if (err.response && err.response.data && err.response.data.error) {
+      if (err.response?.data?.error) {
         setErrorMessage(err.response.data.error);
       } else {
         setErrorMessage("Failed to create wage. Please try again.");
@@ -118,20 +152,35 @@ const CreateWageForm = () => {
     }
   };
 
-  const InputWrapper = ({
-    icon,
-    children,
-  }: {
-    icon: JSX.Element;
-    children: React.ReactNode;
-  }) => (
-    <div className="relative rounded-md shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-75">
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
-        {icon}
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center mt-10">
+        <svg
+          className="animate-spin h-8 w-8 text-blue-600"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          ></circle>
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v8z"
+          ></path>
+        </svg>
+        <span className="ml-2 text-gray-700 dark:text-gray-300">
+          Loading...
+        </span>
       </div>
-      {children}
-    </div>
-  );
+    );
+  }
 
   return (
     <div className="max-w-xl mx-auto p-5 border border-gray-600 bg-white dark:bg-gray-900 rounded-xl shadow-xl relative">
@@ -168,13 +217,16 @@ const CreateWageForm = () => {
           <label htmlFor="userId" className="block mb-2 font-semibold">
             Select User
           </label>
-          <InputWrapper icon={<UserIcon className="w-5 h-5" />}>
+          <div className="relative rounded-md shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-75">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
+              <UserIcon className="w-5 h-5" />
+            </div>
             <select
               id="userId"
               name="userId"
               onChange={handleChange}
-              value={formData.userId || ""}
               className="block w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
+              value={formData.userId || ""}
               required
             >
               <option value="">-- Select User --</option>
@@ -184,10 +236,11 @@ const CreateWageForm = () => {
                 </option>
               ))}
             </select>
-          </InputWrapper>
+          </div>
           {userHasWageWarning && (
-            <p className="mt-2 text-sm text-red-600 dark:text-red-400">
-              {userHasWageWarning}
+            <p className="mt-2 text-yellow-600 dark:text-yellow-400 flex items-center space-x-1">
+              <XCircleIcon className="w-5 h-5" />
+              <span>{userHasWageWarning}</span>
             </p>
           )}
         </div>
@@ -196,82 +249,89 @@ const CreateWageForm = () => {
           <label htmlFor="hourRate" className="block mb-2 font-semibold">
             Hourly Rate
           </label>
-          <InputWrapper icon={<CurrencyDollarIcon className="w-5 h-5" />}>
+          <div className="relative rounded-md shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-75">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
+              <CurrencyDollarIcon className="w-5 h-5" />
+            </div>
             <input
               id="hourRate"
               name="hourRate"
               type="number"
               step="0.01"
               onChange={handleChange}
-              value={formData.hourRate}
               className="block w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
+              value={formData.hourRate || ""}
               required
             />
-          </InputWrapper>
+          </div>
         </div>
 
         <div>
           <label htmlFor="weeklyHours" className="block mb-2 font-semibold">
             Weekly Hours
           </label>
-          <InputWrapper icon={<ClockIcon className="w-5 h-5" />}>
+          <div className="relative rounded-md shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-75">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
+              <ClockIcon className="w-5 h-5" />
+            </div>
             <input
               id="weeklyHours"
               name="weeklyHours"
               type="number"
               onChange={handleChange}
-              value={formData.weeklyHours}
               className="block w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
+              value={formData.weeklyHours || ""}
               required
             />
-          </InputWrapper>
+          </div>
         </div>
 
         <div>
           <label htmlFor="taxImposed" className="block mb-2 font-semibold">
             Tax Imposed (%)
           </label>
-          <InputWrapper icon={<DocumentTextIcon className="w-5 h-5" />}>
+          <div className="relative rounded-md shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-75">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
+              <DocumentTextIcon className="w-5 h-5" />
+            </div>
             <input
               id="taxImposed"
               name="taxImposed"
               type="number"
               step="0.01"
               onChange={handleChange}
-              value={formData.taxImposed}
               className="block w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
+              value={formData.taxImposed || ""}
               required
             />
-          </InputWrapper>
+          </div>
         </div>
 
         <div>
           <label htmlFor="extraPayments" className="block mb-2 font-semibold">
             Extra Payments
           </label>
-          <InputWrapper icon={<CurrencyDollarIcon className="w-5 h-5" />}>
+          <div className="relative rounded-md shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-75">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
+              <CurrencyDollarIcon className="w-5 h-5" />
+            </div>
             <input
               id="extraPayments"
               name="extraPayments"
               type="number"
-              step="0.01"
               onChange={handleChange}
-              value={formData.extraPayments}
               className="block w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
+              value={formData.extraPayments || ""}
               required
             />
-          </InputWrapper>
+          </div>
         </div>
 
         <button
           type="submit"
-          disabled={!!userHasWageWarning}
-          className={`flex justify-center items-center w-full gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-md shadow-md transition-transform active:scale-95 ${
-            userHasWageWarning ? "opacity-50 cursor-not-allowed" : ""
-          }`}
+          className="mt-5 w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 transition duration-200"
         >
-          <CurrencyDollarIcon className="w-5 h-5" />
-          Save Wage
+          Create Wage
         </button>
       </form>
     </div>

@@ -9,7 +9,7 @@ export interface UserDTO {
   lastname: string;
   email: string;
   password: string;
-  rol: "ADMIN" | "RECEPCION" | "LIMPIEZA" | "MANTENIMIENTO" | "UNKNOWN"; // Extend with your actual enums
+  rol: "admin" | "recepcion" | "limpieza" | "mantenimiento" | "unknown"; // Extend with your actual enums
   tenant: number;
 }
 
@@ -36,7 +36,7 @@ export const getWages = async (): Promise<WageDTO[]> => {
   }
 };
 
-interface WageCreateRequest {
+export interface WageCreateRequest {
   userId: number;
   hourRate: number;
   weeklyHours: number;
@@ -54,7 +54,7 @@ export const createWage = async (wage: WageCreateRequest): Promise<WageDTO> => {
       lastname: "",
       email: "",
       password: "",
-      rol: "UNKNOWN",
+      rol: "unknown",
       tenant: 0,
     },
   };

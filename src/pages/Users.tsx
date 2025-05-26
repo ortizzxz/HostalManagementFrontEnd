@@ -43,10 +43,10 @@ const Users = () => {
 
   // Define filter buttons
   const userFilterButtons = [
-    { label: "Admin", value: "ADMIN" },
-    { label: "Reception", value: "RECEPCION" },
-    { label: "Janitors", value: "LIMPIEZA" },
-    { label: "Maintenance", value: "MANTENIMIENTO" },
+    { label: "Admin", value: "admin" },
+    { label: "Reception", value: "recepcion" },
+    { label: "Janitors", value: "limpieza" },
+    { label: "Maintenance", value: "mantenimiento" },
     { label: "All", value: "" }, // No filter
   ];
 

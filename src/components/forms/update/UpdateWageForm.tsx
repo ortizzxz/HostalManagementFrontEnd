@@ -16,7 +16,6 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
-
 interface FormData {
   userId: number | "";
   hourRate: number | "";
@@ -113,7 +112,7 @@ const UpdateWageForm = () => {
           lastname: selectedUser.lastname,
           email: selectedUser.email,
           password: selectedUser.password,
-          rol: isValidRol(selectedUser.rol) ? selectedUser.rol : "UNKNOWN",
+          rol: isValidRol(selectedUser.rol) ? selectedUser.rol : "unknown",
           tenant: selectedUser.tenant,
         },
         hourRate: formData.hourRate || 0,
@@ -170,11 +169,11 @@ const UpdateWageForm = () => {
 
   const isValidRol = (role: string): role is UserDTO["rol"] => {
     return [
-      "ADMIN",
-      "RECEPCION",
-      "LIMPIEZA",
-      "MANTENIMIENTO",
-      "UNKNOWN",
+      "admin",
+      "recepcion",
+      "limpieza",
+      "mantenimiento",
+      "unknown",
     ].includes(role);
   };
 
