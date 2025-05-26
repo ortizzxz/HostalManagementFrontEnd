@@ -150,7 +150,7 @@ const CheckInOut = () => {
                   className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
                   onClick={() => handleUpdate(entry.reservationDTO)}
                 >
-                  {t("checkinout.update") || "Update"}
+                  {t("checkin.update")}
                 </button>
               </div>
             </div>
@@ -165,7 +165,7 @@ const CheckInOut = () => {
 
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Check-In Date
+                  {t("checkin.datein")}
                 </label>
                 <input
                   type="datetime-local"
@@ -175,7 +175,7 @@ const CheckInOut = () => {
                 />
 
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Check-Out Date
+                  {t("checkin.dateout")}
                 </label>
                 <input
                   type="datetime-local"
@@ -194,10 +194,11 @@ const CheckInOut = () => {
               <div className="flex justify-end space-x-2 pt-4">
                 <button
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 bg-gray-300 dark:bg-gray-600rounded hover:bg-gray-400"
+                  className="px-3 py-2 bg-gray-300 dark:bg-gray-300 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  Cancel
+                  {t("common.cancel")}
                 </button>
+
                 <button
                   onClick={async () => {
                     try {
@@ -221,7 +222,7 @@ const CheckInOut = () => {
                   }}
                   className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
-                  Save
+                  {t("common.save")}
                 </button>
               </div>
             </div>

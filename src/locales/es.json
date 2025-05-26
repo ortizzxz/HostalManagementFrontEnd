@@ -17,9 +17,10 @@
   },
   "reservation": {
     "reservation": "Reserva",
+    "room": "Número de Habitación",
     "list": "Reservas",
     "create": "Crear Reserva",
-    "update": "Actualizar Reserva",
+    "update": "Actualizar",
     "delete": "Eliminar Reservas",
     "empty": "No hay Reservas para mostar",
     "guest_summary": "Huéspedes Añadidos",
@@ -28,7 +29,17 @@
     "confirmed": "Confirmada",
     "pending": "Pendiente",
     "cancelled": "Cancelada",
+    "completed": "Completeda",
     "guest_details": "Detalles de Huéspedes"
+  },
+  "dashboard": {
+    "disposition": "Dashboard",
+    "totalrooms": "Habitaciones",
+    "rentedrooms": "Habitaciones Rentadas",
+    "totalreservations": "Reservas",
+    "totalworkers": "Trabajadores",
+    "announcements": "Últimos Anuncios",
+    "noannouncements": "No hay Anuncios recientes"
   },
   "finances":{
     "list": "Finanzas",
@@ -82,6 +93,11 @@
     "overview": "Dashboard",
     "finances": "Finanzas"
   },
+  "checkin":{
+    "datein": "Fecha de Check In",
+    "dateout": "Fecha de Check Out",
+    "update": "Actualizar Check In/Out"
+  },
   "modal": {
     "settings": "Ajustes",
     "languages": "Idioma",
@@ -114,6 +130,7 @@
   },
   "common": {
     "save": "Guardar",
-    "actions": "Acción"
+    "actions": "Acción",
+    "cancel": "Cancelar"
   }
 }

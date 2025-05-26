@@ -14,7 +14,7 @@ export interface UserDTO {
 }
 
 export interface WageDTO {
-  id: number;
+  id?: number; // <-- make this optional
   userDTO: UserDTO;
   hourRate: number;
   weeklyHours: number;
@@ -32,6 +32,54 @@ export const getWages = async (): Promise<WageDTO[]> => {
     return response.data;
   } catch (error) {
     console.error("Error fetching wages:", error);
+    throw error;
+  }
+};
+
+interface WageCreateRequest {
+  userId: number;
+  hourRate: number;
+  weeklyHours: number;
+  taxImposed: number;
+  extraPayments: number;
+}
+
+// change createWage to map userId into userDTO on sending
+export const createWage = async (wage: WageCreateRequest): Promise<WageDTO> => {
+  const wageDTO: WageDTO = {
+    ...wage,
+    userDTO: {
+      id: wage.userId,
+      name: "",
+      lastname: "",
+      email: "",
+      password: "",
+      rol: "UNKNOWN",
+      tenant: 0,
+    },
+  };
+  const response = await axios.post<WageDTO>(API_URL, wageDTO);
+  return response.data;
+};
+
+// Obtener un wage por ID
+export const getWageById = async (id: number) => {
+  try {
+    const response = await axios.get(`${API_URL}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching wage with id ${id}:`, error);
+    throw error;
+  }
+};
+
+// Actualizar un wage por ID
+export const updateWage = async (id: number, wageDTO: WageDTO) => {
+  try {
+    const response = await axios.put(`${API_URL}/${id}`, wageDTO);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating wage with id ${id}:`, error);
     throw error;
   }
 };

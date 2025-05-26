@@ -1,28 +1,20 @@
 import { useState, useEffect } from "react";
-import { getWages } from "../api/wageApi";  
+import { getWages, WageDTO } from "../api/wageApi";
 import HeaderWithActions from "../components/ui/HeaderWithActions";
 import { useNavigate } from "react-router-dom"; // For navigation
-import { FaEdit, FaTrashAlt, FaDollarSign, FaClock, FaUserLock, FaEuroSign } from "react-icons/fa"; 
+import {
+  FaEdit,
+  FaTrashAlt,
+  FaDollarSign,
+  FaClock,
+  FaUserLock,
+  FaEuroSign,
+} from "react-icons/fa";
 import { User } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-interface Wage {
-  id: number;
-  userDTO: {
-    id: number;
-    name: string;
-    lastname: string;
-    email: string;
-    rol: string;
-  };
-  hourRate: number;
-  weeklyHours: number;
-  taxImposed: number;
-  extraPayments: number;
-}
-
 const Finances = () => {
-  const [wages, setWages] = useState<Wage[]>([]);
+  const [wages, setWages] = useState<WageDTO[]>([]);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -47,29 +39,33 @@ const Finances = () => {
     navigate("/create-wage"); // Navigate to Create Wage form
   };
 
+  const handleEditWage = (id: number) => {
+    navigate(`/update-wage/${id}`);
+  };
+
   return (
     <div className="text-black dark:text-white">
       {/* Header with actions */}
       <HeaderWithActions
-        title= {t('finances.list')}
+        title={t("finances.list")}
         onCreate={handleCreateWage}
         onExtra={handleGoBack}
-        createLabel={t('finances.create_wage')}
-        extraLabel={t('finances.back')}
+        createLabel={t("finances.create_wage")}
+        extraLabel={t("finances.back")}
       />
 
       {/* Wages Table */}
       <div className="overflow-x-auto shadow-md sm:rounded-lg mt-4">
         <table className="min-w-full text-left text-lg font-light">
           <thead className="border-b bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white">
-          <tr>
-              <th className="px-6 py-3">{t('finances.employee')}</th>
-              <th className="px-6 py-3">{t('finances.role')}</th>
-              <th className="px-6 py-3">{t('finances.hourly_rate')}</th>
-              <th className="px-6 py-3">{t('finances.weekly_hours')}</th>
-              <th className="px-6 py-3">{t('finances.tax_imposed')}</th>
-              <th className="px-6 py-3">{t('finances.extra_payments')}</th>
-              <th className="px-6 py-3">{t('common.actions')}</th>
+            <tr>
+              <th className="px-6 py-3">{t("finances.employee")}</th>
+              <th className="px-6 py-3">{t("finances.role")}</th>
+              <th className="px-6 py-3">{t("finances.hourly_rate")}</th>
+              <th className="px-6 py-3">{t("finances.weekly_hours")}</th>
+              <th className="px-6 py-3">{t("finances.tax_imposed")}</th>
+              <th className="px-6 py-3">{t("finances.extra_payments")}</th>
+              <th className="px-6 py-3">{t("common.actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -89,7 +85,11 @@ const Finances = () => {
                 </td>
 
                 {/* Role Formatted to UpperCase*/}
-                <td className="px-6 py-4 inline-flex gap-2 items-center"><FaUserLock />{wage.userDTO.rol.slice(0, 1)}{wage.userDTO.rol.slice(1).toLowerCase()}</td>
+                <td className="px-6 py-4 inline-flex gap-2 items-center">
+                  <FaUserLock />
+                  {wage.userDTO.rol.slice(0, 1)}
+                  {wage.userDTO.rol.slice(1).toLowerCase()}
+                </td>
 
                 {/* Hourly Rate */}
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -126,7 +126,12 @@ const Finances = () => {
                 {/* Actions */}
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="inline-flex gap-3">
-                    <button className="text-blue-500 hover:text-blue-700">
+                    <button
+                      className="text-blue-500 hover:text-blue-700"
+                      onClick={() =>
+                        wage.id !== undefined && handleEditWage(wage.id)
+                      }
+                    >
                       <FaEdit className="w-5 h-5" />
                     </button>
                     <button className="text-red-500 hover:text-red-700">
