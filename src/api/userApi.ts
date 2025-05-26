@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 // const API_URL = "http://localhost:8080/api/user";
 // const AUTH_URL = "http://localhost:8080/api/auth"; // For authentication (login)
 const API_URL = import.meta.env.VITE_API_USERS;
-const AUTH_URL = import.meta.env.VITE_API_AUTH;// For authentication (login)
+const AUTH_URL = import.meta.env.VITE_API_AUTH; // For authentication (login)
 
 // TypeScript interface for User data
 export interface User {
@@ -18,6 +18,15 @@ export interface User {
   tenantId?: number; // Assuming tenantId is part of the user data, optional if not required.
   createdAt?: Date;
   updatedAt?: Date;
+}
+export interface UserDTO {
+  id: number;
+  name: string;
+  lastname: string;
+  email: string;
+  password: string;
+  rol: "ADMIN" | "RECEPCION" | "LIMPIEZA" | "MANTENIMIENTO" | "UNKNOWN"; // Extend with your actual enums
+  tenant: number;
 }
 
 interface DecodedToken {
@@ -46,10 +55,10 @@ axiosInstance.interceptors.request.use(
 );
 
 // Get all users with proper typing, handling tenant information
-export const getUsers = async (): Promise<User[]> => {
+export const getUsers = async (): Promise<UserDTO[]> => {
   try {
     const tenantId = Number(localStorage.getItem("tenantId"));
-    const response = await axiosInstance.get<User[]>(API_URL, {
+    const response = await axiosInstance.get<UserDTO[]>(API_URL, {
       params: { tenantId },
     });
     return response.data;
@@ -101,7 +110,7 @@ export const deleteUser = async (id: number): Promise<void> => {
     throw error;
   }
 };
- 
+
 export const loginUser = async (email: string, password: string) => {
   try {
     const response = await axios.post(`${AUTH_URL}/login`, { email, password });
@@ -125,7 +134,7 @@ export const loginUser = async (email: string, password: string) => {
     throw error;
   }
 };
- 
+
 export const logoutUser = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("tenantId");

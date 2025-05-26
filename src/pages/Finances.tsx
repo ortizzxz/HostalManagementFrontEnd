@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getWages } from "../api/wageApi";
+import { getWages, WageDTO } from "../api/wageApi";
 import HeaderWithActions from "../components/ui/HeaderWithActions";
 import { useNavigate } from "react-router-dom"; // For navigation
 import {
@@ -13,23 +13,8 @@ import {
 import { User } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-interface Wage {
-  id: number;
-  userDTO: {
-    id: number;
-    name: string;
-    lastname: string;
-    email: string;
-    rol: string;
-  };
-  hourRate: number;
-  weeklyHours: number;
-  taxImposed: number;
-  extraPayments: number;
-}
-
 const Finances = () => {
-  const [wages, setWages] = useState<Wage[]>([]);
+  const [wages, setWages] = useState<WageDTO[]>([]);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -143,7 +128,9 @@ const Finances = () => {
                   <div className="inline-flex gap-3">
                     <button
                       className="text-blue-500 hover:text-blue-700"
-                      onClick={() => handleEditWage(wage.id)}
+                      onClick={() =>
+                        wage.id !== undefined && handleEditWage(wage.id)
+                      }
                     >
                       <FaEdit className="w-5 h-5" />
                     </button>

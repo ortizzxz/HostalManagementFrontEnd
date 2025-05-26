@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getUsers } from "../../../api/userApi";
-import { getWageById, updateWage } from "../../../api/wageApi";
+import {
+  getWageById,
+  updateWage,
+  WageDTO,
+  UserDTO,
+} from "../../../api/wageApi";
 import {
   UserIcon,
   CurrencyDollarIcon,
@@ -11,11 +16,6 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
-interface UserOption {
-  id: number;
-  name: string;
-  lastname: string;
-}
 
 interface FormData {
   userId: number | "";
@@ -29,7 +29,7 @@ const UpdateWageForm = () => {
   const { wageId } = useParams<{ wageId: string }>();
   const navigate = useNavigate();
 
-  const [users, setUsers] = useState<UserOption[]>([]);
+  const [users, setUsers] = useState<UserDTO[]>([]);
   const [formData, setFormData] = useState<FormData>({
     userId: "",
     hourRate: "",
@@ -99,18 +99,27 @@ const UpdateWageForm = () => {
     }
 
     try {
-      // Prepare payload: convert empty strings to 0 or suitable defaults
-      const payload = {
-        userId: typeof formData.userId === "number" ? formData.userId : 0,
-        hourRate: typeof formData.hourRate === "number" ? formData.hourRate : 0,
-        weeklyHours:
-          typeof formData.weeklyHours === "number" ? formData.weeklyHours : 0,
-        taxImposed:
-          typeof formData.taxImposed === "number" ? formData.taxImposed : 0,
-        extraPayments:
-          typeof formData.extraPayments === "number"
-            ? formData.extraPayments
-            : 0,
+      const selectedUser = users.find((user) => user.id === formData.userId);
+
+      if (!selectedUser) {
+        setErrorMessage("User not found.");
+        return;
+      }
+
+      const payload: WageDTO = {
+        userDTO: {
+          id: selectedUser.id,
+          name: selectedUser.name,
+          lastname: selectedUser.lastname,
+          email: selectedUser.email,
+          password: selectedUser.password,
+          rol: isValidRol(selectedUser.rol) ? selectedUser.rol : "UNKNOWN",
+          tenant: selectedUser.tenant,
+        },
+        hourRate: formData.hourRate || 0,
+        weeklyHours: formData.weeklyHours || 0,
+        taxImposed: formData.taxImposed || 0,
+        extraPayments: formData.extraPayments || 0,
       };
 
       await updateWage(Number(wageId), payload);
@@ -158,6 +167,16 @@ const UpdateWageForm = () => {
       </div>
     );
   }
+
+  const isValidRol = (role: string): role is UserDTO["rol"] => {
+    return [
+      "ADMIN",
+      "RECEPCION",
+      "LIMPIEZA",
+      "MANTENIMIENTO",
+      "UNKNOWN",
+    ].includes(role);
+  };
 
   return (
     <div className="max-w-xl mx-auto p-5 border border-gray-600 bg-white dark:bg-gray-900 rounded-xl shadow-xl relative">

@@ -1,6 +1,6 @@
 import { JSX, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUsers } from "../../../api/userApi";
+import { getUsers, User } from "../../../api/userApi";
 import { getWages, createWage } from "../../../api/wageApi";
 
 import {
@@ -12,19 +12,11 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
-export interface UserDTO {
-  id: number;
-  name: string;
-  lastname: string;
-  email: string;
-  password: string;
-  rol: "ADMIN" | "RECEPCION" | "LIMPIEZA" | "MANTENIMIENTO" | "UNKNOWN"; // Extend with your actual enums
-  tenant: number;
-}
+
 
 export interface WageDTO {
   id?: number; // <-- make this optional
-  userDTO: UserDTO;
+  userDTO: User;
   hourRate: number;
   weeklyHours: number;
   taxImposed: number;
@@ -32,7 +24,7 @@ export interface WageDTO {
 }
 
 const CreateWageForm = () => {
-  const [users, setUsers] = useState<UserDTO[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [wages, setWages] = useState<WageDTO[]>([]);
 
   const [formData, setFormData] = useState({
