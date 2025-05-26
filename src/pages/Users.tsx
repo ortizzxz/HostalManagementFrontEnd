@@ -189,7 +189,8 @@ const Users = () => {
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onConfirm={confirmDeleteUser}
-        userId={userToDelete?.id ?? ""}
+        userName={userToDelete?.name ?? ""}
+        userLastname={userToDelete?.lastname ?? ""}
       />
     </div>
   );

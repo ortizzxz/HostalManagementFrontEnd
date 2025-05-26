@@ -140,7 +140,7 @@
   "delete": {
     "verification_room": "Are you sure you want to delete Room #{{roomNumber}}?",
     "verification_announcement": "Are you sure you want to delete Announcement #{{announcementNumber}}?",
-    "verification_user": "Are you sure you want to delete User #{{userNumber}}?"
+    "verification_user": "Are you sure you want to delete User {{userName}} {{userLastname}}?"
   },
   "common": {
     "save": "Save",

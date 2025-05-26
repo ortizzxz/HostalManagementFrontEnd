@@ -16,7 +16,7 @@ interface RoomFromApi {
   capacity: string | number;
   baseRate: string | number;
   state: string;
-  tenantDTO: TenantDTO;
+  tenant: TenantDTO;
 }
 
 interface TenantDTO {
@@ -88,7 +88,7 @@ const CreateReservationForm: React.FC = () => {
           capacity: Number(room.capacity),
           baseRate: Number(room.baseRate),
           state: room.state,
-          tenantDTO: room.tenantDTO?.id ? { id: room.tenantDTO.id } : { id: 0 },
+          tenantDTO: room.tenant?.id ? { id: room.tenant.id } : { id: 0 },
         }));
         setRooms(normalizedRooms);
       } catch (error) {

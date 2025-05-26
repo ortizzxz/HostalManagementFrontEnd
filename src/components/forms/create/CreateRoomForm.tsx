@@ -8,7 +8,6 @@ import { createRoom } from "../../../api/roomApi.js";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-// --- Form types ---
 interface RoomFormData {
   number: string;
   type: string;
@@ -19,7 +18,6 @@ interface RoomFormData {
 
 type RoomFormErrors = Partial<Record<keyof RoomFormData, string>>;
 
-// --- Component ---
 const CreateRoomForm: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -36,29 +34,53 @@ const CreateRoomForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // --- Validation ---
+  // --- Single field validation ---
+  const validateField = (name: keyof RoomFormData, value: string): string | undefined => {
+    switch (name) {
+      case "number":
+        if (!value.trim()) return "⚠️ Room number is required.";
+        break;
+      case "type":
+        if (!value.trim()) return "⚠️ Room type is required.";
+        if (value.trim().length <= 4 ) return "⚠️ Room Type should be self-explanatory.";
+        break;
+      case "capacity":
+        if (!value || isNaN(Number(value)))
+        return "⚠️ Valid capacity is required.";
+        if (Number(value) <= 0 || Number(value) > 20)
+        return "⚠️ Capacity not allowed (1 - 20).";
+        break;
+      case "baseRate":
+        if (!value || isNaN(Number(value)) || Number(value) <= 0 )
+          return "⚠️ Valid base rate is required.";
+        break;
+      default:
+        return undefined;
+    }
+    return undefined;
+  };
+
+  // --- Validate all fields ---
   const validateForm = (): boolean => {
     const newErrors: RoomFormErrors = {};
-
-    if (!formData.number.trim()) newErrors.number = "⚠️ Room number is required.";
-    if (!formData.type.trim()) newErrors.type = "⚠️ Room type is required.";
-
-    const capacityNum = Number(formData.capacity);
-    if (!formData.capacity || isNaN(capacityNum) || capacityNum <= 0)
-      newErrors.capacity = "⚠️ Valid capacity is required.";
-
-    const baseRateNum = Number(formData.baseRate);
-    if (!formData.baseRate || isNaN(baseRateNum) || baseRateNum <= 0)
-      newErrors.baseRate = "⚠️ Valid base rate is required.";
-
+    (Object.keys(formData) as (keyof RoomFormData)[]).forEach((key) => {
+      const error = validateField(key, formData[key]);
+      if (error) newErrors[key] = error;
+    });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // --- Handle input ---
+  // --- Live validation on input change ---
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Validate this field only
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: validateField(name as keyof RoomFormData, value),
+    }));
   };
 
   // --- Submit handler ---
@@ -72,13 +94,14 @@ const CreateRoomForm: React.FC = () => {
     const tenantId = Number(localStorage.getItem("tenantId"));
 
     try {
+      console.log('Tenant ID: ', tenantId);
       await createRoom({
         number: formData.number.trim(),
         type: formData.type.trim(),
         capacity: Number(formData.capacity),
         baseRate: Number(formData.baseRate),
         state: formData.state,
-        tenantDTO:{id: tenantId},
+        tenant: { id: tenantId },
       });
 
       alert("🏨 Room created successfully!");
@@ -89,7 +112,7 @@ const CreateRoomForm: React.FC = () => {
         baseRate: "",
         state: "DISPONIBLE",
       });
-
+      setErrors({});
       navigate("/rooms");
     } catch (error) {
       console.error("Error creating room:", error);
@@ -107,7 +130,6 @@ const CreateRoomForm: React.FC = () => {
         </h1>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-
             {/* Room Number */}
             <div>
               <Label htmlFor="number" className="text-sm font-medium my-2 block">

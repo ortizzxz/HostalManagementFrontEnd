@@ -6,10 +6,11 @@ interface DeleteUserFormProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  userId: string | number;
+  userName: string;
+  userLastname: string;
 }
 
-const DeleteUserForm: React.FC<DeleteUserFormProps> = ({ isOpen, onClose, onConfirm, userId }) => {
+const DeleteUserForm: React.FC<DeleteUserFormProps> = ({ isOpen, onClose, onConfirm, userName, userLastname }) => {
     const {t} = useTranslation();
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -24,7 +25,7 @@ const DeleteUserForm: React.FC<DeleteUserFormProps> = ({ isOpen, onClose, onConf
             Confirm Deletion
           </Dialog.Title>
           <Dialog.Description className="text-sm text-gray-700 dark:text-gray-300 mt-2">
-            {t('delete.verification_user',{userId})}
+            {t('delete.verification_user', { userName, userLastname })}
           </Dialog.Description>
 
           <div className="mt-4 flex justify-end gap-3">
