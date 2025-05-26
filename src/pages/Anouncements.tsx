@@ -59,7 +59,7 @@ const Announcements = () => {
         .filter((msg) => !prev.some((announcement) => announcement.id === msg.id))
         .map((msg) => ({
           ...msg,
-          tenantId: Number(localStorage.getItem("tenantid")),
+          tenantId: Number(localStorage.getItem("tenantId")),
           tenant: msg.tenant || "defaultTenant", // Add tenant property if required
         }));
       return [...prev, ...newAnnouncements];

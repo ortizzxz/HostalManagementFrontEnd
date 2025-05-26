@@ -72,7 +72,7 @@ const UpdateReservationForm = () => {
         phone: "",
         email: "",
         nif: "",
-        tenantId: Number(localStorage.getItem("tenantid")) || 0,
+        tenantId: Number(localStorage.getItem("tenantId")) || 0,
       });
       return { ...prev, guests };
     });

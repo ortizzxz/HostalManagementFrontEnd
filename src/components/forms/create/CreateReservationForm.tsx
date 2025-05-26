@@ -71,7 +71,7 @@ const CreateReservationForm: React.FC = () => {
         lastname: "",
         email: "",
         phone: "",
-        tenantId: Number(localStorage.getItem("tenantid")) || 0,
+        tenantId: Number(localStorage.getItem("tenantId")) || 0,
       },
     ],
   });
@@ -149,7 +149,7 @@ const CreateReservationForm: React.FC = () => {
       lastname: "",
       email: "",
       phone: "",
-      tenantId: Number(localStorage.getItem("tenantid")) || 0, // Add tenantId here
+      tenantId: Number(localStorage.getItem("tenantId")) || 0, // Add tenantId here
     };
 
     setFormData({
@@ -210,7 +210,7 @@ const CreateReservationForm: React.FC = () => {
             lastname: "",
             email: "",
             phone: "",
-            tenantId: Number(localStorage.getItem("tenantid")) || 0,
+            tenantId: Number(localStorage.getItem("tenantId")) || 0,
           },
         ],
       });
