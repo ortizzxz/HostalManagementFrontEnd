@@ -109,7 +109,14 @@
     "darkTheme": "Modo Oscuro",
     "enableNotifications": "Activar Notificaciones",
     "disableNotifications": "Desactivar Notificaciones",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "password": "Contraseña",
+    "password_incorrect": "Por favor verfifique su contraseña actual",
+    "password_success": "Tu contraseña se ha actualizado existosamente",
+    "password_error": "Ha ocurrido un error. Inténtelo nuevamente más tarde.",
+    "old_password": "Contraseña Actual",
+    "new_password": "Nueva Contraseña",
+    "change_password": "Cambiar Contraseña"
   },
   "login": {
     "login": "Inicie Sesión",

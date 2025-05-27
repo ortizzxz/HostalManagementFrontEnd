@@ -32,7 +32,6 @@ const ConfigModal = () => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
-
       }
     };
 
@@ -46,8 +45,12 @@ const ConfigModal = () => {
   }, [isOpen]);
 
   // Toggle modal visibility
-  const toggleModal = () => setIsOpen((prev) => !prev);
-
+  const toggleModal = () => {
+    setIsOpen((prev) => !prev);
+    setOldPassword("");
+    setNewPassword("");
+    setPasswordMessage("");
+  };
   // Change language
   const handleLanguageChange = (lang: string) => {
     i18n.changeLanguage(lang);
@@ -67,12 +70,20 @@ const ConfigModal = () => {
 
   const handleChangePassword = async () => {
     try {
-      await changePassword(email, oldPassword, newPassword);  
-      setPasswordMessage(t("modal.passwordSuccess"));
+      await changePassword(email, oldPassword, newPassword);
+      setPasswordMessage(t("modal.password_success"));
       setOldPassword("");
       setNewPassword("");
     } catch (error) {
-      setPasswordMessage(t("modal.passwordError"));
+      console.log(error);
+
+      const errorMsg = error.response?.data?.message || error.message;
+
+      if (errorMsg === "fake_password") {
+        setPasswordMessage(t("modal.password_incorrect"));
+      } else {
+        setPasswordMessage(t("modal.password_error"));
+      }
     }
   };
 
@@ -130,14 +141,14 @@ const ConfigModal = () => {
               type="password"
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
-              placeholder={t("modal.oldPassword")}
+              placeholder={t("modal.old_password")}
               className="w-full px-4 py-2 rounded bg-gray-700 text-white placeholder-gray-300"
             />
             <input
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder={t("modal.newPassword")}
+              placeholder={t("modal.new_password")}
               className="w-full px-4 py-2 rounded bg-gray-700 text-white placeholder-gray-300"
             />
             <button
@@ -145,7 +156,7 @@ const ConfigModal = () => {
               className="w-full px-4 py-2 bg-green-600 rounded hover:bg-green-700 flex items-center justify-center"
             >
               <KeyRound className="mr-2" />
-              {t("modal.changePassword")}
+              {t("modal.change_password")}
             </button>
             {passwordMessage && (
               <div className="text-center text-sm mt-2">{passwordMessage}</div>

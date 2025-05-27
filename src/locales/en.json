@@ -119,7 +119,15 @@
     "darkTheme": "Dark Theme",
     "enableNotifications": "Enable Notifications",
     "disableNotifications": "Disable Notifications",
-    "close": "Close"
+    "close": "Close",
+    "password": "Password",
+    "password_incorrect": "Please verify you current password",
+    "password_success": "Your password has been succesfully updated",
+    "password_error": "An error has ocurred. Please try again later.",
+    "old_password": "Current Password",
+    "new_password": "New Password",
+    "change_password": "Change Password"
+
   },
   "checkinout": {
     "list": "Check In/Out",
