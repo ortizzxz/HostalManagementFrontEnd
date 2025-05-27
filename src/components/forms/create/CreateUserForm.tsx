@@ -34,7 +34,6 @@ const CreateUserForm = () => {
   let tenantId = 0;
 
   if (!token) {
-    console.log("Token not found");
     redirect("/login");
   }
 
@@ -211,7 +210,6 @@ const CreateUserForm = () => {
       setErrors({});
     } catch (error) {
       setApiError("❌ Failed to create user. Please try again.");
-      console.log(error);
     } finally {
       setLoading(false);
     }

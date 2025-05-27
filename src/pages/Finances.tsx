@@ -12,20 +12,25 @@ import {
 } from "react-icons/fa";
 import { User } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { LoadingModal } from "../components/ui/LoadingModal";
 
 const Finances = () => {
   const [wages, setWages] = useState<WageDTO[]>([]);
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [loading, setLoading] = useState<boolean>(true); // loading state added
 
   // Fetch all wages (possibly filtering by tenantId if needed)
   useEffect(() => {
     const fetchWages = async () => {
       try {
+        setLoading(true);
         const data = await getWages(); // API call to fetch wages
         setWages(data);
       } catch (error) {
         console.error("Error fetching wages:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchWages();
@@ -43,6 +48,10 @@ const Finances = () => {
     navigate(`/update-wage/${id}`);
   };
 
+  if (loading) {
+    return <LoadingModal />; // Show loading modal while loading
+  }
+  
   return (
     <div className="text-black dark:text-white p-3">
       {/* Header with actions */}

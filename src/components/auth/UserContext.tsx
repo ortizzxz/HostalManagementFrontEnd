@@ -37,7 +37,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         const decoded: UserJWT = jwtDecode<UserJWT>(token);
         const currentTime = Date.now() / 1000; // en segundos
         if (decoded.exp && decoded.exp > currentTime) {
-          console.log(decoded);
           setUser({
             id: decoded.id || 0,
             email: decoded.sub,

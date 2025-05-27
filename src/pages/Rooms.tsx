@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getRooms, deleteRoom } from "../api/roomApi";
 import FilterBar from "../components/ui/FilterBar";
 import DeleteRoomForm from "../components/forms/create/DeleteRoomForm";
+import { LoadingModal } from "../components/ui/LoadingModal";
 
 interface Room {
   id: number;
@@ -23,6 +24,7 @@ const Rooms = () => {
   const [activeRoomFilter, setActiveRoomFilter] = useState(""); // State for custom filter
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [roomToDelete, setRoomToDelete] = useState<Room | null>(null);
+  const [loading, setLoading] = useState<boolean>(true); // Track loading state
 
   // Filter rooms based on search term and active filter
   const filteredRooms = rooms.filter((room) => {
@@ -47,10 +49,13 @@ const Rooms = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
+        setLoading(true);
         const data = await getRooms();
         setRooms(data);
       } catch (error) {
         console.error("Error fetching rooms: ", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -86,8 +91,10 @@ const Rooms = () => {
       }
     }
   };
-  
 
+  if (loading) {
+    return <LoadingModal />;
+  }
   return (
     <div className="text-black dark:text-white p-3">
       {/* Header with actions */}

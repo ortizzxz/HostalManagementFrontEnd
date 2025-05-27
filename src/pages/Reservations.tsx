@@ -12,6 +12,7 @@ import {
   FaBed,
   FaIdBadge,
 } from "react-icons/fa"; // Optional icons for better UI
+import { LoadingModal } from "../components/ui/LoadingModal";
 
 export interface GuestDTO {
   nif: string;
@@ -41,9 +42,11 @@ const Reservations = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true); // Track loading state
 
   const fetchReservations = async () => {
     try {
+      setLoading(true);
       const data: ReservationDTO[] = await getReservations();
       const transformedReservations: Reservation[] = data.map(
         (reservation) => ({
@@ -62,6 +65,8 @@ const Reservations = () => {
       setReservations(transformedReservations);
     } catch (error) {
       console.error("Error fetching reservations: ", error);
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -146,6 +151,10 @@ const Reservations = () => {
         };
     }
   };
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <div className="text-black dark:text-white p-3">

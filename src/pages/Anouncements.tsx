@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { FaCalendarAlt, FaCalendarCheck } from "react-icons/fa";
 import { format } from "date-fns";
 import DeleteAnnouncementForm from "../components/forms/create/DeleteAnnouncementForm";
+import { LoadingModal } from "../components/ui/LoadingModal";
 
 // Define types for the announcements
 interface Announcement {
@@ -15,9 +16,9 @@ interface Announcement {
   content: string;
   postDate: string | Date;
   expirationDate: string | Date;
-  tenant:{
+  tenant: {
     id: number;
-  } 
+  };
 }
 
 const Announcements = () => {
@@ -27,6 +28,9 @@ const Announcements = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [announcementToDelete, setAnnouncementToDelete] =
     useState<Announcement | null>(null);
+  const [filter, setFilter] = useState<"all" | "expired" | "notExpired">(
+    "notExpired"
+  );
 
   const { announcements: realTimeAnnouncements } = useContext(
     WebSocketContext
@@ -38,6 +42,7 @@ const Announcements = () => {
     const fetchAnnouncements = async () => {
       try {
         const data = await getAnnouncements();
+        console.log(data);
         setAnnouncements(data);
       } catch (error) {
         setError("Failed to fetch announcements");
@@ -53,10 +58,12 @@ const Announcements = () => {
   // Add tenantId to filtered announcements before merging
   useEffect(() => {
     if (!realTimeAnnouncements || realTimeAnnouncements.length === 0) return;
-  
+
     setAnnouncements((prev) => {
       const newAnnouncements = realTimeAnnouncements
-        .filter((msg) => !prev.some((announcement) => announcement.id === msg.id))
+        .filter(
+          (msg) => !prev.some((announcement) => announcement.id === msg.id)
+        )
         .map((msg) => ({
           ...msg,
           tenantId: Number(localStorage.getItem("tenantId")),
@@ -65,18 +72,21 @@ const Announcements = () => {
       return [...prev, ...newAnnouncements];
     });
   }, [realTimeAnnouncements]);
-  
-  
+
+  const now = new Date();
+
+  const filteredAnnouncements = announcements.filter((announcement) => {
+    const expiration = new Date(announcement.expirationDate);
+    if (filter === "expired") return expiration < now;
+    if (filter === "notExpired") return expiration >= now;
+    return true; // 'all'
+  });
+
   const handleCreateAnnouncement = () => {
     navigate("/create-announcement");
   };
 
-  const handleUpdateAnnouncement = (announcementId: number) => {
-    console.log(
-      "Redirect to announcement update form or open modal for id:",
-      announcementId
-    );
-  };
+  const handleUpdateAnnouncement = (announcementId: number) => {};
 
   const handleDeleteAnnouncement = (id: number) => {
     const selectedAnnouncement = announcements.find((r) => r.id === id);
@@ -105,7 +115,7 @@ const Announcements = () => {
   };
 
   if (loading) {
-    return <p>{t("announcement.loading")}</p>; // Display loading text
+    return <LoadingModal />;
   }
 
   if (error) {
@@ -122,10 +132,29 @@ const Announcements = () => {
         createLabel={t("announcement.create")}
         updateLabel={t("announcement.update")}
       />
+      <div className="flex flex-wrap gap-2 mb-3">
+        {[
+          { label: "Not Expired", value: "notExpired", color: "green" },
+          { label: "Expired", value: "expired", color: "red" },
+          { label: "All", value: "all", color: "blue" },
+        ].map(({ label, value, color }) => (
+          <button
+            key={value}
+            className={`text-sm font-medium px-4 py-2 rounded-lg transition duration-200 border border-transparent focus:outline-none focus:ring-2 focus:ring-${color}-400 ${
+              filter === value
+                ? `bg-${color}-600 text-white hover:bg-${color}-700`
+                : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
+            }`}
+            onClick={() => setFilter(value as "all" | "notExpired" | "expired")}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {announcements.length > 0 ? (
-          announcements.map((announcement) => (
+        {filteredAnnouncements.length > 0 ? (
+          filteredAnnouncements.map((announcement) => (
             <div
               key={announcement.id}
               className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-300 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-default"

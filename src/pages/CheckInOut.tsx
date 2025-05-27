@@ -5,6 +5,7 @@ import FilterBar from "../components/ui/FilterBar";
 import { FaCalendarAlt, FaUserFriends } from "react-icons/fa";
 import { format } from "date-fns";
 import { getCheckInsOuts, updateCheckInOut } from "../api/checkinoutApi";
+import { LoadingModal } from "../components/ui/LoadingModal";
 
 interface Guest {
   nif: string;
@@ -32,6 +33,7 @@ interface ReservationApiResponse {
 const CheckInOut = () => {
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [checkInsOuts, setCheckInsOuts] = useState<ReservationApiResponse[]>(
     []
@@ -71,6 +73,7 @@ const CheckInOut = () => {
   ];
 
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       try {
         const rawData = await getCheckInsOuts(); // This now returns ReservationApiResponse[]
@@ -78,6 +81,8 @@ const CheckInOut = () => {
         setCheckInsOuts(rawData); // No need to map again, data is already in the correct format
       } catch (error) {
         console.error("Error fetching check-in/out data:", error);
+      }finally{
+        setLoading(false);
       }
     };
 
@@ -91,6 +96,10 @@ const CheckInOut = () => {
     setShowModal(true);
   };
 
+  if (loading) {
+    return <LoadingModal />;
+  }
+  
   return (
     <div className="text-black dark:text-white p-3">
       <HeaderWithActions

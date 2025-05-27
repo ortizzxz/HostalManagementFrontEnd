@@ -78,6 +78,7 @@
     "delete": "Delete Room",
     "empty": "No Rooms To Display",
     "status": "Status",
+    "update_success": "The Room has been updated",
     "creation": {
       "number": "Room Number",
       "type": "Room Type",
@@ -157,6 +158,7 @@
   "common": {
     "save": "Save",
     "actions": "Actions",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "loading": "Loading..."
   }
 }

@@ -75,7 +75,6 @@ const ConfigModal = () => {
       setOldPassword("");
       setNewPassword("");
     } catch (error) {
-      console.log(error);
 
       let errorMsg = t("modal.password_error");
 
