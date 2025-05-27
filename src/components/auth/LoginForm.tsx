@@ -50,14 +50,17 @@ const LoginPage = () => {
         {/* Logo Section */}
         <div className="text-center mb-6">
           <img
-            src="/images/eh_logo.png"  
+            src="/images/eh_logo.png"
             alt="Logo"
             className="w-48 h-auto mx-auto"
           />
         </div>
         <h2 className="text-2xl font-semibold mb-6">{t("login.login")}</h2>
         <div>
-          <Label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
+          <Label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300"
+          >
             {t("login.email")}
           </Label>
           <Input
@@ -70,7 +73,10 @@ const LoginPage = () => {
           />
         </div>
         <div className="mt-4">
-          <Label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
+          <Label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300"
+          >
             {t("login.password")}
           </Label>
           <Input
@@ -82,6 +88,16 @@ const LoginPage = () => {
             required
           />
         </div>
+        <div className="mt-2 text-right">
+          <button
+            type="button"
+            className="text-blue-600 hover:underline text-sm"
+            onClick={() => navigate("/forgot-password")}
+          >
+            {t("login.forgot_password")}
+          </button>
+        </div>
+
         {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
         <Button type="submit" className="w-full mt-6" disabled={loading}>
           {loading ? t("login.wait") : t("login.enter")}

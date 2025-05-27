@@ -21,7 +21,8 @@ import UpdateUserForm from "./components/forms/update/UpdateUserForm";
 import UpdateReservationForm from "./components/forms/update/UpdateReservationComponent";
 import CreateWageForm from "./components/forms/create/CreateWageForm";
 import UpdateWageForm from "./components/forms/update/UpdateWageForm";
-
+import ForgotPassword from "./components/auth/ForgotPassword";
+import ResetPassword from "./components/auth/ResetPassword";
 const AppRoutes = () => {
   const { isAuthenticated } = useUser();
 
@@ -31,7 +32,7 @@ const AppRoutes = () => {
       {isAuthenticated && <Sidebar />}
 
       {/* Main Content */}
-      <div className="flex-1 p-5 dark:bg-gray-900 overflow-y-auto sidebar">
+      <div className="flex-1 dark:bg-gray-900 overflow-y-auto sidebar">
         <Routes>
           {/* Public Route */}
           <Route path="/login" element={isAuthenticated ? <ProtectedRoute><Dashboard /></ProtectedRoute> : <LoginPage />} />
@@ -55,7 +56,8 @@ const AppRoutes = () => {
           <Route path="/update-user/:id" element={<ProtectedRoute><UpdateUserForm/></ProtectedRoute>} />
           <Route path="/update-reservation/:id" element={<ProtectedRoute><UpdateReservationForm/></ProtectedRoute>} />
           <Route path="/update-wage/:wageId" element={<ProtectedRoute><UpdateWageForm/></ProtectedRoute>} />
-
+          <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword/> : <ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/reset-password" element={!isAuthenticated ? <ResetPassword /> : <ProtectedRoute><Dashboard /></ProtectedRoute>}/>
           <Route path="/*" element={isAuthenticated ? <ProtectedRoute><Dashboard /></ProtectedRoute> : <LoginPage />} />
         </Routes>
       </div>

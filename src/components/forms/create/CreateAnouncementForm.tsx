@@ -1,5 +1,4 @@
-// CreateAnnouncementForm.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "../../ui/button.js";
 import { Input } from "../../ui/input.js";
 import { Label } from "../../ui/label.js";
@@ -8,8 +7,8 @@ import { Loader2 } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { createAnnouncement } from "../../../api/anouncementApi.js";
+import { useTranslation } from "react-i18next";
 
-// --- API types, keep in sync with your API layer ---
 interface TenantDTO {
   id: number;
 }
@@ -21,14 +20,11 @@ interface AnnouncementFormData {
   expirationDate: Date | null;
 }
 
-// --- Form error type ---
 type FormErrors = Partial<Record<keyof AnnouncementFormData, string>>;
 
-// --- The form component ---
 const CreateAnnouncementForm: React.FC = () => {
-  // Get tenant info from localStorage or your auth context
   const tenantId = Number(localStorage.getItem("tenantId"));
-
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<AnnouncementFormData>({
     title: "",
     content: "",
@@ -37,47 +33,76 @@ const CreateAnnouncementForm: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // --- Form validation ---
-  const validateForm = () => {
+  // Validate whenever formData changes
+  useEffect(() => {
     const newErrors: FormErrors = {};
-    if (!formData.title.trim()) newErrors.title = "⚠️ Title is required.";
-    if (!formData.content.trim()) newErrors.content = "⚠️ Content is required.";
+    if (!formData.title.trim()) newErrors.title = t("error.title_required");
+    if (formData.title.length <= 4) newErrors.title = t("error.title_min_size");
+    if (!formData.content.trim())
+      newErrors.content = t("error.content_required");
+    if (formData.content.length <= 15 ) newErrors.content = t("error.content_min_size");
     if (!formData.expirationDate)
-      newErrors.expirationDate = "⚠️ Expiration date is required.";
+      newErrors.expirationDate = t("error.expiration_required");
+    
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  }, [formData, t]);
 
-  // --- Handle input changes ---
+  const isValid = Object.keys(errors).length === 0;
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    console.log("handleChange", e.target.name, e.target.value);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // --- Handle form submission ---
+  const handleDateChange = (date: Date | null) => {
+    setFormData({ ...formData, expirationDate: date });
+  };
+
+  // Mark field as touched on blur
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLDivElement>
+  ) => {
+    const name = e.currentTarget.getAttribute("name");
+    if (name) {
+      setTouched((prev) => ({ ...prev, [name]: true }));
+    }
+  };
+
+  const getBorderClass = (field: keyof AnnouncementFormData) => {
+    if (errors[field] && touched[field]) return "border-red-500";
+    if (!errors[field] && touched[field]) return "border-green-500";
+    return "border-gray-300";
+  };
+
+  const shouldShowError = (field: keyof AnnouncementFormData) =>
+    errors[field] && touched[field];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    // Mark all fields touched to show errors if any
+    setTouched({
+      title: true,
+      content: true,
+      expirationDate: true,
+    });
+    if (!isValid) return;
+
     setLoading(true);
     setApiError(null);
 
-    // Prepare the tenant object as required by the API
-    const tenant: TenantDTO = {
-      id: tenantId
-    };
-
-    // Prepare the announcement payload for the API
+    const tenant: TenantDTO = { id: tenantId };
     const announcementPayload = {
       ...formData,
       postDate: formData.postDate.toISOString(),
-      expirationDate: formData.expirationDate!.toISOString(), // Non-null assertion
+      expirationDate: formData.expirationDate!.toISOString(),
       tenant,
     };
-    
 
     try {
       await createAnnouncement(announcementPayload);
@@ -88,8 +113,9 @@ const CreateAnnouncementForm: React.FC = () => {
         postDate: new Date(),
         expirationDate: null,
       });
+      setTouched({});
     } catch (error) {
-      console.log('Error on creating announcement', error)
+      console.error("Error on creating announcement", error);
       setApiError("❌ Failed to create announcement. Please try again.");
     } finally {
       setLoading(false);
@@ -99,71 +125,78 @@ const CreateAnnouncementForm: React.FC = () => {
   return (
     <div className="flex items-center justify-center p-4">
       <Card className="max-w-md w-full p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center">
-          📢 Create New Announcement
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-4">
+          📢 {t("announcement.create")}
         </h1>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title */}
             <div>
-              <Label htmlFor="title" className="text-sm font-medium my-2 block">
-                📝 Title
+              <Label htmlFor="title" className="block text-sm font-medium mb-1">
+                📝 {t("announcement.title")}
               </Label>
               <Input
-                type="text"
                 id="title"
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className={`border rounded-md p-2 dark:bg-gray-900 ${
-                  errors.title ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="Announcement Title"
+                onBlur={handleBlur}
+                className={`p-2 rounded-md dark:bg-gray-900 focus:ring-2 focus:outline-none ${getBorderClass(
+                  "title"
+                )}`}
+                placeholder={t("announcement.title_placeholder")}
               />
-              {errors.title && (
+              {shouldShowError("title") && (
                 <p className="text-red-500 text-xs mt-1">{errors.title}</p>
               )}
             </div>
 
             {/* Content */}
             <div>
-              <Label htmlFor="content" className="text-sm font-medium my-2 block">
-                ✏️ Content
+              <Label
+                htmlFor="content"
+                className="block text-sm font-medium mb-1"
+              >
+                ✏️ {t("announcement.content")}
               </Label>
               <textarea
                 id="content"
                 name="content"
                 value={formData.content}
                 onChange={handleChange}
-                className={`w-full h-24 border rounded-md p-2 dark:bg-gray-900 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.content ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="Announcement Content"
+                onBlur={handleBlur}
+                className={`w-full h-24 p-2 rounded-md border dark:bg-gray-900 resize-none focus:ring-2 focus:outline-none ${getBorderClass(
+                  "content"
+                )}`}
+                placeholder={t("announcement.content_placeholder")}
               />
-              {errors.content && (
+              {shouldShowError("content") && (
                 <p className="text-red-500 text-xs mt-1">{errors.content}</p>
               )}
             </div>
 
             {/* Expiration Date */}
             <div>
-              <Label htmlFor="expirationDate" className="text-sm font-medium my-2 block">
-                📅 Expiration Date
+              <Label
+                htmlFor="expirationDate"
+                className="block text-sm font-medium mb-1"
+              >
+                📅 {t("announcement.expiration_date")}
               </Label>
               <DatePicker
                 id="expirationDate"
                 selected={formData.expirationDate}
-                onChange={(date: Date | null) =>
-                  setFormData({ ...formData, expirationDate: date })
-                }
-                className={`w-full border dark:bg-gray-900 p-2 text-black dark:text-white text-center ${
-                  errors.expirationDate ? "border-red-500" : "border-gray-300"
-                } rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                onChange={handleDateChange}
+                onBlur={handleBlur}
+                name="expirationDate"
+                className={`w-full p-2 border text-center rounded-md dark:bg-gray-900 text-black dark:text-white focus:ring-2 focus:outline-none ${getBorderClass(
+                  "expirationDate"
+                )}`}
                 dateFormat="dd-MM-yyyy"
                 minDate={new Date()}
-                placeholderText="01/01/2025"
+                placeholderText={t("announcement.date_placeholder")}
               />
-              {errors.expirationDate && (
+              {shouldShowError("expirationDate") && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.expirationDate}
                 </p>
@@ -172,15 +205,24 @@ const CreateAnnouncementForm: React.FC = () => {
 
             {/* API Error */}
             {apiError && (
-              <p className="text-red-500 text-sm text-center">{apiError}</p>
+              <p className="text-red-500 text-sm text-center mt-2">
+                {apiError}
+              </p>
             )}
 
             {/* Submit */}
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button
+              type="submit"
+              className="w-full flex justify-center items-center gap-2"
+              disabled={loading || !isValid}
+            >
               {loading ? (
-                <Loader2 className="animate-spin" />
+                <>
+                  <Loader2 className="animate-spin h-5 w-5" />
+                  {t("announcement.creating")}
+                </>
               ) : (
-                "🚀 Create Announcement"
+                ` 🚀 ${t("announcement.create")}`
               )}
             </Button>
           </form>

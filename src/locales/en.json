@@ -59,7 +59,7 @@
     "delete": "Delete Guest",
     "empty": "No Guests To Display"
   },
-  "finances":{
+  "finances": {
     "list": "Finances",
     "employee": "Employee",
     "create_wage": "Assign Wage",
@@ -103,7 +103,7 @@
     "overview": "Dashboard",
     "finances": "Finances"
   },
-  "checkin":{
+  "checkin": {
     "datein": "Check In Date",
     "dateout": "Check Out Date",
     "update": "Update Check In/Out"
@@ -119,7 +119,14 @@
     "darkTheme": "Dark Theme",
     "enableNotifications": "Enable Notifications",
     "disableNotifications": "Disable Notifications",
-    "close": "Close"
+    "close": "Close",
+    "password": "Password",
+    "password_incorrect": "Please verify you current password",
+    "password_success": "Your password has been succesfully updated",
+    "password_error": "An error has ocurred. Please try again later.",
+    "old_password": "Current Password",
+    "new_password": "New Password",
+    "change_password": "Change Password"
   },
   "checkinout": {
     "list": "Check In/Out",
@@ -132,7 +139,12 @@
     "wait": "Logging In...",
     "enter": "Log In",
     "login_failed": "Login failed. Please check your credentials.",
-    "session_expired": "Session expired. Please log in again."
+    "session_expired": "Session expired. Please log in again.",
+    "forgot_password": "Recover Password",
+    "reset_email_sent": "A password reset email has been sent if the address exists.",
+    "reset_email_failed": "Failed to send reset email. Please try again.",
+    "send_reset_link": "Send Reset Link",
+    "back_to_login": "Back to Login"
   },
   "filterbar": {
     "search_placeholder": "Search..."
@@ -140,7 +152,7 @@
   "delete": {
     "verification_room": "Are you sure you want to delete Room #{{roomNumber}}?",
     "verification_announcement": "Are you sure you want to delete Announcement #{{announcementNumber}}?",
-    "verification_user": "Are you sure you want to delete User #{{userNumber}}?"
+    "verification_user": "Are you sure you want to delete User {{userName}} {{userLastname}}?"
   },
   "common": {
     "save": "Save",

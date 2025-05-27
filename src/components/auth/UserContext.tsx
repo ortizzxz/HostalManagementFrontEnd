@@ -1,15 +1,22 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 
-interface User {
+interface UserJWT {
   id: number;
-  email: string;
   rol: string;
   tenantId: number;
   exp: number;
   iat: number;
+  sub: string;
 }
-
+interface User {
+  id: number;
+  rol: string;
+  tenantId: number;
+  exp: number;
+  iat: number;
+  email: string;
+}
 interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
@@ -27,16 +34,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decoded: User = jwtDecode<User>(token);
+        const decoded: UserJWT = jwtDecode<UserJWT>(token);
         const currentTime = Date.now() / 1000; // en segundos
         if (decoded.exp && decoded.exp > currentTime) {
+          console.log(decoded);
           setUser({
             id: decoded.id || 0,
-            email: decoded.email,
+            email: decoded.sub,
             rol: decoded.rol,
             tenantId: decoded.tenantId,
             exp: decoded.exp,
-            iat: decoded.iat
+            iat: decoded.iat,
           });
         } else {
           console.warn("Token expirado");
@@ -52,7 +60,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser, isAuthenticated: !!user && (user.exp > Date.now() / 1000)}}>
+    <UserContext.Provider
+      value={{
+        user,
+        setUser,
+        isAuthenticated: !!user && user.exp > Date.now() / 1000,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

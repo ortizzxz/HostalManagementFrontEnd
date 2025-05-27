@@ -15,7 +15,7 @@ export interface Room {
   capacity: string | number;
   baseRate: string | number;
   state: string;
-  tenantDTO: TenantDTO; // Now tenant is a TenantDTO object
+  tenant: TenantDTO; // Now tenant is a TenantDTO object
 }
 
 // Get all Rooms

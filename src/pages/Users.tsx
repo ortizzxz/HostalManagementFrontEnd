@@ -31,10 +31,13 @@ const Users = () => {
 
   // Filter rooms based on search term and active filter
   const filteredUsers = users.filter((user) => {
-    const matchesSearch = user.id
-      .toString()
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+    const matchesSearch =
+      user.name.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.lastname
+        .toString()
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      user.email.toString().toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = activateUserFilter
       ? user.rol === activateUserFilter
       : true;
@@ -43,10 +46,11 @@ const Users = () => {
 
   // Define filter buttons
   const userFilterButtons = [
-    { label: "Admin", value: "admin" },
-    { label: "Reception", value: "recepcion" },
-    { label: "Janitors", value: "limpieza" },
-    { label: "Maintenance", value: "mantenimiento" },
+    { label: "Admin", value: "ADMIN" },
+    { label: "Reception", value: "RECEPCION" },
+    { label: "Janitors", value: "LIMPIEZA" },
+    { label: "Maintenance", value: "MANTENIMIENTO" },
+    { label: "Non Assigned", value: "UNKNOWN" },
     { label: "All", value: "" }, // No filter
   ];
 
@@ -103,15 +107,13 @@ const Users = () => {
   };
 
   return (
-    <div className="text-black dark:text-white">
+    <div className="text-black dark:text-white p-3">
       {/* Header con acciones */}
       <HeaderWithActions
         title={t("user.list")}
         onCreate={handleCreateUser}
-        onUpdate={handleUpdateUser}
         onExtra={handleGoToFinances}
         createLabel={t("user.create")}
-        updateLabel={t("user.update")}
         extraLabel={t("Finances")} // Label for the nav button
       />
       {/* Filter Bar */}
@@ -189,7 +191,8 @@ const Users = () => {
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onConfirm={confirmDeleteUser}
-        userId={userToDelete?.id ?? ""}
+        userName={userToDelete?.name ?? ""}
+        userLastname={userToDelete?.lastname ?? ""}
       />
     </div>
   );

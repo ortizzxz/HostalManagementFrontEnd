@@ -140,3 +140,32 @@ export const logoutUser = () => {
   localStorage.removeItem("tenantId");
   window.location.href = "/login"; // Or use React Router navigation
 };
+
+export async function sendPasswordResetEmail(email: string) {
+  // Adjust the endpoint to your backend
+  const response = await fetch(`${AUTH_URL}/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to send reset email");
+  }
+  return response.json();
+}
+
+// Change password for the logged-in user
+export const changePassword = async (email: string, currentPassword: string, newPassword: string) => {
+  try {
+    const response = await axiosInstance.put(`${API_URL}/change-password`, {
+      email,
+      currentPassword,
+      newPassword,
+    });
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Error changing password:", error);
+    throw new Error(error.response?.data?.error || "Password change failed");
+  }
+};

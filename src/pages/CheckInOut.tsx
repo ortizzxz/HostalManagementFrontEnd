@@ -92,7 +92,7 @@ const CheckInOut = () => {
   };
 
   return (
-    <div className="text-black dark:text-white">
+    <div className="text-black dark:text-white p-3">
       <HeaderWithActions
         title={t("checkinout.list") || "Check-In/Out List"}
         updateLabel={t("checkinout.update") || "Update"}
