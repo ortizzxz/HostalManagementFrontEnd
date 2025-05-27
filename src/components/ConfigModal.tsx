@@ -77,12 +77,16 @@ const ConfigModal = () => {
     } catch (error) {
       console.log(error);
 
-      const errorMsg = error.response?.data?.message || error.message;
+      let errorMsg = t("modal.password_error");
+
+      if (error instanceof Error) {
+        errorMsg = (error as any)?.response?.data?.message || error.message;
+      }
 
       if (errorMsg === "fake_password") {
         setPasswordMessage(t("modal.password_incorrect"));
       } else {
-        setPasswordMessage(t("modal.password_error"));
+        setPasswordMessage(errorMsg);
       }
     }
   };
