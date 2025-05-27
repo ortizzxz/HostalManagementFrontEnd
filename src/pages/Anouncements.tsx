@@ -86,7 +86,7 @@ const Announcements = () => {
     navigate("/create-announcement");
   };
 
-  const handleUpdateAnnouncement = (announcementId: number) => {};
+  const handleUpdateAnnouncement = (announcementId: number) => {console.log(announcementId)};
 
   const handleDeleteAnnouncement = (id: number) => {
     const selectedAnnouncement = announcements.find((r) => r.id === id);
