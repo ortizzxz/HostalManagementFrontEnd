@@ -89,7 +89,7 @@ const Dashboard = () => {
         <div className="card-dashboard">
           <div className="p-6">
             <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
-            {t("dashboard.activeworkers")}
+            {t("dashboard.totalworkers")}
             </h3>
             <p className="text-3xl text-gray-900 dark:text-white">
               {userStats}

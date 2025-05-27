@@ -59,7 +59,7 @@
     "delete": "Delete Guest",
     "empty": "No Guests To Display"
   },
-  "finances":{
+  "finances": {
     "list": "Finances",
     "employee": "Employee",
     "create_wage": "Assign Wage",
@@ -103,7 +103,7 @@
     "overview": "Dashboard",
     "finances": "Finances"
   },
-  "checkin":{
+  "checkin": {
     "datein": "Check In Date",
     "dateout": "Check Out Date",
     "update": "Update Check In/Out"
@@ -127,7 +127,6 @@
     "old_password": "Current Password",
     "new_password": "New Password",
     "change_password": "Change Password"
-
   },
   "checkinout": {
     "list": "Check In/Out",
@@ -142,10 +141,10 @@
     "login_failed": "Login failed. Please check your credentials.",
     "session_expired": "Session expired. Please log in again.",
     "forgot_password": "Recover Password",
-  "reset_email_sent": "A password reset email has been sent if the address exists.",
-  "reset_email_failed": "Failed to send reset email. Please try again.",
-  "send_reset_link": "Send Reset Link",
-  "back_to_login": "Back to Login"
+    "reset_email_sent": "A password reset email has been sent if the address exists.",
+    "reset_email_failed": "Failed to send reset email. Please try again.",
+    "send_reset_link": "Send Reset Link",
+    "back_to_login": "Back to Login"
   },
   "filterbar": {
     "search_placeholder": "Search..."
