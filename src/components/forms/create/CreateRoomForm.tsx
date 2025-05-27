@@ -94,7 +94,6 @@ const CreateRoomForm: React.FC = () => {
     const tenantId = Number(localStorage.getItem("tenantId"));
 
     try {
-      console.log('Tenant ID: ', tenantId);
       await createRoom({
         number: formData.number.trim(),
         type: formData.type.trim(),

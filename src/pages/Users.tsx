@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FaUserShield, FaUserAlt } from "react-icons/fa"; // Usamos iconos de react-icons
 import FilterBar from "../components/ui/FilterBar";
 import DeleteUserForm from "../components/forms/create/DeleteUserForm";
+import { LoadingModal } from "../components/ui/LoadingModal";
 
 interface User {
   id: number;
@@ -22,6 +23,7 @@ interface User {
 const Users = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true); // Track loading state
 
   const [users, setUsers] = useState<User[]>([]);
   const { t } = useTranslation();
@@ -57,6 +59,7 @@ const Users = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setLoading(true);
         const data = await getUsers(); // Llamada a la API
         // Filtramos el password
         const filteredUsers = data.map(
@@ -65,6 +68,8 @@ const Users = () => {
         setUsers(filteredUsers); // Establecemos los usuarios
       } catch (error) {
         console.error("Error al obtener usuarios:", error);
+      }finally{
+        setLoading(false);
       }
     };
 
@@ -72,7 +77,6 @@ const Users = () => {
   }, []);
 
   const handleCreateUser = () => {
-    console.log("click on create user");
     navigate("/create-user");
   };
 
@@ -105,6 +109,10 @@ const Users = () => {
       }
     }
   };
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <div className="text-black dark:text-white p-3">

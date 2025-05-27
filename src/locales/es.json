@@ -68,6 +68,7 @@
     "delete": "Eliminar Habitación",
     "empty": "No hay Habitacones para mostar",
     "status": "Estado",
+    "update_success": "La Habitación se ha actualizado",
     "creation": {
       "number": "Número de Habitación",
       "type": "Tipo de Habitación",
@@ -143,6 +144,7 @@
   "common": {
     "save": "Guardar",
     "actions": "Acción",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "loading": "Cargando..."
   }
 }

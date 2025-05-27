@@ -19,7 +19,6 @@ export const getGuestByNIF = async (nif: string): Promise<Guest | null> => {
     const response = await axios.get<Guest>(`${GUEST_API_URL}/${nif}`);
     return response.data;
   } catch (error) {
-    console.log('Error: ', error)
     return null; // not found or error
   }
 };

@@ -37,10 +37,8 @@ export const WebSocketProviderAnnouncements = ({
 
     const connect = async () => {
       stompClient.onConnect = () => {
-        console.log("Connected to WebSocket!");
         const subscription = stompClient.subscribe("/topic/updates", (msg) => {
           const parsedMessage = JSON.parse(msg.body);
-          console.log("Received announcement via WebSocket:", parsedMessage);
           setAnnouncements((prev) => [...prev, parsedMessage]);
         });
 

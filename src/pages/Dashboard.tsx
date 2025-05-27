@@ -12,6 +12,7 @@ import { Room } from "../api/roomApi";
 import { Announcement } from "../api/anouncementApi";
 import { ReservationDTO } from "../api/reservationApi";
 import { useTranslation } from "react-i18next";
+import { LoadingModal } from "../components/ui/LoadingModal";
 
 
 const Dashboard = () => {
@@ -19,10 +20,14 @@ const Dashboard = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Track loading state
+  
   const {t} = useTranslation();
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
+
         const reservationData = await getReservations();
         const userData = await getUsers();
         const roomData = await getRooms();
@@ -32,9 +37,10 @@ const Dashboard = () => {
         setUsers(userData);
         setRooms(roomData);
         setAnnouncements(announcementData);
-        console.log('Room data Dashboard: ', roomData)
       } catch (error) {
         console.error("Error fetching data:", error);
+      }finally{
+        setLoading(false);
       }
     };
 
@@ -45,7 +51,11 @@ const Dashboard = () => {
   const userStats = users.length;
   const roomStats = rooms.length;
   const rentedRooms = rooms.filter(room => room.state === "OCUPADO").length;
-
+ 
+  if (loading) {
+    return <LoadingModal />;
+  }
+ 
   return (
     <div className="text-black dark:text-white p-3">
       {/* Header with actions */}

@@ -36,7 +36,6 @@ export const createAnnouncement = async (
   announcementData: Omit<Announcement, "id"> // Exclude 'id' since it's generated server-side
 ): Promise<Announcement> => {
   try {
-    console.log('Data API: ', announcementData);
     const response = await axios.post<Announcement>(API_URL, announcementData);
     return response.data;
   } catch (error) {

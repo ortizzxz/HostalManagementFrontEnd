@@ -5,11 +5,9 @@ const Guests = () => {
   const { t } = useTranslation();
 
   const handleCreateReservation = () => {
-    console.log("Creando");
   };
 
   const handleUpdateReservation = () => {
-    console.log("Actualizando");
   };
 
   return (

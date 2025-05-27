@@ -34,7 +34,6 @@ const LoginPage = () => {
       navigate("/dashboard");
       window.location.reload();
     } catch (err) {
-      console.log("Error logging in", err);
       setError(t("login.login_failed"));
     } finally {
       setLoading(false);
