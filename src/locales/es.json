@@ -41,7 +41,7 @@
     "announcements": "Últimos Anuncios",
     "noannouncements": "No hay Anuncios recientes"
   },
-  "finances":{
+  "finances": {
     "list": "Finanzas",
     "employee": "Empleado",
     "create_wage": "Asignar Salario",
@@ -75,11 +75,11 @@
       "price": "Precio de la habitación",
       "create": "Registrar Habitación",
       "state": {
-      "available": "Disponible",
-      "busy": "Ocupada",
-      "maintenance": "En Mantenimiento",
-      "baserate": "Precio Base"
-    }
+        "available": "Disponible",
+        "busy": "Ocupada",
+        "maintenance": "En Mantenimiento",
+        "baserate": "Precio Base"
+      }
     }
   },
   "sidebar": {
@@ -93,7 +93,7 @@
     "overview": "Dashboard",
     "finances": "Finanzas"
   },
-  "checkin":{
+  "checkin": {
     "datein": "Fecha de Check In",
     "dateout": "Fecha de Check Out",
     "update": "Actualizar Check In/Out"
@@ -118,7 +118,12 @@
     "wait": "Ingresando...",
     "enter": "Ingresar",
     "login_failed": "No se pudo iniciar sesión. Verifica tus datos e inténtalo de nuevo",
-    "session_expired": "La sesión ha expirado. Por favor inicia sesión nuevamente."
+    "session_expired": "La sesión ha expirado. Por favor inicia sesión nuevamente.",
+    "forgot_password": "Rcuperar Contraseña",
+    "reset_email_sent": "Un link se ha envíado a su correo de empresa.",
+    "reset_email_failed": "Ha ocurrido un error, por favor inténtelo nuevamente.",
+    "send_reset_link": "Enviar Link de Recuperación",
+    "back_to_login": "Volver a Log In"
   },
   "filterbar": {
     "search_placeholder": "Search..."

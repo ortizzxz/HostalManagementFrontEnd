@@ -107,7 +107,7 @@ const Users = () => {
   };
 
   return (
-    <div className="text-black dark:text-white">
+    <div className="text-black dark:text-white p-3">
       {/* Header con acciones */}
       <HeaderWithActions
         title={t("user.list")}

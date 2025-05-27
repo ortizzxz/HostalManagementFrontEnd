@@ -89,7 +89,7 @@ const Rooms = () => {
   
 
   return (
-    <div className="text-black dark:text-white">
+    <div className="text-black dark:text-white p-3">
       {/* Header with actions */}
       <HeaderWithActions
         title={t("room.list")}

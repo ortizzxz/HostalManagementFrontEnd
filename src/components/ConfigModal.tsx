@@ -1,11 +1,18 @@
-import { Bell, BellOff, Languages, Moon, Sun } from "lucide-react";
-import  { useState, useEffect } from "react";
+import { KeyRound, Languages, Moon, Sun } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useUser } from "./auth/UserContext";
+import { changePassword } from "../api/userApi";
 
 const ConfigModal = () => {
   const { t, i18n } = useTranslation();
+  const { user } = useUser();
+  const email = user ? user.email : "nomail@mail.com";
   const [isOpen, setIsOpen] = useState(false); // Track modal visibility
   const [activeTab, setActiveTab] = useState("languages"); // Track active tab (default: languages)
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordMessage, setPasswordMessage] = useState("");
 
   // Initialize language and theme on app load
   useEffect(() => {
@@ -25,6 +32,7 @@ const ConfigModal = () => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
+
       }
     };
 
@@ -57,9 +65,22 @@ const ConfigModal = () => {
     }
   };
 
+  const handleChangePassword = async () => {
+    try {
+      await changePassword(email, oldPassword, newPassword);  
+      setPasswordMessage(t("modal.passwordSuccess"));
+      setOldPassword("");
+      setNewPassword("");
+    } catch (error) {
+      setPasswordMessage(t("modal.passwordError"));
+    }
+  };
+
   // Helper for tab button classes
   const getTabClass = (tab: string) =>
-    `px-4 py-2 w-1/3 text-center ${activeTab === tab ? "bg-gray-600" : "bg-gray-700"}`;
+    `px-4 py-2 w-1/3 text-center ${
+      activeTab === tab ? "bg-gray-600" : "bg-gray-700"
+    }`;
 
   // Render tab content based on activeTab
   const renderTabContent = () => {
@@ -102,17 +123,33 @@ const ConfigModal = () => {
             </button>
           </div>
         );
-      case "notifications":
+      case "password":
         return (
           <div className="space-y-3">
-            <button className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 flex items-center justify-center">
-              <Bell className="mr-2" />
-              {t("modal.enableNotifications")}
+            <input
+              type="password"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              placeholder={t("modal.oldPassword")}
+              className="w-full px-4 py-2 rounded bg-gray-700 text-white placeholder-gray-300"
+            />
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder={t("modal.newPassword")}
+              className="w-full px-4 py-2 rounded bg-gray-700 text-white placeholder-gray-300"
+            />
+            <button
+              onClick={handleChangePassword}
+              className="w-full px-4 py-2 bg-green-600 rounded hover:bg-green-700 flex items-center justify-center"
+            >
+              <KeyRound className="mr-2" />
+              {t("modal.changePassword")}
             </button>
-            <button className="w-full px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 flex items-center justify-center">
-              <BellOff className="mr-2" />
-              {t("modal.disableNotifications")}
-            </button>
+            {passwordMessage && (
+              <div className="text-center text-sm mt-2">{passwordMessage}</div>
+            )}
           </div>
         );
       default:
@@ -143,14 +180,17 @@ const ConfigModal = () => {
               >
                 {t("modal.languages")}
               </button>
-              <button onClick={() => setActiveTab("theme")} className={getTabClass("theme")}>
+              <button
+                onClick={() => setActiveTab("theme")}
+                className={getTabClass("theme")}
+              >
                 {t("modal.theme")}
               </button>
               <button
-                onClick={() => setActiveTab("notifications")}
-                className={getTabClass("notifications") + " rounded-tr-lg"}
+                onClick={() => setActiveTab("password")}
+                className={getTabClass("password") + " rounded-tr-lg"}
               >
-                {t("modal.notifications")}
+                {t("modal.password")}
               </button>
             </div>
 

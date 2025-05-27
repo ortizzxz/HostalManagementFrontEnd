@@ -132,7 +132,12 @@
     "wait": "Logging In...",
     "enter": "Log In",
     "login_failed": "Login failed. Please check your credentials.",
-    "session_expired": "Session expired. Please log in again."
+    "session_expired": "Session expired. Please log in again.",
+    "forgot_password": "Recover Password",
+  "reset_email_sent": "A password reset email has been sent if the address exists.",
+  "reset_email_failed": "Failed to send reset email. Please try again.",
+  "send_reset_link": "Send Reset Link",
+  "back_to_login": "Back to Login"
   },
   "filterbar": {
     "search_placeholder": "Search..."
