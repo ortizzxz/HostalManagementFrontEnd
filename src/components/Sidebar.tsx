@@ -8,6 +8,8 @@ import {
   ReceiptEuro,
   LayoutDashboard,
   CalendarIcon,
+  Wrench,
+  PaintBucket,
 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,6 +22,7 @@ const Sidebar = () => {
   const { t } = useTranslation();
   // State for managing dropdown visibility
   const [showUsersDropdown, setShowUsersDropdown] = useState(false);
+  const [showUtilitiesDropdown, setShowUtilitiesDropdown] = useState(false);
   const [showReservationsDropdown, setShowReservationsDropdown] =
     useState(false);
 
@@ -29,6 +32,10 @@ const Sidebar = () => {
 
   const toggleReservationDropdown = () => {
     setShowReservationsDropdown(!showReservationsDropdown); // Toggle dropdown visibility
+  };
+
+  const toggleUtilitiesDropdowm = () => {
+    setShowUtilitiesDropdown(!showUtilitiesDropdown);
   };
 
   return (
@@ -73,7 +80,6 @@ const Sidebar = () => {
           {/* Dropdown menu for Overview and Finances */}
           {showReservationsDropdown && (
             <div className="ml-4 space-y-2">
-              
               {/* Reservations Overview */}
               <NavLink
                 to="/reservations"
@@ -116,7 +122,6 @@ const Sidebar = () => {
           {/* Dropdown menu for Overview and Finances */}
           {showUsersDropdown && (
             <div className="ml-4 space-y-2">
-
               {/* Users Overview */}
               <NavLink
                 to="/users-overview"
@@ -129,7 +134,7 @@ const Sidebar = () => {
                 <LayoutDashboard className="icon" />
                 {t("sidebar.overview")}
               </NavLink>
-      
+
               {/* Users Finances */}
               <NavLink
                 to="/finances"
@@ -145,16 +150,43 @@ const Sidebar = () => {
           )}
         </div>
 
-        {/* Anouncement */}
         <div className="divider"></div>
-        <NavLink
-          to="/announcements"
-          className={({ isActive }) =>
-            isActive ? "sidebar-link active-link" : "sidebar-link"
-          }
-        >
-          <MessageCircle className="icon" /> {t("sidebar.announcements")}
-        </NavLink>
+
+        {/* Utilities section with dropdown */}
+        <div>
+          <button
+            onClick={toggleUtilitiesDropdowm}
+            className="sidebar-link w-full mb-1"
+          >
+            <Wrench className="icon" /> {t("sidebar.utilities")}
+          </button>
+          {/* Dropdown menu for Announcements and Inventory */}
+          {showUtilitiesDropdown && (
+            <div className="ml-4 space-y-2">
+              <NavLink
+                to="/announcements"
+                className={({ isActive }) =>
+                  isActive ? "sidebar-link active-link" : "sidebar-link"
+                }
+              >
+                <MessageCircle className="icon" /> {t("sidebar.announcements")}
+              </NavLink>
+              <div className="divider"></div>
+
+              {/* Inventory */}
+              <NavLink
+                to="/inventory"
+                className={({ isActive }) =>
+                  isActive
+                    ? "sidebar-link pl-4 active-link"
+                    : "sidebar-link pl-4 text-md"
+                }
+              >
+                <PaintBucket className="icon" /> {t("sidebar.inventory")}
+              </NavLink>
+            </div>
+          )}
+        </div>
       </nav>
 
       {/* Version and Config Button */}

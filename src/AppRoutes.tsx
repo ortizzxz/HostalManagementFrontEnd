@@ -23,6 +23,9 @@ import CreateWageForm from "./components/forms/create/CreateWageForm";
 import UpdateWageForm from "./components/forms/update/UpdateWageForm";
 import ForgotPassword from "./components/auth/ForgotPassword";
 import ResetPassword from "./components/auth/ResetPassword";
+import Inventory from "./pages/Inventory";
+import CreateInventoryForm from "./components/forms/create/CreateInventoryForm";
+import UpdateInventoryForm from "./components/forms/update/UpdateInventoryForm";
 const AppRoutes = () => {
   const { isAuthenticated } = useUser();
 
@@ -51,11 +54,14 @@ const AppRoutes = () => {
           <Route path="/create-announcement" element={<ProtectedRoute><CreateAnouncementForm /></ProtectedRoute>} />
           <Route path="/create-room" element={<ProtectedRoute><CreateRoomForm /></ProtectedRoute>} />
           <Route path="/create-reservation" element={<ProtectedRoute><CreateReservationForm /></ProtectedRoute>} />
+          <Route path="/create-inventory" element={<ProtectedRoute><CreateInventoryForm/></ProtectedRoute>} />
           <Route path="/create-wage" element={<ProtectedRoute><CreateWageForm /></ProtectedRoute>} />
           <Route path="/update-room/:id" element={<ProtectedRoute><UpdateRoomForm/></ProtectedRoute>} />
           <Route path="/update-user/:id" element={<ProtectedRoute><UpdateUserForm/></ProtectedRoute>} />
           <Route path="/update-reservation/:id" element={<ProtectedRoute><UpdateReservationForm/></ProtectedRoute>} />
           <Route path="/update-wage/:wageId" element={<ProtectedRoute><UpdateWageForm/></ProtectedRoute>} />
+          <Route path="/update-inventory/:id" element={<ProtectedRoute><UpdateInventoryForm/></ProtectedRoute>} />
+          <Route path="/inventory" element={<ProtectedRoute><Inventory/></ProtectedRoute>} />
           <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword/> : <ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/reset-password" element={!isAuthenticated ? <ResetPassword /> : <ProtectedRoute><Dashboard /></ProtectedRoute>}/>
           <Route path="/*" element={isAuthenticated ? <ProtectedRoute><Dashboard /></ProtectedRoute> : <LoginPage />} />
