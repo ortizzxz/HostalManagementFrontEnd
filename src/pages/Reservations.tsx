@@ -43,6 +43,7 @@ const Reservations = () => {
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true); // Track loading state
+  const [filter, setFilter] = useState<"upcoming" | "past" | "all">("upcoming");
 
   const fetchReservations = async () => {
     try {
@@ -65,7 +66,7 @@ const Reservations = () => {
       setReservations(transformedReservations);
     } catch (error) {
       console.error("Error fetching reservations: ", error);
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -156,6 +157,16 @@ const Reservations = () => {
     return <LoadingModal />;
   }
 
+  const now = new Date();
+
+  const filteredReservations = reservations.filter((res) => {
+    const outDate = new Date(res.outDate);
+
+    if (filter === "upcoming") return outDate >= now;
+    if (filter === "past") return outDate < now;
+    return true; // "all"
+  });
+
   return (
     <div className="text-black dark:text-white p-3">
       {/* Header with actions */}
@@ -171,9 +182,37 @@ const Reservations = () => {
         </div>
       )}
 
+      <div className="flex flex-wrap gap-2 mb-3">
+        {[
+          {
+            label: t("reservation.upcoming") || "Upcoming",
+            value: "upcoming",
+            color: "green",
+          },
+          {
+            label: t("reservation.past") || "Past",
+            value: "past",
+            color: "red",
+          },
+          { label: t("reservation.all") || "All", value: "all", color: "blue" },
+        ].map(({ label, value, color }) => (
+          <button
+            key={value}
+            className={`text-sm font-medium px-4 py-2 rounded-lg transition duration-200 border border-transparent focus:outline-none focus:ring-2 focus:ring-${color}-400 ${
+              filter === value
+                ? `bg-${color}-600 text-white hover:bg-${color}-700`
+                : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
+            }`}
+            onClick={() => setFilter(value as "upcoming" | "past" | "all")}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       {/* Reservation list */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 mt-6">
-        {reservations.map((reservation) => {
+        {filteredReservations.map((reservation) => {
           const { textClass } = getStatusClasses(
             reservation.editedState ?? reservation.state
           );

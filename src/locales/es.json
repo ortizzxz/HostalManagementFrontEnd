@@ -30,7 +30,11 @@
     "pending": "Pendiente",
     "cancelled": "Cancelada",
     "completed": "Completeda",
-    "guest_details": "Detalles de Huéspedes"
+    "guest_details": "Detalles de Huéspedes",
+    "upcoming": "Próximas",
+    "past": "Pasadas",
+    "all": "Todas",
+    "canceled": "Canceladas"
   },
   "dashboard": {
     "disposition": "Dashboard",
