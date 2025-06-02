@@ -96,7 +96,9 @@
     "users": "Usuarios",
     "checkins": "Check In/Out",
     "overview": "Dashboard",
-    "finances": "Finanzas"
+    "finances": "Finanzas",
+    "utilities": "Herramientas",
+    "inventory": "Inventario"
   },
   "checkin": {
     "datein": "Fecha de Check In",
@@ -150,5 +152,15 @@
     "actions": "Acción",
     "cancel": "Cancelar",
     "loading": "Cargando..."
-  }
+  },
+  "inventory": {
+  "list": "Inventario",
+  "add_item": "Añadir Producto",
+  "back": "Volver a Inventario",
+  "item": "Producto",
+  "amount": "Cantidad",
+  "warning_level": "Nivel Mínimo",
+  "last_update": "Ultima Actualización"
+}
+
 }
