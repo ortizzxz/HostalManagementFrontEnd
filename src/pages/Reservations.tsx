@@ -266,7 +266,7 @@ const Reservations = () => {
                           </p>
                           <p className="text-sm flex items-center">
                             <FaIdBadge className="mr-2" />
-                            {guest.nif}
+                            {guest.nif.toLocaleUpperCase()}
                           </p>
                           <p className="text-sm flex items-center">
                             <FaPhone className="mr-2" />

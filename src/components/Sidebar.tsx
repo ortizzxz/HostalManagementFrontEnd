@@ -28,14 +28,23 @@ const Sidebar = () => {
 
   const toggleUsersDropdown = () => {
     setShowUsersDropdown(!showUsersDropdown); // Toggle dropdown visibility
+    
+    setShowReservationsDropdown(false);
+    setShowUtilitiesDropdown(false);
   };
 
   const toggleReservationDropdown = () => {
-    setShowReservationsDropdown(!showReservationsDropdown); // Toggle dropdown visibility
+    setShowReservationsDropdown(!showReservationsDropdown); 
+    
+    setShowUtilitiesDropdown(false);
+    setShowUsersDropdown(false);
   };
 
   const toggleUtilitiesDropdowm = () => {
     setShowUtilitiesDropdown(!showUtilitiesDropdown);
+    
+    setShowReservationsDropdown(false);
+    setShowUsersDropdown(false);
   };
 
   return (
