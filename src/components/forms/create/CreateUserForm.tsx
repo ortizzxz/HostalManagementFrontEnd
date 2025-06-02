@@ -11,9 +11,10 @@ import {
   SelectItem,
 } from "../../ui/select.js";
 import { Card, CardContent } from "../../ui/card.js";
-import { Loader2 } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
-import { redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
+import { Loader2, User, AtSign, Lock, Repeat } from "lucide-react"; // Added icons
+import { useTranslation } from "react-i18next";
 
 interface MyJwtPayload {
   tenantId?: string | number;
@@ -30,9 +31,10 @@ type FormFields = {
 };
 
 const CreateUserForm = () => {
+  const navigate = useNavigate();
   const token = localStorage.getItem("token") || "";
   let tenantId = 0;
-
+  const { t } = useTranslation();
   if (!token) {
     redirect("/login");
   }
@@ -66,23 +68,23 @@ const CreateUserForm = () => {
   ): string | undefined => {
     switch (name) {
       case "name":
-        if (!value.trim()) return "⚠️ Name is required.";
+        if (!value.trim()) return t("error.name_req");
         break;
       case "lastname":
-        if (!value.trim()) return "⚠️ Lastname is required.";
+        if (!value.trim()) return t("error.lastname_req");
         break;
       case "email":
-        if (!/\S+@\S+\.\S+/.test(value)) return "⚠️ Valid email is required.";
+        if (!/\S+@\S+\.\S+/.test(value)) return t("error.email_req");
         break;
       case "password":
         if (value.length < 8)
-          return "⚠️ Password must be at least 8 characters.";
+          return t("error.password_lenght");
         break;
       case "repeatPassword":
-        if (value !== formData.password) return "⚠️ Passwords do not match.";
+        if (value !== formData.password) return t("error.password_match");
         break;
       case "rol":
-        if (!value.trim()) return "⚠️ Role is required.";
+        if (!value.trim()) return t("error.role_req");
         break;
     }
     return undefined;
@@ -171,21 +173,58 @@ const CreateUserForm = () => {
     });
   };
 
-  type FieldName = keyof Omit<FormFields, "tenant">;
 
-  const fields: { name: FieldName; label: string; placeholder: string }[] = [
-    { name: "name", label: "🧑 First Name", placeholder: "Enter first name" },
-    { name: "lastname", label: "👤 Last Name", placeholder: "Enter last name" },
-    { name: "email", label: "📧 Email", placeholder: "Enter email address" },
+  const fields: { name: keyof Omit<FormFields, "tenant">; label: React.ReactNode; placeholder: string }[] = [
+    {
+      name: "name",
+      label: (
+        <>
+          <User className="inline-block mr-1 w-4 h-4" />
+          {t("user.firstname")}
+        </>
+      ),
+      placeholder: t("user.name_placeholder"),
+    },
+    {
+      name: "lastname",
+      label: (
+        <>
+          <User className="inline-block mr-1 w-4 h-4" />
+          {t("user.lastname")}
+        </>
+      ),
+      placeholder: t("user.lastname_placeholder"),
+    },
+    {
+      name: "email",
+      label: (
+        <>
+          <AtSign className="inline-block mr-1 w-4 h-4" />
+          {t("user.email")}
+
+        </>
+      ),
+      placeholder: t("user.email_placeholder"),
+    },
     {
       name: "password",
-      label: "🔒 Password",
-      placeholder: "Create a secure password",
+      label: (
+        <>
+          <Lock className="inline-block mr-1 w-4 h-4" />
+          {t("user.password")}
+        </>
+      ),
+      placeholder: t("user.create_password_placeholder"),
     },
     {
       name: "repeatPassword",
-      label: "🔁 Repeat Password",
-      placeholder: "Confirm your password",
+      label: (
+        <>
+          <Repeat className="inline-block mr-1 w-4 h-4" />
+          {t("user.repeat_password")}
+        </>
+      ),
+      placeholder: t("user.confirm_password_placeholder"),
     },
   ];
 
@@ -208,8 +247,9 @@ const CreateUserForm = () => {
         tenant: tenantId,
       });
       setErrors({});
+      navigate("/users-overview");
     } catch (error) {
-      setApiError("❌ Failed to create user. Please try again.");
+      setApiError(t("user.failed_creation"));
     } finally {
       setLoading(false);
     }

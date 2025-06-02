@@ -3,7 +3,7 @@ import { Button } from "../../ui/button.js";
 import { Input } from "../../ui/input.js";
 import { Label } from "../../ui/label.js";
 import { Card, CardContent } from "../../ui/card.js";
-import { Loader2 } from "lucide-react";
+import { Loader2, DoorOpen, Hash, ScrollText, Users, DollarSign } from "lucide-react";
 import { createRoom } from "../../../api/roomApi.js";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +34,6 @@ const CreateRoomForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // --- Single field validation ---
   const validateField = (name: keyof RoomFormData, value: string): string | undefined => {
     switch (name) {
       case "number":
@@ -42,16 +41,16 @@ const CreateRoomForm: React.FC = () => {
         break;
       case "type":
         if (!value.trim()) return "⚠️ Room type is required.";
-        if (value.trim().length <= 4 ) return "⚠️ Room Type should be self-explanatory.";
+        if (value.trim().length <= 4) return "⚠️ Room Type should be self-explanatory.";
         break;
       case "capacity":
         if (!value || isNaN(Number(value)))
-        return "⚠️ Valid capacity is required.";
+          return "⚠️ Valid capacity is required.";
         if (Number(value) <= 0 || Number(value) > 20)
-        return "⚠️ Capacity not allowed (1 - 20).";
+          return "⚠️ Capacity not allowed (1 - 20).";
         break;
       case "baseRate":
-        if (!value || isNaN(Number(value)) || Number(value) <= 0 )
+        if (!value || isNaN(Number(value)) || Number(value) <= 0)
           return "⚠️ Valid base rate is required.";
         break;
       default:
@@ -60,7 +59,6 @@ const CreateRoomForm: React.FC = () => {
     return undefined;
   };
 
-  // --- Validate all fields ---
   const validateForm = (): boolean => {
     const newErrors: RoomFormErrors = {};
     (Object.keys(formData) as (keyof RoomFormData)[]).forEach((key) => {
@@ -71,19 +69,15 @@ const CreateRoomForm: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // --- Live validation on input change ---
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-
-    // Validate this field only
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: validateField(name as keyof RoomFormData, value),
     }));
   };
 
-  // --- Submit handler ---
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -124,15 +118,17 @@ const CreateRoomForm: React.FC = () => {
   return (
     <div className="flex items-center justify-center p-4">
       <Card className="max-w-md w-full p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center">
-          🛏️ {t("room.create")}
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center flex items-center justify-center gap-2">
+          <DoorOpen className="w-6 h-6" />
+          {t("room.create")}
         </h1>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 mt-4">
             {/* Room Number */}
             <div>
-              <Label htmlFor="number" className="text-sm font-medium my-2 block">
-                🔢 {t("room.creation.number")}
+              <Label htmlFor="number" className="text-sm font-medium my-2 block flex items-center gap-2">
+                <Hash className="w-4 h-4" />
+                {t("room.creation.number")}
               </Label>
               <Input
                 id="number"
@@ -147,8 +143,9 @@ const CreateRoomForm: React.FC = () => {
 
             {/* Room Type */}
             <div>
-              <Label htmlFor="type" className="text-sm font-medium my-2 block">
-                🧾 {t("room.creation.type")}
+              <Label htmlFor="type" className="text-sm font-medium my-2 block flex items-center gap-2">
+                <ScrollText className="w-4 h-4" />
+                {t("room.creation.type")}
               </Label>
               <Input
                 id="type"
@@ -163,8 +160,9 @@ const CreateRoomForm: React.FC = () => {
 
             {/* Capacity */}
             <div>
-              <Label htmlFor="capacity" className="text-sm font-medium my-2 block">
-                👥 {t("room.creation.capacity")}
+              <Label htmlFor="capacity" className="text-sm font-medium my-2 block flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                {t("room.creation.capacity")}
               </Label>
               <Input
                 type="number"
@@ -180,8 +178,9 @@ const CreateRoomForm: React.FC = () => {
 
             {/* Base Rate */}
             <div>
-              <Label htmlFor="baseRate" className="text-sm font-medium my-2 block">
-                💰 {t("room.creation.price")}
+              <Label htmlFor="baseRate" className="text-sm font-medium my-2 block flex items-center gap-2">
+                <DollarSign className="w-4 h-4" />
+                {t("room.creation.price")}
               </Label>
               <Input
                 type="number"
@@ -199,8 +198,9 @@ const CreateRoomForm: React.FC = () => {
             {apiError && <p className="text-red-500 text-sm text-center">{apiError}</p>}
 
             {/* Submit Button */}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? <Loader2 className="animate-spin" /> : `🚪 ${t("room.creation.create")}`}
+            <Button type="submit" className="w-full flex items-center justify-center gap-2" disabled={loading}>
+              {loading ? <Loader2 className="animate-spin w-4 h-4" /> : <DoorOpen className="w-4 h-4" />}
+              {t("room.creation.create")}
             </Button>
           </form>
         </CardContent>

@@ -3,7 +3,7 @@ import { Button } from "../../ui/button.js";
 import { Input } from "../../ui/input.js";
 import { Label } from "../../ui/label.js";
 import { Card, CardContent } from "../../ui/card.js";
-import { Loader2 } from "lucide-react";
+import { Loader2, Megaphone, Edit, FileText, Calendar, Save } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { createAnnouncement } from "../../../api/anouncementApi.js";
@@ -37,17 +37,16 @@ const CreateAnnouncementForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // Validate whenever formData changes
   useEffect(() => {
     const newErrors: FormErrors = {};
     if (!formData.title.trim()) newErrors.title = t("error.title_required");
-    if (formData.title.length <= 4) newErrors.title = t("error.title_min_size");
-    if (!formData.content.trim())
-      newErrors.content = t("error.content_required");
-    if (formData.content.length <= 15 ) newErrors.content = t("error.content_min_size");
-    if (!formData.expirationDate)
-      newErrors.expirationDate = t("error.expiration_required");
-    
+    else if (formData.title.length <= 4) newErrors.title = t("error.title_min_size");
+
+    if (!formData.content.trim()) newErrors.content = t("error.content_required");
+    else if (formData.content.length <= 15) newErrors.content = t("error.content_min_size");
+
+    if (!formData.expirationDate) newErrors.expirationDate = t("error.expiration_required");
+
     setErrors(newErrors);
   }, [formData, t]);
 
@@ -56,14 +55,14 @@ const CreateAnnouncementForm: React.FC = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleDateChange = (date: Date | null) => {
-    setFormData({ ...formData, expirationDate: date });
+    setFormData((prev) => ({ ...prev, expirationDate: date }));
   };
 
-  // Mark field as touched on blur
   const handleBlur = (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLDivElement>
   ) => {
@@ -84,7 +83,6 @@ const CreateAnnouncementForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Mark all fields touched to show errors if any
     setTouched({
       title: true,
       content: true,
@@ -122,17 +120,22 @@ const CreateAnnouncementForm: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center p-4">
+    <div className="flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-900 min-h-screen">
       <Card className="max-w-md w-full p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-4">
-          📢 {t("announcement.create")}
+        <h1 className="flex items-center justify-center gap-2 text-2xl font-semibold text-gray-900 dark:text-white text-center mb-6">
+          <Megaphone className="w-6 h-6" />
+          {t("announcement.create")}
         </h1>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title */}
             <div>
-              <Label htmlFor="title" className="block text-sm font-medium mb-1">
-                📝 {t("announcement.title")}
+              <Label
+                htmlFor="title"
+                className="flex items-center gap-1 text-sm font-medium mb-2 text-gray-700 dark:text-gray-300"
+              >
+                <Edit className="w-4 h-4" />
+                {t("announcement.title")}
               </Label>
               <Input
                 id="title"
@@ -140,7 +143,7 @@ const CreateAnnouncementForm: React.FC = () => {
                 value={formData.title}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={`p-2 rounded-md dark:bg-gray-900 focus:ring-2 focus:outline-none ${getBorderClass(
+                className={`p-3 rounded-md dark:bg-gray-900 focus:ring-2 focus:outline-none ${getBorderClass(
                   "title"
                 )}`}
                 placeholder={t("announcement.title_placeholder")}
@@ -154,9 +157,10 @@ const CreateAnnouncementForm: React.FC = () => {
             <div>
               <Label
                 htmlFor="content"
-                className="block text-sm font-medium mb-1"
+                className="flex items-center gap-1 text-sm font-medium mb-2 text-gray-700 dark:text-gray-300"
               >
-                ✏️ {t("announcement.content")}
+                <FileText className="w-4 h-4" />
+                {t("announcement.content")}
               </Label>
               <textarea
                 id="content"
@@ -164,7 +168,7 @@ const CreateAnnouncementForm: React.FC = () => {
                 value={formData.content}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={`w-full h-24 p-2 rounded-md border dark:bg-gray-900 resize-none focus:ring-2 focus:outline-none ${getBorderClass(
+                className={`w-full h-28 p-3 rounded-md border dark:bg-gray-900 resize-none focus:ring-2 focus:outline-none ${getBorderClass(
                   "content"
                 )}`}
                 placeholder={t("announcement.content_placeholder")}
@@ -178,9 +182,10 @@ const CreateAnnouncementForm: React.FC = () => {
             <div>
               <Label
                 htmlFor="expirationDate"
-                className="block text-sm font-medium mb-1"
+                className="flex items-center gap-1 text-sm font-medium mb-2 text-gray-700 dark:text-gray-300"
               >
-                📅 {t("announcement.expiration_date")}
+                <Calendar className="w-4 h-4" />
+                {t("announcement.expiration_date")}
               </Label>
               <DatePicker
                 id="expirationDate"
@@ -188,7 +193,7 @@ const CreateAnnouncementForm: React.FC = () => {
                 onChange={handleDateChange}
                 onBlur={handleBlur}
                 name="expirationDate"
-                className={`w-full p-2 border text-center rounded-md dark:bg-gray-900 text-black dark:text-white focus:ring-2 focus:outline-none ${getBorderClass(
+                className={`w-full p-3 border text-center rounded-md dark:bg-gray-900 text-black dark:text-white focus:ring-2 focus:outline-none ${getBorderClass(
                   "expirationDate"
                 )}`}
                 dateFormat="dd-MM-yyyy"
@@ -196,23 +201,19 @@ const CreateAnnouncementForm: React.FC = () => {
                 placeholderText={t("announcement.date_placeholder")}
               />
               {shouldShowError("expirationDate") && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.expirationDate}
-                </p>
+                <p className="text-red-500 text-xs mt-1">{errors.expirationDate}</p>
               )}
             </div>
 
             {/* API Error */}
             {apiError && (
-              <p className="text-red-500 text-sm text-center mt-2">
-                {apiError}
-              </p>
+              <p className="text-red-500 text-sm text-center mt-3">{apiError}</p>
             )}
 
             {/* Submit */}
             <Button
               type="submit"
-              className="w-full flex justify-center items-center gap-2"
+              className="w-full flex justify-center items-center gap-2 py-3"
               disabled={loading || !isValid}
             >
               {loading ? (
@@ -221,7 +222,10 @@ const CreateAnnouncementForm: React.FC = () => {
                   {t("announcement.creating")}
                 </>
               ) : (
-                ` 🚀 ${t("announcement.create")}`
+                <>
+                  <Save />
+                  {t("announcement.create")}
+                </>
               )}
             </Button>
           </form>
