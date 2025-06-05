@@ -14,8 +14,8 @@ export interface User {
   lastname: string;
   email: string;
   password: string;
-  role?: string; // Optional field
-  tenantId?: number; // Assuming tenantId is part of the user data, optional if not required.
+  rol?: string; // Optional field
+  tenant?: number; // Assuming tenantId is part of the user data, optional if not required.
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -72,7 +72,7 @@ export const getUsers = async (): Promise<UserDTO[]> => {
 export const createUser = async (userData: Omit<User, "id">): Promise<User> => {
   const tenantId = localStorage.getItem("tenantId"); // Assuming tenant ID is stored in localStorage
   if (tenantId) {
-    userData.tenantId = Number(tenantId); // Add tenant ID if it's available
+    userData.tenant = Number(tenantId); // Add tenant ID if it's available
   }
 
   try {

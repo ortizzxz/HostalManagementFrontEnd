@@ -13,6 +13,7 @@ import {
   FaIdBadge,
 } from "react-icons/fa"; // Optional icons for better UI
 import { LoadingModal } from "../components/ui/LoadingModal";
+import { useUser } from "../components/auth/UserContext";
 
 export interface GuestDTO {
   nif: string;
@@ -44,7 +45,14 @@ const Reservations = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true); // Track loading state
   const [filter, setFilter] = useState<"upcoming" | "past" | "all">("upcoming");
+  const { user } = useUser();
+  const [hasAccess, setHasAccess] = useState(false);
 
+  useEffect(() => {
+    if (user?.rol === "admin" || user?.rol == "recepcion") {
+      setHasAccess(true);
+    }
+  }, [user]);
   const fetchReservations = async () => {
     try {
       setLoading(true);
@@ -168,166 +176,185 @@ const Reservations = () => {
   });
 
   return (
-    <div className="text-black dark:text-white p-3">
-      {/* Header with actions */}
-      <HeaderWithActions
-        title={t("reservation.list")}
-        onCreate={handleCreateReservation}
-        createLabel={t("reservation.create")}
-      />
-
-      {successMessage && (
-        <div className="fixed top-4 right-4 z-50 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 px-4 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out animate-fade-in">
-          {successMessage}
+    <>
+      {!hasAccess ? (
+        <div className="max-w-xl mx-auto mt-20 p-6 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-100 rounded-xl shadow-md text-center border border-yellow-300 dark:border-yellow-600">
+          <h2 className="text-2xl font-semibold mb-2">
+            {t("common.access_denied")}
+          </h2>
+          <p className="text-sm">{t("common.no_permission")}</p>
         </div>
-      )}
+      ) : (
+        <div className="text-black dark:text-white p-3">
+          {/* Header with actions */}
+          <HeaderWithActions
+            title={t("reservation.list")}
+            onCreate={handleCreateReservation}
+            createLabel={t("reservation.create")}
+          />
 
-      <div className="flex flex-wrap gap-2 mb-3">
-        {[
-          {
-            label: t("reservation.upcoming") || "Upcoming",
-            value: "upcoming",
-            color: "green",
-          },
-          {
-            label: t("reservation.past") || "Past",
-            value: "past",
-            color: "red",
-          },
-          { label: t("reservation.all") || "All", value: "all", color: "blue" },
-        ].map(({ label, value, color }) => (
-          <button
-            key={value}
-            className={`text-sm font-medium px-4 py-2 rounded-lg transition duration-200 border border-transparent focus:outline-none focus:ring-2 focus:ring-${color}-400 ${
-              filter === value
-                ? `bg-${color}-600 text-white hover:bg-${color}-700`
-                : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
-            }`}
-            onClick={() => setFilter(value as "upcoming" | "past" | "all")}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+          {successMessage && (
+            <div className="fixed top-4 right-4 z-50 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 px-4 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out animate-fade-in">
+              {successMessage}
+            </div>
+          )}
 
-      {/* Reservation list */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 mt-6">
-        {filteredReservations.map((reservation) => {
-          const { textClass } = getStatusClasses(
-            reservation.editedState ?? reservation.state
-          );
+          <div className="flex flex-wrap gap-2 mb-3">
+            {[
+              {
+                label: t("reservation.upcoming") || "Upcoming",
+                value: "upcoming",
+                color: "green",
+              },
+              {
+                label: t("reservation.past") || "Past",
+                value: "past",
+                color: "red",
+              },
+              {
+                label: t("reservation.all") || "All",
+                value: "all",
+                color: "blue",
+              },
+            ].map(({ label, value, color }) => (
+              <button
+                key={value}
+                className={`text-sm font-medium px-4 py-2 rounded-lg transition duration-200 border border-transparent focus:outline-none focus:ring-2 focus:ring-${color}-400 ${
+                  filter === value
+                    ? `bg-${color}-600 text-white hover:bg-${color}-700`
+                    : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
+                }`}
+                onClick={() => setFilter(value as "upcoming" | "past" | "all")}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
 
-          return (
-            <div
-              key={reservation.id}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-300 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer"
-            >
-              <div className="p-6">
-                {/* Reservation Header */}
-                <h2 className="text-2xl font-semibold mb-4 flex items-center">
-                  <FaBed className="mr-2 text-gray-500 dark:text-gray-200" />
-                  {t("reservation.reservation")} #{reservation.id}
-                </h2>
+          {/* Reservation list */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 mt-6">
+            {filteredReservations.map((reservation) => {
+              const { textClass } = getStatusClasses(
+                reservation.editedState ?? reservation.state
+              );
 
-                {/* Reservation Details */}
-                <div className="space-y-3">
-                  <p className="text-sm text-gray-500 dark:text-gray-200 flex items-center">
-                    <FaCalendarAlt className="mr-2" />
-                    {t("reservation.room")}: #{reservation.roomId}
-                  </p>
+              return (
+                <div
+                  key={reservation.id}
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-300 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer"
+                >
+                  <div className="p-6">
+                    {/* Reservation Header */}
+                    <h2 className="text-2xl font-semibold mb-4 flex items-center">
+                      <FaBed className="mr-2 text-gray-500 dark:text-gray-200" />
+                      {t("reservation.reservation")} #{reservation.id}
+                    </h2>
 
-                  <p className="text-sm text-gray-500 dark:text-gray-200 flex items-center">
-                    <FaCalendarAlt className="mr-2" />
-                    {t("reservation.inDate")}: {formatDate(reservation.inDate)}{" "}
-                    || {t("reservation.outDate")}:{" "}
-                    {formatDate(reservation.outDate)}
-                  </p>
+                    {/* Reservation Details */}
+                    <div className="space-y-3">
+                      <p className="text-sm text-gray-500 dark:text-gray-200 flex items-center">
+                        <FaCalendarAlt className="mr-2" />
+                        {t("reservation.room")}: #{reservation.roomId}
+                      </p>
 
-                  <p className="text-sm text-gray-500 dark:text-gray-200 flex items-center">
-                    <FaUser className="mr-2" />
-                    {t("reservation.guests")}: {reservation.guests?.length || 0}
-                  </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-200 flex items-center">
+                        <FaCalendarAlt className="mr-2" />
+                        {t("reservation.inDate")}:{" "}
+                        {formatDate(reservation.inDate)} ||{" "}
+                        {t("reservation.outDate")}:{" "}
+                        {formatDate(reservation.outDate)}
+                      </p>
 
-                  <div className="bg-gray-100 dark:bg-gray-500 p-4 rounded-lg mt-4 dark:text-white">
-                    <p className="text-sm font-semibold mb-2">
-                      {t("reservation.guest_details")}
-                    </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-200 flex items-center">
+                        <FaUser className="mr-2" />
+                        {t("reservation.guests")}:{" "}
+                        {reservation.guests?.length || 0}
+                      </p>
 
-                    {/* Guest Sub Card */}
-                    <div className="flex text-gray-700 dark:text-gray-200 overflow-x-auto space-x-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
-                      {reservation.guests?.map((guest, index) => (
-                        <div
-                          key={index}
-                          className="min-w-fit flex-shrink-0 bg-white dark:bg-gray-700 p-2 rounded-lg shadow"
-                        >
-                          <p className="text-sm flex items-center">
-                            <FaUser className="mr-2" />
-                            {guest.name} {guest.lastname}
-                          </p>
-                          <p className="text-sm flex items-center">
-                            <FaIdBadge className="mr-2" />
-                            {guest.nif.toLocaleUpperCase()}
-                          </p>
-                          <p className="text-sm flex items-center">
-                            <FaPhone className="mr-2" />
-                            {guest.phone}
-                          </p>
-                          <p className="text-sm flex items-center">
-                            <FaEnvelope className="mr-2" />
-                            {guest.email}
-                          </p>
+                      <div className="bg-gray-100 dark:bg-gray-500 p-4 rounded-lg mt-4 dark:text-white">
+                        <p className="text-sm font-semibold mb-2">
+                          {t("reservation.guest_details")}
+                        </p>
+
+                        {/* Guest Sub Card */}
+                        <div className="flex text-gray-700 dark:text-gray-200 overflow-x-auto space-x-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
+                          {reservation.guests?.map((guest, index) => (
+                            <div
+                              key={index}
+                              className="min-w-fit flex-shrink-0 bg-white dark:bg-gray-700 p-2 rounded-lg shadow"
+                            >
+                              <p className="text-sm flex items-center">
+                                <FaUser className="mr-2" />
+                                {guest.name} {guest.lastname}
+                              </p>
+                              <p className="text-sm flex items-center">
+                                <FaIdBadge className="mr-2" />
+                                {guest.nif.toLocaleUpperCase()}
+                              </p>
+                              <p className="text-sm flex items-center">
+                                <FaPhone className="mr-2" />
+                                {guest.phone}
+                              </p>
+                              <p className="text-sm flex items-center">
+                                <FaEnvelope className="mr-2" />
+                                {guest.email}
+                              </p>
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </div>
+                      </div>
 
-                  {/* Status Badge */}
-                  <div className="flex flex-row gap-4">
-                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-200 space-x-2">
-                      <span>{t("reservation.status")}:</span>
-                      <select
-                        value={reservation.editedState ?? reservation.state}
-                        onChange={(e) =>
-                          handleStatusChange(reservation.id, e.target.value)
-                        }
-                        className={`bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 ${textClass}`}
-                      >
-                        <option value="CONFIRMADA">
-                          {t("reservation.confirmed")}
-                        </option>
-                        <option value="COMPLETADA">
-                          {t("reservation.completed")}
-                        </option>
-                        <option value="CANCELADA">
-                          {t("reservation.cancelled")}
-                        </option>
-                      </select>
-                    </div>
+                      {/* Status Badge */}
+                      <div className="flex flex-row gap-4">
+                        <div className="flex items-center text-sm text-gray-500 dark:text-gray-200 space-x-2">
+                          <span>{t("reservation.status")}:</span>
+                          <select
+                            value={reservation.editedState ?? reservation.state}
+                            onChange={(e) =>
+                              handleStatusChange(reservation.id, e.target.value)
+                            }
+                            className={`bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 ${textClass}`}
+                          >
+                            <option value="CONFIRMADA">
+                              {t("reservation.confirmed")}
+                            </option>
+                            <option value="COMPLETADA">
+                              {t("reservation.completed")}
+                            </option>
+                            <option value="CANCELADA">
+                              {t("reservation.cancelled")}
+                            </option>
+                          </select>
+                        </div>
 
-                    {/* Save button appears only when the status has changed */}
-                    {reservation.editedState &&
-                      reservation.editedState !== reservation.state && (
+                        {/* Save button appears only when the status has changed */}
+                        {reservation.editedState &&
+                          reservation.editedState !== reservation.state && (
+                            <button
+                              onClick={() => handleSaveStatus(reservation.id)}
+                              className="self-start px-3 py-1 rounded transition bg-blue-500 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-500"
+                            >
+                              {t("common.save")}
+                            </button>
+                          )}
                         <button
-                          onClick={() => handleSaveStatus(reservation.id)}
-                          className="self-start px-3 py-1 rounded transition bg-blue-500 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-500"
+                          onClick={() =>
+                            handleUpdateReservation(reservation.id)
+                          }
+                          className="self-start px-3 py-1 rounded transition bg-yellow-500 dark:bg-yellow-600 hover:bg-yellow-700 dark:hover:bg-yellow-500"
                         >
-                          {t("common.save")}
+                          {t("reservation.update")}
                         </button>
-                      )}
-                    <button
-                      onClick={() => handleUpdateReservation(reservation.id)}
-                      className="self-start px-3 py-1 rounded transition bg-yellow-500 dark:bg-yellow-600 hover:bg-yellow-700 dark:hover:bg-yellow-500"
-                    >
-                      {t("reservation.update")}
-                    </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

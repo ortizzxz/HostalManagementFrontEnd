@@ -40,12 +40,11 @@ const Rooms = () => {
 
   // Define filter buttons
   const roomFilterButtons = [
-    { label: "Busy Rooms", value: "OCUPADO" },
-    { label: "Free Rooms", value: "DISPONIBLE" },
-    { label: "On Maintenance", value: "MANTENIMIENTO" },
-    { label: "All Rooms", value: "" }, // No filter
+    { label: t("room.state.busy"), value: "OCUPADO" },
+    { label: t("room.state.available"), value: "DISPONIBLE" },
+    { label: t("room.state.maintenance"), value: "MANTENIMIENTO" },
+    { label: t("room.state.all"), value: "" },
   ];
-
   useEffect(() => {
     const fetchRooms = async () => {
       try {
@@ -106,7 +105,7 @@ const Rooms = () => {
 
       {/* Filter Bar */}
       <FilterBar
-        placeholder={t("filterbar.search_placeholder")}
+        placeholder={t("common.search")}
         value={searchTerm}
         onSearchChange={setSearchTerm}
         activeFilter={activeRoomFilter}

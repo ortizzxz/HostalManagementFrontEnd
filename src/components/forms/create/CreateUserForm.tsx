@@ -13,7 +13,7 @@ import {
 import { Card, CardContent } from "../../ui/card.js";
 import { jwtDecode } from "jwt-decode";
 import { redirect, useNavigate } from "react-router-dom";
-import { Loader2, User, AtSign, Lock, Repeat } from "lucide-react"; // Added icons
+import { Loader2, User, AtSign, Lock, Repeat, CheckCircle, XCircle } from "lucide-react"; // Icons
 import { useTranslation } from "react-i18next";
 
 interface MyJwtPayload {
@@ -58,7 +58,8 @@ const CreateUserForm = () => {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
-  const [apiError, setApiError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Single field validation
   const validateField = (
@@ -77,8 +78,7 @@ const CreateUserForm = () => {
         if (!/\S+@\S+\.\S+/.test(value)) return t("error.email_req");
         break;
       case "password":
-        if (value.length < 8)
-          return t("error.password_lenght");
+        if (value.length < 8) return t("error.password_lenght");
         break;
       case "repeatPassword":
         if (value !== formData.password) return t("error.password_match");
@@ -127,17 +127,14 @@ const CreateUserForm = () => {
       }
 
       setErrors((prevErrors) => {
-        // Start with previous errors, but as a shallow copy
         const updatedErrors = { ...prevErrors };
 
-        // Handle current field
         if (currentError) {
           updatedErrors[name] = currentError;
         } else {
           delete updatedErrors[name];
         }
 
-        // Handle repeatPassword or password match error
         if (name === "password" || name === "repeatPassword") {
           const otherField =
             name === "password" ? "repeatPassword" : "password";
@@ -173,8 +170,11 @@ const CreateUserForm = () => {
     });
   };
 
-
-  const fields: { name: keyof Omit<FormFields, "tenant">; label: React.ReactNode; placeholder: string }[] = [
+  const fields: {
+    name: keyof Omit<FormFields, "tenant">;
+    label: React.ReactNode;
+    placeholder: string;
+  }[] = [
     {
       name: "name",
       label: (
@@ -201,7 +201,6 @@ const CreateUserForm = () => {
         <>
           <AtSign className="inline-block mr-1 w-4 h-4" />
           {t("user.email")}
-
         </>
       ),
       placeholder: t("user.email_placeholder"),
@@ -228,15 +227,17 @@ const CreateUserForm = () => {
     },
   ];
 
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
     setLoading(true);
-    setApiError(null);
+    setErrorMessage(null);
+    setSuccessMessage(null);
     try {
       const { repeatPassword, ...userData } = formData;
       await createUser(userData);
-      alert("User created successfully!");
+      setSuccessMessage(t("user.created_successfully"));
       setFormData({
         name: "",
         lastname: "",
@@ -247,86 +248,121 @@ const CreateUserForm = () => {
         tenant: tenantId,
       });
       setErrors({});
-      navigate("/users-overview");
-    } catch (error) {
-      setApiError(t("user.failed_creation"));
+
+      setTimeout(() => {
+        navigate("/users-overview");
+      }, 1500);
+    } catch (error: any) {
+      const message = error.response.data.message;
+      console.log(message)
+      if(message.includes("email in use")){
+        setErrorMessage(t("user.email_in_use"));
+      }else{
+        setErrorMessage(t("user.failed_creation"));
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center dark:bg-gray-900 p-4">
-      <Card className="max-w-md w-full p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center">
-          Create New User
-        </h1>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {fields.map(({ name, label, placeholder }) => (
-              <div key={name}>
+    <>
+     {/* Floating notifications */}
+      {successMessage && (
+        <div className="fixed top-6 right-6 z-50 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 px-5 py-3 rounded-lg shadow-lg flex items-center space-x-3 max-w-xs">
+          <CheckCircle className="w-6 h-6 flex-shrink-0" />
+          <span>{successMessage}</span>
+          <button
+            onClick={() => setSuccessMessage(null)}
+            aria-label="Close success message"
+            className="font-bold text-xl leading-none hover:text-green-600 dark:hover:text-green-400"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
+      {errorMessage && (
+        <div className="fixed top-6 right-6 z-50 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 px-5 py-3 rounded-lg shadow-lg flex items-center space-x-3 max-w-xs">
+          <XCircle className="w-6 h-6 flex-shrink-0" />
+          <span className="flex-grow">{errorMessage}</span>
+          <button
+            onClick={() => setErrorMessage(null)}
+            aria-label="Close error message"
+            className="font-bold text-xl leading-none hover:text-red-600 dark:hover:text-red-400"
+          >
+            ×
+          </button>
+        </div>
+      )}
+      <div className="flex items-center justify-center dark:bg-gray-900 p-4">
+        <Card className="max-w-md w-full p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center">
+            Create New User
+          </h1>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {fields.map(({ name, label, placeholder }) => (
+                <div key={name}>
+                  <Label
+                    htmlFor={name}
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 my-2"
+                  >
+                    {label}
+                  </Label>
+                  <Input
+                    type={
+                      name === "password" || name === "repeatPassword"
+                        ? "password"
+                        : "text"
+                    }
+                    id={name}
+                    name={name}
+                    value={formData[name]}
+                    onChange={handleChange}
+                    placeholder={placeholder}
+                    className={`dark:bg-gray-900 ${
+                      errors[name] ? "border-red-500" : "border-gray-300"
+                    } border rounded-md p-2`}
+                  />
+                  {errors[name] && (
+                    <p className="text-red-500 text-xs mt-1">{errors[name]}</p>
+                  )}
+                </div>
+              ))}
+
+              <div>
                 <Label
-                  htmlFor={name}
+                  htmlFor="rol"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 my-2"
                 >
-                  {label}
+                  Role
                 </Label>
-                <Input
-                  type={
-                    name === "password" || name === "repeatPassword"
-                      ? "password"
-                      : "text"
-                  }
-                  id={name}
-                  name={name}
-                  value={formData[name]}
-                  onChange={handleChange}
-                  placeholder={placeholder}
-                  className={`dark:bg-gray-900 ${
-                    errors[name] ? "border-red-500" : "border-gray-300"
-                  } border rounded-md p-2`}
-                />
-                {errors[name] && (
-                  <p className="text-red-500 text-xs mt-1">{errors[name]}</p>
+                <Select value={formData.rol} onValueChange={handleSelectChange}>
+                  <SelectTrigger className={errors.rol ? "border-red-500" : ""}>
+                    <SelectValue placeholder={t("user.select_role")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="admin">Admin</SelectItem>
+                    <SelectItem value="recepcion">Recepción</SelectItem>
+                    <SelectItem value="limpieza">Limpieza</SelectItem>
+                    <SelectItem value="mantenimiento">Mantenimiento</SelectItem>
+                    <SelectItem value="unknown">Sin Asignar</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.rol && (
+                  <p className="text-red-500 text-xs mt-1">{errors.rol}</p>
                 )}
               </div>
-            ))}
 
-            <div>
-              <Label
-                htmlFor="rol"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 my-2"
-              >
-                Role
-              </Label>
-              <Select value={formData.rol} onValueChange={handleSelectChange}>
-                <SelectTrigger className={errors.rol ? "border-red-500" : ""}>
-                  <SelectValue placeholder="Select a role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="recepcion">Recepción</SelectItem>
-                  <SelectItem value="limpieza">Limpieza</SelectItem>
-                  <SelectItem value="mantenimiento">Mantenimiento</SelectItem>
-                  <SelectItem value="unknown">Sin Asignar</SelectItem>
-                </SelectContent>
-              </Select>
-              {errors.rol && (
-                <p className="text-red-500 text-xs mt-1">{errors.rol}</p>
-              )}
-            </div>
-
-            {apiError && (
-              <p className="text-red-500 text-sm text-center">{apiError}</p>
-            )}
-
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? <Loader2 className="animate-spin" /> : "Create User"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? <Loader2 className="animate-spin" /> : "Create User"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 };
 

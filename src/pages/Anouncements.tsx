@@ -42,7 +42,6 @@ const Announcements = () => {
     const fetchAnnouncements = async () => {
       try {
         const data = await getAnnouncements();
-        console.log(data);
         setAnnouncements(data);
       } catch (error) {
         setError("Failed to fetch announcements");

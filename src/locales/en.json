@@ -4,8 +4,19 @@
     "role": "Role",
     "create": "Create User",
     "update": "Update User",
-    "delete": "Delete User"
-  },
+    "delete": "Delete User",
+    "firstname": "First Name",
+    "lastname": "Last Name",
+    "email": "Email",
+    "password": "Password",
+    "repeat_password": "Repeat Password",
+    "select_role": "Select a Role",
+    "name_placeholder": "Carlos...",
+    "lastname_placeholder": "Pérez...",
+    "email_placeholder": "carlos@perez.com",
+    "create_password_placeholder": "Secure Password",
+    "confirm_password_placeholder": "Repeat your Secure Password"
+    },
   "announcement": {
     "list": "Announcements",
     "create": "Create Announcement",
@@ -94,7 +105,8 @@
     "state": {
       "available": "Available",
       "busy": "Busy",
-      "maintenance": "Under Maintenance"
+      "maintenance": "Under Maintenance",
+      "all": "All"
     }
   },
   "sidebar": {
@@ -165,7 +177,8 @@
     "save": "Save",
     "actions": "Actions",
     "cancel": "Cancel",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "search": "Search..."
   },
   "inventory": {
   "list": "Inventory List",
@@ -175,6 +188,12 @@
   "amount": "Amount",
   "warning_level": "Warning Level",
   "last_update": "Last Update"
+},
+"error" : {
+  "in_before_out": "In date must take place before out date.",
+  "unexpected_error": "An unexpected error ocurred. Please try again later.",
+  "room_reserved": "This room is already reserved for the selected dates. Please choose different dates or another room."
+
 }
 
 }

@@ -4,7 +4,18 @@
     "role": "Cargo",
     "create": "Crear Usuario",
     "update": "Editar Usuario",
-    "delete": "Eliminar Usuario"
+    "delete": "Eliminar Usuario",
+    "firstname": "Nombre",
+    "lastname": "Apellido",
+    "email": "Email",
+    "password": "Contraseña",
+    "repeat_password": "Repita su Contraseña",
+    "select_role": "Seleccione un Role",
+    "name_placeholder": "Carlos...",
+    "lastname_placeholder": "Pérez...",
+    "email_placeholder": "carlos@perez.com",
+    "create_password_placeholder": "Contraseña Segura",
+    "confirm_password_placeholder": "Repita su Contraseña Segura"
   },
   "announcement": {
     "list": "Anuncios",
@@ -83,6 +94,7 @@
         "available": "Disponible",
         "busy": "Ocupada",
         "maintenance": "En Mantenimiento",
+        "all": "Todas",
         "baserate": "Precio Base"
       }
     }
@@ -151,7 +163,9 @@
     "save": "Guardar",
     "actions": "Acción",
     "cancel": "Cancelar",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "search": "Buscar..."
+  
   },
   "inventory": {
   "list": "Inventario",
@@ -161,6 +175,12 @@
   "amount": "Cantidad",
   "warning_level": "Nivel Mínimo",
   "last_update": "Ultima Actualización"
+},
+"error" : {
+  "in_before_out": "La fecha de entrada tiene que ser anterior a la fecha de salida.",
+  "unexpected_error": "Ha ocurrido un error inesperado. Inténtelo nuevamente más tarde.",
+  "room_reserved": "Existe una reserva para las fechas seleccionadas para esta habitación. Por favor cambie las fechas o la habitación e inténtelo nuevamente."
+  
 }
 
 }

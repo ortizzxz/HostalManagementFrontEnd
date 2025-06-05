@@ -16,6 +16,7 @@ import {
   CheckCircleIcon,
   XCircleIcon,
 } from "@heroicons/react/24/solid";
+import { useTranslation } from "react-i18next";
 
 interface FormData {
   userId: number | "";
@@ -27,7 +28,7 @@ interface FormData {
 
 const CreateWageForm = () => {
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   const [users, setUsers] = useState<UserDTO[]>([]);
   const [formData, setFormData] = useState<FormData>({
     userId: "",
@@ -229,7 +230,7 @@ const CreateWageForm = () => {
               value={formData.userId || ""}
               required
             >
-              <option value="">-- Select User --</option>
+              <option value="">-- {t("wage.select_user")} --</option>
               {users.map((u) => (
                 <option key={u.id} value={u.id}>
                   {u.name} {u.lastname}
