@@ -55,7 +55,11 @@
     "upcoming": "Upcoming",
     "past": "Past",
     "all": "All",
-    "canceled": "Canceled"
+    "canceled": "Canceled",
+    "guestInfo": "Guest Details",
+    "success": "Reservation created successfully!",
+    "creating": "Creating Reservation..."
+
   },
   "dashboard": {
     "disposition": "Dashboard",
@@ -72,7 +76,13 @@
     "create": "Register Guest",
     "update": "Update Guest",
     "delete": "Delete Guest",
-    "empty": "No Guests To Display"
+    "empty": "No Guests To Display",
+    "nif": "NIF/DNI/Passport",
+    "name": "Name",
+    "lastname": "Lastname",
+    "email": "Email",
+    "phone": "Phone",
+    "remove": "Delete Guest"
   },
   "finances": {
     "list": "Finances",
@@ -155,13 +165,13 @@
     "login": "Log In",
     "email": "Email",
     "password": "Password",
-    "wait": "Logging In...",
+    "wait": "Sending Link...",
     "enter": "Log In",
     "login_failed": "Login failed. Please check your credentials.",
     "session_expired": "Session expired. Please log in again.",
     "forgot_password": "Recover Password",
     "reset_email_sent": "A password reset email has been sent if the address exists.",
-    "reset_email_failed": "Failed to send reset email. Please try again.",
+    "reset_email_failed": "Failed to send reset email. Please make sure the email exists and try again.",
     "send_reset_link": "Send Reset Link",
     "back_to_login": "Back to Login"
   },
@@ -194,6 +204,12 @@
   "unexpected_error": "An unexpected error ocurred. Please try again later.",
   "room_reserved": "This room is already reserved for the selected dates. Please choose different dates or another room."
 
+},
+"auth": {
+  "reset_password": "Reset Password",
+  "new_password": "New Password",
+  "confirm_password": "Confirm Password",
+  "set_password": "Set Password"
 }
 
 }

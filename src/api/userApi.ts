@@ -147,6 +147,7 @@ export async function sendPasswordResetEmail(email: string) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
   });
+  console.log(response)
   if (!response.ok) {
     throw new Error("Failed to send reset email");
   }

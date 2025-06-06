@@ -207,7 +207,7 @@ const CreateReservationForm: React.FC = () => {
 
       await createReservation(reservationDTO);
 
-      setSuccessMessage("Reservation created successfully!");
+      setSuccessMessage(t("reservation.success"));
       setFormData({
         roomId: "",
         inDate: "",
@@ -434,7 +434,7 @@ const CreateReservationForm: React.FC = () => {
                             variant={"destructive"}
                             size={"sm"}
                           >
-                            Remove Guest
+                            {t("guest.remove")}
                           </Button>
                         )}
                       </div>

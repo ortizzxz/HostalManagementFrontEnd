@@ -31,6 +31,7 @@
     "room": "Número de Habitación",
     "list": "Reservas",
     "create": "Crear Reserva",
+    "selectRoom": "Seleccionar habitación ",
     "update": "Actualizar",
     "delete": "Eliminar Reservas",
     "empty": "No hay Reservas para mostar",
@@ -45,7 +46,11 @@
     "upcoming": "Próximas",
     "past": "Pasadas",
     "all": "Todas",
-    "canceled": "Canceladas"
+    "canceled": "Canceladas",
+    "addGuest": "Añadir otro Huésped",
+    "guestInfo": "Detalles del Huésped",
+    "success": "¡Reserva creada existosamente!",
+    "creating": "Creando Reserva..."
   },
   "dashboard": {
     "disposition": "Dashboard",
@@ -73,7 +78,13 @@
     "create": "Registrar Huésped",
     "update": "Actualizar Huésped",
     "delete": "Eliminar Huésped",
-    "empty": "No hay Huéspedes para mostar"
+    "empty": "No hay Huéspedes para mostar",
+    "nif": "NIF/DNI/Pasaporte",
+    "name": "Nombre",
+    "lastname": "Apellidos",
+    "email": "Email",
+    "phone": "Teléfono",
+    "remove": "Eliminar Huésped"
   },
   "room": {
     "room": "Habitación",
@@ -141,7 +152,7 @@
     "login": "Inicie Sesión",
     "email": "Email",
     "password": "Contraseña",
-    "wait": "Ingresando...",
+    "wait": "Enviando Enlace...",
     "enter": "Ingresar",
     "login_failed": "No se pudo iniciar sesión. Verifica tus datos e inténtalo de nuevo",
     "session_expired": "La sesión ha expirado. Por favor inicia sesión nuevamente.",
@@ -181,6 +192,12 @@
   "unexpected_error": "Ha ocurrido un error inesperado. Inténtelo nuevamente más tarde.",
   "room_reserved": "Existe una reserva para las fechas seleccionadas para esta habitación. Por favor cambie las fechas o la habitación e inténtelo nuevamente."
   
+},
+"auth": {
+  "reset_password": "Rcuperar Contraseña",
+  "new_password": "Nueva Contraseña",
+  "confirm_password": "Confirmar Contraseña",
+  "set_password": "Guardar Contraseña "
 }
 
 }
