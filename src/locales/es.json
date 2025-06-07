@@ -49,7 +49,7 @@
     "canceled": "Canceladas",
     "addGuest": "Añadir otro Huésped",
     "guestInfo": "Detalles del Huésped",
-    "success": "¡Reserva creada existosamente!",
+    "success": "¡Reserva creada exitosamente!",
     "creating": "Creando Reserva..."
   },
   "dashboard": {
@@ -108,7 +108,9 @@
         "all": "Todas",
         "baserate": "Precio Base"
       }
-    }
+    },
+    "success": "Room created successfully!",
+    "fail": "Ha ocurrido un error creando la Habitación. Inténtelo nuevamente más tarde."
   },
   "sidebar": {
     "dashboard": "Panel",
@@ -197,7 +199,9 @@
   "reset_password": "Rcuperar Contraseña",
   "new_password": "Nueva Contraseña",
   "confirm_password": "Confirmar Contraseña",
-  "set_password": "Guardar Contraseña "
+  "set_password": "Guardar Contraseña",
+  "succesful_reset": "Su contraseña se ha cambiado exitosamente."
+
 }
 
 }

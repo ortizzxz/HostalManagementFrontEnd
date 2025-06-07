@@ -3,7 +3,16 @@ import { Button } from "../../ui/button.js";
 import { Input } from "../../ui/input.js";
 import { Label } from "../../ui/label.js";
 import { Card, CardContent } from "../../ui/card.js";
-import { Loader2, DoorOpen, Hash, ScrollText, Users, DollarSign } from "lucide-react";
+import {
+  Loader2,
+  DoorOpen,
+  Hash,
+  ScrollText,
+  Users,
+  DollarSign,
+  XCircle,
+  CheckCircle,
+} from "lucide-react";
 import { createRoom } from "../../../api/roomApi.js";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -32,16 +41,21 @@ const CreateRoomForm: React.FC = () => {
 
   const [errors, setErrors] = useState<RoomFormErrors>({});
   const [loading, setLoading] = useState(false);
-  const [apiError, setApiError] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>("");
+  const [successMessage, setSuccessMessage] = useState<string | null>("");
 
-  const validateField = (name: keyof RoomFormData, value: string): string | undefined => {
+  const validateField = (
+    name: keyof RoomFormData,
+    value: string
+  ): string | undefined => {
     switch (name) {
       case "number":
         if (!value.trim()) return "⚠️ Room number is required.";
         break;
       case "type":
         if (!value.trim()) return "⚠️ Room type is required.";
-        if (value.trim().length <= 4) return "⚠️ Room Type should be self-explanatory.";
+        if (value.trim().length <= 4)
+          return "⚠️ Room Type should be self-explanatory.";
         break;
       case "capacity":
         if (!value || isNaN(Number(value)))
@@ -83,7 +97,6 @@ const CreateRoomForm: React.FC = () => {
     if (!validateForm()) return;
 
     setLoading(true);
-    setApiError(null);
 
     const tenantId = Number(localStorage.getItem("tenantId"));
 
@@ -97,7 +110,7 @@ const CreateRoomForm: React.FC = () => {
         tenant: { id: tenantId },
       });
 
-      alert("🏨 Room created successfully!");
+      setSuccessMessage(t("room.success"));
       setFormData({
         number: "",
         type: "",
@@ -109,103 +122,166 @@ const CreateRoomForm: React.FC = () => {
       navigate("/rooms");
     } catch (error) {
       console.error("Error creating room:", error);
-      setApiError("❌ Failed to create room. Please try again.");
+      setSuccessMessage(t("room.fail"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center p-4">
-      <Card className="max-w-md w-full p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center flex items-center justify-center gap-2">
-          <DoorOpen className="w-6 h-6" />
-          {t("room.create")}
-        </h1>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6 mt-4">
-            {/* Room Number */}
-            <div>
-              <Label htmlFor="number" className="text-sm font-medium my-2 block flex items-center gap-2">
-                <Hash className="w-4 h-4" />
-                {t("room.creation.number")}
-              </Label>
-              <Input
-                id="number"
-                name="number"
-                value={formData.number}
-                onChange={handleChange}
-                className={`p-2 dark:bg-gray-900 ${errors.number ? "border-red-500" : "border-gray-300"}`}
-                placeholder="Room number"
-              />
-              {errors.number && <p className="text-red-500 text-xs mt-1">{errors.number}</p>}
-            </div>
+    <>
+         {/* Floating notifications */}
+      {successMessage && (
+        <div className="fixed top-6 right-6 z-50 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 px-5 py-3 rounded-lg shadow-lg flex items-center space-x-3 max-w-xs">
+          <CheckCircle className="w-6 h-6 flex-shrink-0" />
+          <span>{successMessage}</span>
+          <button
+            onClick={() => setSuccessMessage(null)}
+            aria-label="Close success message"
+            className="font-bold text-xl leading-none hover:text-green-600 dark:hover:text-green-400"
+          >
+            ×
+          </button>
+        </div>
+      )}
 
-            {/* Room Type */}
-            <div>
-              <Label htmlFor="type" className="text-sm font-medium my-2 block flex items-center gap-2">
-                <ScrollText className="w-4 h-4" />
-                {t("room.creation.type")}
-              </Label>
-              <Input
-                id="type"
-                name="type"
-                value={formData.type}
-                onChange={handleChange}
-                className={`p-2 dark:bg-gray-900 ${errors.type ? "border-red-500" : "border-gray-300"}`}
-                placeholder="Room type"
-              />
-              {errors.type && <p className="text-red-500 text-xs mt-1">{errors.type}</p>}
-            </div>
+      {errorMessage && (
+        <div className="fixed top-6 right-6 z-50 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 px-5 py-3 rounded-lg shadow-lg flex items-center space-x-3 max-w-xs">
+          <XCircle className="w-6 h-6 flex-shrink-0" />
+          <span className="flex-grow">{errorMessage}</span>
+          <button
+            onClick={() => setErrorMessage(null)}
+            aria-label="Close error message"
+            className="font-bold text-xl leading-none hover:text-red-600 dark:hover:text-red-400"
+          >
+            ×
+          </button>
+        </div>
+      )}
+      <div className="flex items-center justify-center p-4">
+        <Card className="max-w-md w-full p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center flex items-center justify-center gap-2">
+            <DoorOpen className="w-6 h-6" />
+            {t("room.create")}
+          </h1>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+              {/* Room Number */}
+              <div>
+                <Label
+                  htmlFor="number"
+                  className="text-sm font-medium my-2 block flex items-center gap-2"
+                >
+                  <Hash className="w-4 h-4" />
+                  {t("room.creation.number")}
+                </Label>
+                <Input
+                  id="number"
+                  name="number"
+                  value={formData.number}
+                  onChange={handleChange}
+                  className={`p-2 dark:bg-gray-900 ${
+                    errors.number ? "border-red-500" : "border-gray-300"
+                  }`}
+                  placeholder="Room number"
+                />
+                {errors.number && (
+                  <p className="text-red-500 text-xs mt-1">{errors.number}</p>
+                )}
+              </div>
 
-            {/* Capacity */}
-            <div>
-              <Label htmlFor="capacity" className="text-sm font-medium my-2 block flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                {t("room.creation.capacity")}
-              </Label>
-              <Input
-                type="number"
-                id="capacity"
-                name="capacity"
-                value={formData.capacity}
-                onChange={handleChange}
-                className={`p-2 dark:bg-gray-900 ${errors.capacity ? "border-red-500" : "border-gray-300"}`}
-                placeholder="Capacity"
-              />
-              {errors.capacity && <p className="text-red-500 text-xs mt-1">{errors.capacity}</p>}
-            </div>
+              {/* Room Type */}
+              <div>
+                <Label
+                  htmlFor="type"
+                  className="text-sm font-medium my-2 block flex items-center gap-2"
+                >
+                  <ScrollText className="w-4 h-4" />
+                  {t("room.creation.type")}
+                </Label>
+                <Input
+                  id="type"
+                  name="type"
+                  value={formData.type}
+                  onChange={handleChange}
+                  className={`p-2 dark:bg-gray-900 ${
+                    errors.type ? "border-red-500" : "border-gray-300"
+                  }`}
+                  placeholder="Room type"
+                />
+                {errors.type && (
+                  <p className="text-red-500 text-xs mt-1">{errors.type}</p>
+                )}
+              </div>
 
-            {/* Base Rate */}
-            <div>
-              <Label htmlFor="baseRate" className="text-sm font-medium my-2 block flex items-center gap-2">
-                <DollarSign className="w-4 h-4" />
-                {t("room.creation.price")}
-              </Label>
-              <Input
-                type="number"
-                id="baseRate"
-                name="baseRate"
-                value={formData.baseRate}
-                onChange={handleChange}
-                className={`p-2 dark:bg-gray-900 ${errors.baseRate ? "border-red-500" : "border-gray-300"}`}
-                placeholder="Base rate"
-              />
-              {errors.baseRate && <p className="text-red-500 text-xs mt-1">{errors.baseRate}</p>}
-            </div>
+              {/* Capacity */}
+              <div>
+                <Label
+                  htmlFor="capacity"
+                  className="text-sm font-medium my-2 block flex items-center gap-2"
+                >
+                  <Users className="w-4 h-4" />
+                  {t("room.creation.capacity")}
+                </Label>
+                <Input
+                  type="number"
+                  id="capacity"
+                  name="capacity"
+                  value={formData.capacity}
+                  onChange={handleChange}
+                  className={`p-2 dark:bg-gray-900 ${
+                    errors.capacity ? "border-red-500" : "border-gray-300"
+                  }`}
+                  placeholder="Capacity"
+                />
+                {errors.capacity && (
+                  <p className="text-red-500 text-xs mt-1">{errors.capacity}</p>
+                )}
+              </div>
 
-            {/* API Error */}
-            {apiError && <p className="text-red-500 text-sm text-center">{apiError}</p>}
+              {/* Base Rate */}
+              <div>
+                <Label
+                  htmlFor="baseRate"
+                  className="text-sm font-medium my-2 block flex items-center gap-2"
+                >
+                  <DollarSign className="w-4 h-4" />
+                  {t("room.creation.price")}
+                </Label>
+                <Input
+                  type="number"
+                  id="baseRate"
+                  name="baseRate"
+                  value={formData.baseRate}
+                  onChange={handleChange}
+                  className={`p-2 dark:bg-gray-900 ${
+                    errors.baseRate ? "border-red-500" : "border-gray-300"
+                  }`}
+                  placeholder="Base rate"
+                />
+                {errors.baseRate && (
+                  <p className="text-red-500 text-xs mt-1">{errors.baseRate}</p>
+                )}
+              </div>
 
-            {/* Submit Button */}
-            <Button type="submit" className="w-full flex items-center justify-center gap-2" disabled={loading}>
-              {loading ? <Loader2 className="animate-spin w-4 h-4" /> : <DoorOpen className="w-4 h-4" />}
-              {t("room.creation.create")}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className="w-full flex items-center justify-center gap-2"
+                disabled={loading}
+              >
+                {loading ? (
+                  <Loader2 className="animate-spin w-4 h-4" />
+                ) : (
+                  <DoorOpen className="w-4 h-4" />
+                )}
+                {t("room.creation.create")}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 };
 

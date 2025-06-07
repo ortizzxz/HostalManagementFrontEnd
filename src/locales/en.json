@@ -117,7 +117,9 @@
       "busy": "Busy",
       "maintenance": "Under Maintenance",
       "all": "All"
-    }
+    },
+    "success": "Room created successfully!",
+    "fail": "There has been an error creating the room. Please try again later."
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -209,7 +211,8 @@
   "reset_password": "Reset Password",
   "new_password": "New Password",
   "confirm_password": "Confirm Password",
-  "set_password": "Set Password"
+  "set_password": "Set Password",
+  "succesful_reset": "Your password was succesfully reset."
 }
 
 }
