@@ -64,7 +64,8 @@
     "canceled": "Canceled",
     "guestInfo": "Guest Details",
     "success": "Reservation created successfully!",
-    "creating": "Creating Reservation..."
+    "creating": "Creating Reservation...",
+    "loagingRooms" : "Loading Rooms..."
 
   },
   "dashboard": {
@@ -215,6 +216,7 @@
   "expiration_required": "Expiration Date invalid",
   "content_min_size": "Announcement Message must be more than 20 characters",
   "title_required": "Title is mandatory",
+    "title_min_size": "Announcement Title must be more than 20 characters",
   "content_required": "Announcement Message is mandatory"
 },
 "auth": {
@@ -223,6 +225,9 @@
   "confirm_password": "Confirm Password",
   "set_password": "Set Password",
   "succesful_reset": "Your password was succesfully reset."
+},
+"wage": {
+  "select_user": "Select User"
 }
 
 }

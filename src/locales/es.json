@@ -56,7 +56,8 @@
     "addGuest": "Añadir otro Huésped",
     "guestInfo": "Detalles del Huésped",
     "success": "¡Reserva creada exitosamente!",
-    "creating": "Creando Reserva..."
+    "creating": "Creando Reserva...",
+    "loagingRooms" : "Cargando habitaciones..."
   },
   "dashboard": {
     "disposition": "Dashboard",
@@ -202,17 +203,21 @@
   "room_reserved": "Existe una reserva para las fechas seleccionadas para esta habitación. Por favor cambie las fechas o la habitación e inténtelo nuevamente.",
     "expiration_required": "La fecha de expiración es inválida",
   "content_min_size": "El anuncio del mensaje debe ser mayor que 20 caracteres",
+    "title_min_size": "El titulo del anuncio no cumple la longitud mínima",
   "title_required": "El Titulo es obligatorio",
   "content_required": "Announcement Message is mandatory"
   
 },
 "auth": {
-  "reset_password": "Rcuperar Contraseña",
+  "reset_password": "Recuperar Contraseña",
   "new_password": "Nueva Contraseña",
   "confirm_password": "Confirmar Contraseña",
   "set_password": "Guardar Contraseña",
   "succesful_reset": "Su contraseña se ha cambiado exitosamente."
 
+},
+"wage": {
+  "select_user": "Seleccionar Usuario"
 }
 
 }
