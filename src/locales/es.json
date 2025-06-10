@@ -24,7 +24,10 @@
     "delete": "Eliminar Usuario",
     "postDate": "Publicación",
     "expirationDate": "Vencimiento",
-    "empty": "No hay Anuncios para mostrar"
+    "empty": "No hay Anuncios para mostrar",
+    "title": "Titulo",
+    "content": "Mensaje",
+    "expiration_date": "01/01/2025"
   },
   "reservation": {
     "reservation": "Reserva",
@@ -193,7 +196,11 @@
 "error" : {
   "in_before_out": "La fecha de entrada tiene que ser anterior a la fecha de salida.",
   "unexpected_error": "Ha ocurrido un error inesperado. Inténtelo nuevamente más tarde.",
-  "room_reserved": "Existe una reserva para las fechas seleccionadas para esta habitación. Por favor cambie las fechas o la habitación e inténtelo nuevamente."
+  "room_reserved": "Existe una reserva para las fechas seleccionadas para esta habitación. Por favor cambie las fechas o la habitación e inténtelo nuevamente.",
+    "expiration_required": "La fecha de expiración es inválida",
+  "content_min_size": "El anuncio del mensaje debe ser mayor que 20 caracteres",
+  "title_required": "El Titulo es obligatorio",
+  "content_required": "Announcement Message is mandatory"
   
 },
 "auth": {

@@ -24,7 +24,10 @@
     "delete": "Delete Announcement",
     "postDate": "Post",
     "expirationDate": "Expiration",
-    "empty": "No Anouncements To Display"
+    "empty": "No Anouncements To Display",
+    "title": "Title",
+    "content": "Message",
+    "expiration_date": "01/01/2025"
   },
   "reservation": {
     "reservation": "Reservation",
@@ -205,8 +208,11 @@
 "error" : {
   "in_before_out": "In date must take place before out date.",
   "unexpected_error": "An unexpected error ocurred. Please try again later.",
-  "room_reserved": "This room is already reserved for the selected dates. Please choose different dates or another room."
-
+  "room_reserved": "This room is already reserved for the selected dates. Please choose different dates or another room.",
+  "expiration_required": "Expiration Date invalid",
+  "content_min_size": "Announcement Message must be more than 20 characters",
+  "title_required": "Title is mandatory",
+  "content_required": "Announcement Message is mandatory"
 },
 "auth": {
   "reset_password": "Reset Password",
