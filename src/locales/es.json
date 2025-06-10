@@ -27,7 +27,10 @@
     "empty": "No hay Anuncios para mostrar",
     "title": "Titulo",
     "content": "Mensaje",
-    "expiration_date": "01/01/2025"
+    "expiration_date": "Fecha de Expiración",
+    "title_placeholder": "Titulo del anuncio...",
+    "content_placeholder": "Mensaje del anuncio...",
+    "date_placeholder": "01/01/2025"
   },
   "reservation": {
     "reservation": "Reserva",
