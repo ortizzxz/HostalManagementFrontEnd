@@ -167,6 +167,7 @@
     "login": "Log In",
     "email": "Email",
     "password": "Password",
+    "logging": "Logging in...",
     "wait": "Sending Link...",
     "enter": "Log In",
     "login_failed": "Login failed. Please check your credentials.",

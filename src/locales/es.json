@@ -154,6 +154,7 @@
     "login": "Inicie Sesión",
     "email": "Email",
     "password": "Contraseña",
+    "logging": "Ingresando...",
     "wait": "Enviando Enlace...",
     "enter": "Ingresar",
     "login_failed": "No se pudo iniciar sesión. Verifica tus datos e inténtalo de nuevo",

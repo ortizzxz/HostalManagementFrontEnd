@@ -99,7 +99,7 @@ const LoginPage = () => {
 
         {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
         <Button type="submit" className="w-full mt-6" disabled={loading}>
-          {loading ? t("login.wait") : t("login.enter")}
+          {loading ? t("login.logging") : t("login.enter")}
         </Button>
       </form>
     </div>
